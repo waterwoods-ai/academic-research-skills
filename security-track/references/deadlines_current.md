@@ -1,6 +1,6 @@
 # Upcoming Deadlines — 22 Tracked Conferences
 
-> GENERATED FILE — do not edit. Refreshed by `fetch_deadlines.py` at every `git sync-upstream`. Fetched 2026-08-13 08:43 UTC.
+> GENERATED FILE — do not edit. Refreshed by `fetch_deadlines.py` at every `git sync-upstream`. Fetched 2026-08-13 10:23 UTC.
 > Source: https://github.com/sec-deadlines/sec-deadlines.github.io/blob/master/_data/conferences.yml
 > All deadlines are AoE (UTC-12) unless the venue states otherwise.
 

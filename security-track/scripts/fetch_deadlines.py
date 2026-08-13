@@ -26,7 +26,9 @@ SOURCE_URL = (
     "https://raw.githubusercontent.com/sec-deadlines/"
     "sec-deadlines.github.io/master/_data/conferences.yml"
 )
-OUTPUT_PATH = Path(__file__).parent / "deadlines_current.md"
+OUTPUT_PATH = (
+    Path(__file__).resolve().parent.parent / "references" / "deadlines_current.md"
+)
 FETCH_TIMEOUT_SECONDS = 30
 
 # yaml name (exact match in sec-deadlines data) -> (ranking name, CIF rank 2025)

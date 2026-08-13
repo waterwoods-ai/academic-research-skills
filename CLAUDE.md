@@ -16,7 +16,7 @@ overlay and use stock ARS behavior.
 ## Required reading before paper work
 
 Before planning, outlining, drafting, reviewing, or revising a paper, read
-the relevant files from `custom/security-track/`:
+the relevant files from `security-track/references/`:
 
 | Task | Read first |
 |---|---|
@@ -45,14 +45,17 @@ the relevant files from `custom/security-track/`:
 
 ## Deadlines are never recalled from memory
 
-Quote deadlines ONLY from `custom/security-track/deadlines_current.md`.
+Quote deadlines ONLY from `security-track/references/deadlines_current.md`.
 If its `Fetched` timestamp is older than 7 days, refresh first:
-`python3 custom/security-track/fetch_deadlines.py`. If the fetch fails,
+`python3 security-track/scripts/fetch_deadlines.py`. If the fetch fails,
 say the calendar is stale — do not fill in dates from model memory.
 
 ## Repo conventions (fork hygiene)
 
 - `main` mirrors upstream (ff-only); ALL personal work goes on `dev`.
-- Customizations are additive only: new files in `custom/` (or this file).
-  Never edit upstream-owned files — that is what keeps `git sync-upstream`
-  conflict-free.
+- Customizations are additive only: the `security-track/` skill, its
+  `skills/security-track` symlink, and this file. Sole permitted upstream-file
+  edit: the one-line `"./security-track"` entry in
+  `.claude-plugin/marketplace.json` (keep that edit minimal when resolving
+  any future sync conflict). Never edit other upstream-owned files — that is
+  what keeps `git sync-upstream` conflict-free.
