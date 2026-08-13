@@ -51,8 +51,9 @@ Read the relevant reference BEFORE the corresponding task:
 2. **Structure:** Introduction / Threat Model / Design / Implementation /
    Evaluation / Discussion / Related Work / Ethics Considerations — not
    IMRaD. A security paper without an explicit threat-model section is
-   structurally incomplete. USENIX Security additionally requires Ethics
-   Considerations and Open Science compliance sections.
+   structurally incomplete. USENIX Security additionally expects an Ethics
+   Considerations appendix ('26 mandatory, '27 strongly encouraged) and
+   Open Science compliance.
 3. **Reviewer panel:** for security papers the `academic-paper-reviewer`
    panel MUST use the five personas in
    `references/security_reviewer_personas.md` (PC Chair, Systems/CPS,
