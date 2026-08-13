@@ -29,10 +29,43 @@ Novelty, Soundness, Evaluation, Presentation, and an overall merit score
 ## R0 — PC Chair
 
 Judges fit and process, not technical depth: Is this a security paper or an
-applications paper with security keywords? Does it meet anonymity, ethics,
-and page-limit requirements (desk-reject checks)? For CCS: is the chosen
-track right? Synthesizes the panel into a decision with explicit
-revision criteria when verdict is Major Revision.
+applications paper with security keywords? For CCS: is the chosen track
+right? Synthesizes the panel into a decision with explicit revision
+criteria when the venue's verdict ladder includes a revision tier.
+
+### Phase-0 — Manuscript compliance check (R0 runs this BEFORE the panel)
+
+Scope discipline: this table checks MANUSCRIPT PROPERTIES only — things
+decidable from the PDF itself. Submission-process logistics (ORCID entry,
+HotCRP attestations, per-author caps, registration deadlines) are NOT
+review matters; they live in `big4_venue_profiles.md` § Submission
+logistics and are consulted at submission-planning time.
+
+| # | Check | Applies to | Verify by |
+|---|---|---|---|
+| P0-1 | Ethics Considerations section/appendix present and substantive (names stakeholders/risks, not boilerplate) | USENIX '26 mandatory ('27 strongly encouraged); S&P '26 section ('27 camera-ready + registration field); CCS 2026 MUST when the paper raises ethical concerns ("in doubt → add it"); NDSS expected for vulnerability papers | Locate it; check substance |
+| P0-2 | Open Science / artifact statement present; artifact links anonymized and live | CCS 2026 Open Science appendix is a MUST (desk rejection); USENIX '26+ artifacts at submission, acceptance conditional on availability | Find appendix; check anonymous hosting |
+| P0-3 | Anonymization complete: own prior work in third person; no acknowledgments/grant numbers/IRB institution names; no identifying artifact URLs; no full CVE IDs (S&P); vendor-disclosure narrative does not identify the authors; PDF metadata clean | All four (strict double-blind) | The anonymization checklist in `security_paper_conventions.md` |
+| P0-4 | Topic fit: the PRIMARY contribution is security/privacy, not an AI/ML contribution wearing a security dataset | NDSS explicit (Topic Concerns sub-committee desk-rejects without reviews); others enforce informally via early-reject | State the main claim in one sentence and classify it |
+| P0-5 | Paper type allowed at the target venue | CCS 2026 does not accept SoK/survey papers | Classify the paper |
+| P0-6 | Page limit and template compliance (~12–13 body pages excluding references/appendices, venue two-column template) | All four; violations are desk rejections | Count body pages |
+| P0-7 | References resolve — no fabricated/hallucinated citations | CCS 2026 treats fabricated citations as misconduct (desk reject); fatal to credibility everywhere | Spot-check unusual refs; run the ARS citation-existence gate when available |
+
+**Output contract:** R0 reports, before any quality review:
+
+```
+PHASE-0 COMPLIANCE (target: <venue> <year>)
+P0-1 Ethics section ......... PASS | FAIL | N/A  — one-line evidence
+P0-2 Open science/artifacts . PASS | FAIL | N/A  — ...
+... (all seven rows)
+Overall: COMPLIANT | WOULD BE DESK-REJECTED AS SUBMITTED (failing rows: ...)
+```
+
+Any FAIL does not stop the quality panel, but the final panel verdict MUST
+be prefixed "CONDITIONAL ON COMPLIANCE FIX — would be desk-rejected as
+submitted" with the failing rows listed above the decision. A compliance
+FAIL is a fact about the manuscript, never a quality judgment — it does not
+lower any reviewer's scores.
 
 ## R1 — Systems & CPS security reviewer
 

@@ -65,8 +65,10 @@ Read the relevant reference BEFORE the corresponding task:
    §1 (S&P: Accept/Reject only; NDSS: 4-tier incl. Major Revision; CCS:
    Accept/Minor revision/Reject; USENIX '26+: Accepted/Shepherd
    Approval/Rejected). Calibrate against the file's eight standard rejection anchors.
-   This composes with — never replaces — the stock 5-reviewer process,
-   synthesis, and integrity gates.
+   Before the panel runs, R0 executes the Phase-0 manuscript-compliance
+   check (personas file § Phase-0); any FAIL row prefixes the final verdict
+   with "CONDITIONAL ON COMPLIANCE FIX". This composes with — never
+   replaces — the stock 5-reviewer process, synthesis, and integrity gates.
 4. **Anonymity:** strict double-blind is the default; apply the
    anonymization checklist in `references/security_paper_conventions.md`
    during formatting and citation passes.

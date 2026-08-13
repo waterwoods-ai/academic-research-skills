@@ -29,6 +29,7 @@ USENIX Security 2.15 (#6). Acceptance rates 14.6%–19.1% (2016–2025 average).
 | Ethics | Research Ethics Committee reviews flagged papers; ethics alone can reject; vendor disclosure required no later than the rebuttal deadline |
 | Artifact evaluation | Yes — post-acceptance, badge system (Available / Functional / Reproduced) |
 | Citation style | IEEE numeric `[1]` |
+| Submission logistics | Abstract registration ~1 week before deadline freezes title/abstract/authors (ORCIDs required, missing = desk-reject); 6 papers/author/cycle ('27: enforced at registration); '27: papers under submission elsewhere at registration time cannot register |
 
 **Fit notes (CPS/IoT/AI):** S&P regularly publishes CPS/ICS attack + defense
 papers and top-tier adversarial-ML work. Highest bar of the four for both
@@ -48,6 +49,7 @@ expected to evaluate against **adaptive adversaries**, not just static baselines
 | Ethics | Ethics statement expected; measurement and vulnerability studies scrutinized |
 | Artifact evaluation | Yes — badge system |
 | Citation style | IEEE-style numeric |
+| Submission logistics | 6 submissions/author/cycle (12/year); no new authors after the submission deadline; all deadlines AoE |
 
 **Fit notes:** Strong network/systems flavor — historically the most receptive
 of the four to IoT/embedded and protocol-level work (firmware analysis, IoT
@@ -67,6 +69,7 @@ network/system angle should be foregrounded.
 | Ethics | Ethics + responsible-disclosure paragraph expected for offensive results |
 | Artifact evaluation | Yes — ACM badge system (Artifacts Available / Evaluated / Results Reproduced) |
 | Citation style | ACM numeric |
+| Submission logistics | Registration 1 week early freezes title/abstract/track + ~200-word track justification; 7 papers/author/cycle; ORCIDs + submission-terms acknowledgment in HotCRP by the deadline; withdrawal prohibited until final decision (2026) |
 
 **Fit notes:** Largest of the four (≈200 papers/year), broadest topical spread,
 and has an explicit ML-and-security track — the highest-volume Big-4 outlet
@@ -86,6 +89,7 @@ Track choice matters: the same paper can meet very different reviewer pools.
 | Open science | **Mandatory Open Science policy** (since '25): artifacts/data expected to be shared or exemption justified; compliance checked |
 | Artifact evaluation | Since '26, anonymized artifacts must be available **at submission** and are used during review; acceptance is conditional on continued availability; functionality/reproducibility badging stays opt-in post-acceptance |
 | Citation style | Numeric |
+| Submission logistics | Registration 1 week early freezes the author list; 7 papers/author/cycle; every author individually attests to submission terms in HotCRP; '27: submission artifacts due 3 days after the paper deadline |
 
 **Fit notes:** Systems-heavy, pragmatic reviewing culture; large volume
 (≈230 papers/year). Very strong venue for IoT/embedded measurement and
