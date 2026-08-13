@@ -42,6 +42,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Peer-review simulation | `references/security_reviewer_personas.md` |
 | Ranking / tier questions | `references/conference_ranking_2025.json` |
 | Reviewer comments / rebuttal / revision / re-review | `references/major_revision_playbook.md` |
+| Literature search / coverage expansion ("broad coverage", lit-review, gap analysis) | `references/perspective_retrieval_protocol.md` |
 
 ## Overrides of stock ARS defaults
 
