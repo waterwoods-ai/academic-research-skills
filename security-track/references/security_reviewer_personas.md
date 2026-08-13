@@ -15,8 +15,12 @@
 | R3 | Peer reviewer 3 | **Adversarial-ML / AI-security reviewer** |
 | R4 | Devil's Advocate | **Threat-model skeptic** |
 
-Verdict vocabulary: **Accept / Minor revision / Major revision (with numbered
-binding criteria) / Reject** — not journal R&R language. Each reviewer gives
+Verdict vocabulary: use the TARGET venue's exact decision names (see
+`major_revision_playbook.md` §1) — S&P: Accept/Reject only; NDSS:
+Accept/Minor Revision/Major Revision/Reject; CCS: Accept/Minor
+revision/Reject; USENIX '26+: Accepted/Accepted on Shepherd
+Approval/Rejected. Never offer "Major Revision" when the venue has retired
+it. Major-Revision verdicts (NDSS) MUST carry a numbered binding task list. Each reviewer gives
 Novelty, Soundness, Evaluation, Presentation, and an overall merit score
 (1–5), plus reviewer expertise self-rating (1–4, Big-4 convention).
 

@@ -41,6 +41,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Writing / outlining / drafting / revising | `references/security_paper_conventions.md` |
 | Peer-review simulation | `references/security_reviewer_personas.md` |
 | Ranking / tier questions | `references/conference_ranking_2025.json` |
+| Reviewer comments / rebuttal / revision / re-review | `references/major_revision_playbook.md` |
 
 ## Overrides of stock ARS defaults
 
