@@ -3,9 +3,10 @@
 > Custom overlay for ARS, maintained on the `dev` branch only. Not part of upstream.
 > Scope: the four top-tier security conferences, calibrated for research in
 > **CPS security, IoT security, and AI/ML security**.
-> Deadline dates and page limits shift year to year — ALWAYS verify against the
-> current CFP before formatting or planning a submission. Structural facts below
-> are stable as of early 2026.
+> Concrete deadline dates are NEVER stored here — they are pulled from
+> https://sec-deadlines.github.io into `deadlines_current.md` by
+> `fetch_deadlines.py` at every upstream sync. Page limits shift year to year;
+> verify against the current CFP. Structural facts below are stable as of early 2026.
 
 ## Venue ranking context
 
@@ -21,7 +22,7 @@ USENIX Security 2.15 (#6). Acceptance rates 14.6%–19.1% (2016–2025 average).
 | Attribute | Value |
 |---|---|
 | Organizer / when | IEEE Computer Society TC-SP; May, San Francisco |
-| Submission model | Multiple cycles per year (recently 2; count has changed across years — verify) |
+| Submission model | Multiple cycles per year — live dates: `deadlines_current.md` |
 | Format | IEEE two-column (IEEEtran conference), ~13 pages **excluding** references and appendices |
 | Anonymity | Fully double-blind; anonymize artifacts and cite own prior work in third person |
 | Decisions | Accept / Revise (major revision with binding revision criteria) / Reject; early-reject round |
@@ -40,7 +41,7 @@ expected to evaluate against **adaptive adversaries**, not just static baselines
 | Attribute | Value |
 |---|---|
 | Organizer / when | Internet Society (ISOC); February, San Diego |
-| Submission model | 2 cycles per year (roughly Apr and Jul/Aug for the following Feb) |
+| Submission model | 2 cycles per year — live dates: `deadlines_current.md` |
 | Format | NDSS's own LaTeX template, ~13 pages excluding references and appendices |
 | Anonymity | Double-blind |
 | Decisions | Accept / Major revision / Reject; shepherding common |
@@ -59,7 +60,7 @@ network/system angle should be foregrounded.
 | Attribute | Value |
 |---|---|
 | Organizer / when | ACM SIGSAC; October/November, rotating |
-| Submission model | 2 rounds per year (roughly Jan and Apr/May) |
+| Submission model | 2 rounds per year — live dates: `deadlines_current.md` |
 | Format | ACM `sigconf` two-column, ~12 pages excluding references and well-marked appendices |
 | Anonymity | Double-blind |
 | Decisions | Accept / Minor-or-major revision / Reject; topic-track reviewing (submit to a named track) |
@@ -77,7 +78,7 @@ Track choice matters: the same paper can meet very different reviewer pools.
 | Attribute | Value |
 |---|---|
 | Organizer / when | USENIX Association; August |
-| Submission model | Cycle count has shifted (3 → 2 per year); verify current CFP |
+| Submission model | Cycle count shifts year to year — live dates: `deadlines_current.md` |
 | Format | USENIX two-column template, ~13 pages excluding references and appendices |
 | Anonymity | Double-blind |
 | Decisions | Accept / Major revision (binding criteria, resubmit to a later cycle) / Reject |
