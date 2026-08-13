@@ -1,0 +1,32 @@
+{
+  "source": "http://jianying.space/conference-ranking.html",
+  "fetched": "2026-08-13",
+  "metric": "CIF = 1 / (AR + PR + CR); AR = accepted/submissions (2016-2025), PR = accepted/participants (2016-2025), CR = accepted/citations via Google Scholar h5-median (2025)",
+  "note": "Values marked with * on the source page are partially estimated.",
+  "ranking_2025": [
+    {"rank": 1,  "name": "IEEE S&P",     "cif": 3.05,  "ar": "14.6%", "pr": "15.6%", "cr": "2.6%",  "h5_median": 195, "type": "security"},
+    {"rank": 2,  "name": "Eurocrypt",    "cif": 2.51,  "ar": "22.5%", "pr": "12.3%", "cr": "5.0%",  "h5_median": 101, "type": "crypto"},
+    {"rank": 3,  "name": "NDSS",         "cif": 2.46,  "ar": "16.8%", "pr": "19.4%", "cr": "4.4%",  "h5_median": 113, "type": "security"},
+    {"rank": 4,  "name": "ACM CCS",      "cif": 2.45,  "ar": "17.5%", "pr": "19.9%", "cr": "3.4%",  "h5_median": 146, "type": "security"},
+    {"rank": 5,  "name": "Crypto",       "cif": 2.27,  "ar": "24.0%", "pr": "14.7%", "cr": "5.4%",  "h5_median": 92,  "type": "crypto"},
+    {"rank": 6,  "name": "USENIX Security", "cif": 2.15, "ar": "19.1%", "pr": "24.5%", "cr": "2.9%", "h5_median": 170, "type": "security"},
+    {"rank": 7,  "name": "CHES",         "cif": 2.00,  "ar": "30.7%", "pr": "13.5%", "cr": "5.7%",  "h5_median": 87,  "type": "crypto-hardware"},
+    {"rank": 8,  "name": "FC",           "cif": 1.99,  "ar": "21.8%", "pr": "21.6%", "cr": "6.8%",  "h5_median": 74,  "type": "financial-crypto"},
+    {"rank": 9,  "name": "IEEE EuroS&P", "cif": 1.97,  "ar": "23.2%", "pr": "21.2%", "cr": "6.3%",  "h5_median": 79,  "type": "security"},
+    {"rank": 10, "name": "ACNS",         "cif": 1.88,  "ar": "21.9%", "pr": "20.5%", "cr": "10.9%", "h5_median": 46,  "type": "crypto-applied"},
+    {"rank": 11, "name": "ACSAC",        "cif": 1.764, "ar": "22.0%", "pr": "25.4%", "cr": "9.3%",  "h5_median": 54,  "type": "security"},
+    {"rank": 12, "name": "ACM AsiaCCS",  "cif": 1.761, "ar": "20.3%", "pr": "28.9%", "cr": "7.6%",  "h5_median": 66,  "type": "security"},
+    {"rank": 13, "name": "PETS",         "cif": 1.75,  "ar": "22.3%", "pr": "28.2%", "cr": "6.7%",  "h5_median": 75,  "type": "privacy"},
+    {"rank": 14, "name": "Asiacrypt",    "cif": 1.74,  "ar": "27.9%", "pr": "22.8%", "cr": "6.8%",  "h5_median": 73,  "type": "crypto"},
+    {"rank": 15, "name": "PKC",          "cif": 1.66,  "ar": "27.2%", "pr": "24.9%", "cr": "8.2%",  "h5_median": 61,  "type": "crypto"},
+    {"rank": 16, "name": "ESORICS",      "cif": 1.63,  "ar": "18.3%", "pr": "32.5%", "cr": "10.4%", "h5_median": 48,  "type": "security"},
+    {"rank": 17, "name": "FSE",          "cif": 1.58,  "ar": "29.8%", "pr": "23.3%", "cr": "10.2%", "h5_median": 49,  "type": "crypto"},
+    {"rank": 18, "name": "ACM WiSec",    "cif": 1.54,  "ar": "27.7%", "pr": "24.7%", "cr": "12.5%", "h5_median": 40,  "type": "security-wireless"},
+    {"rank": 19, "name": "RAID",         "cif": 1.48,  "ar": "24.8%", "pr": "32.8%", "cr": "9.8%",  "h5_median": 51,  "type": "security"},
+    {"rank": 20, "name": "CT-RSA",       "cif": 1.46,  "ar": "32.2%", "pr": "20.9%", "cr": "15.2%", "h5_median": 33,  "type": "crypto"},
+    {"rank": 21, "name": "IEEE CSF",     "cif": 1.40,  "ar": "24.7%", "pr": "31.8%", "cr": "14.7%", "h5_median": 34,  "type": "security-foundations"},
+    {"rank": 22, "name": "TCC",          "cif": 1.31,  "ar": "36.4%", "pr": "29.8%", "cr": "10.0%", "h5_median": 50,  "type": "crypto-theory"}
+  ],
+  "unranked_pool_count": 90,
+  "unranked_examples": ["DIMVA", "DFRWS", "IEEE-HOST", "IEEE-SecDev", "IEEE/IFIP-DSN", "IEEE-TrustCom", "ACM-CODASPY", "ACM-SACMAT", "NSPW", "PQCrypto", "RWC", "GameSec"]
+}
