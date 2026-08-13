@@ -37,8 +37,9 @@ the relevant files from `security-track/references/`:
   `academic-paper-reviewer` panel MUST use the five personas in
   `security_reviewer_personas.md` (PC Chair, CPS, IoT/embedded,
   Adversarial-ML, threat-model skeptic) instead of journal-field personas,
-  the verdict vocabulary Accept / Minor revision / Major revision (numbered
-  binding criteria) / Reject, and the eight rejection anchors in that file.
+  the target venue's exact decision vocabulary (see
+  `security-track/references/major_revision_playbook.md` §1 — only NDSS
+  still has a Major Revision), and the eight rejection anchors in that file.
   This composes with — does not replace — the stock review process
   (5 independent reviewers, synthesis, integrity gates).
 - **field_analyst_agent:** for security papers, skip journal-field

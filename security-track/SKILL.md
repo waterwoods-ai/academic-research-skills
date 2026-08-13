@@ -58,9 +58,11 @@ Read the relevant reference BEFORE the corresponding task:
    `references/security_reviewer_personas.md` (PC Chair, Systems/CPS,
    IoT/embedded, Adversarial-ML, threat-model skeptic) instead of
    journal-field personas; `field_analyst_agent` skips journal-field
-   detection and configures the panel from that file. Verdict vocabulary:
-   Accept / Minor revision / Major revision (numbered binding criteria) /
-   Reject. Calibrate against the file's eight standard rejection anchors.
+   detection and configures the panel from that file. Verdict vocabulary: the TARGET
+   venue's exact decision names per `references/major_revision_playbook.md`
+   §1 (S&P: Accept/Reject only; NDSS: 4-tier incl. Major Revision; CCS:
+   Accept/Minor revision/Reject; USENIX '26+: Accepted/Shepherd
+   Approval/Rejected). Calibrate against the file's eight standard rejection anchors.
    This composes with — never replaces — the stock 5-reviewer process,
    synthesis, and integrity gates.
 4. **Anonymity:** strict double-blind is the default; apply the
