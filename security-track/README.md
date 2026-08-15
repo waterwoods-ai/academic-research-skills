@@ -1,5 +1,7 @@
 # Security Track — 安装与使用
 
+> 日常使用手册(全流程场景速查 + 研究闭环 S0–S8):[`HowTo.md`](../HowTo.md)
+
 > 本 fork 在上游 ARS（4 个 skill）之上增加第 5 个 skill `security-track`：
 > 面向安全顶会（四大 + tier-2）研究的覆盖层，校准方向为 CPS / IoT / AI 安全。
 > 上游文件零改动（唯一例外：`marketplace.json` 注册行），`main` 分支保持
