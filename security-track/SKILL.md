@@ -90,6 +90,37 @@ Read the relevant reference BEFORE the corresponding task:
    anonymization checklist in `references/security_paper_conventions.md`
    during formatting and citation passes.
 
+## Review Workspace (stateful multi-round reviews)
+
+Standalone reviewer invocations MUST be stateful so the user never
+re-pastes prior rounds. On the FIRST `ars-reviewer` run for a paper,
+create `ars-review/` next to the manuscript:
+
+```
+ars-review/
+├── state.json            {venue, paper_path, round, created}
+└── round-1/
+    ├── decision.md       verdict + numbered task list + panel reports
+    ├── compliance.md     Phase-0 table
+    └── manuscript-snapshot.<ext>   copy of the paper as reviewed
+```
+
+On `re-review`, NOTHING needs to be supplied. Defaults, in order:
+1. Venue + paper path from `state.json`; latest `round-N/decision.md` is
+   the frozen task list. Never ask the user to re-paste them.
+2. Change map: if `round-N/changelog.md` exists (user-maintained,
+   "T1 → §4.2 …" lines), use it verbatim. Otherwise DIFF the current
+   manuscript against `round-N/manuscript-snapshot.*`, draft the
+   task-to-change mapping yourself, and show it for a one-line
+   confirmation before judging. The mapping exists to keep verification
+   mechanical and to suppress hallucinated regressions — it is the
+   system's job to produce it, the user's only to correct it.
+3. Write the new round's outputs to `round-(N+1)/` and bump `state.json`.
+
+Explicit arguments always override defaults. If `ars-review/` is absent
+on a re-review request, fall back to asking for the prior decision (the
+stateless path still works, e.g. on another machine).
+
 ## Deadline integrity rule (IRON RULE)
 
 Conference deadlines are quoted ONLY from

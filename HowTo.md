@@ -22,7 +22,7 @@
 | 大纲 | `/ars-outline — target venue: ...` | 安全论文结构(Threat Model / Ethics 章) |
 | 全文写作 | `/ars-full — target venue: ...` | numeric 引用、双盲写法、页数预算 |
 | 模拟审稿 | `/ars-reviewer — target venue: ...` + 论文 | Phase-0 合规 → 安全合同盲态预提交 → 5 人安全面板 → 会议判定词汇 |
-| 修改后复审 | `/ars-reviewer` re-review + **粘贴上轮判定原文** | 只判任务清单、禁止新异议、二元收敛 |
+| 修改后复审 | `/ars-reviewer re-review`(零参数,读 `ars-review/` 工作区) | 只判任务清单、禁止新异议、二元收敛 |
 | 收到真实审稿意见 | `/ars-revision-coach` + decision letter | 按 venue+判定档的 Roadmap + 响应包结构 + 倒排时间表 |
 | 检查 rebuttal 草稿 | `/ars-rebuttal-audit` + 意见 + 草稿 | venue 硬规则审计(S&P 500 词、禁未经要求新材料) |
 | 摘要/引用检查/格式转换 | `/ars-abstract`、`/ars-citation-check`、`/ars-format-convert` | stock ARS + numeric 引用覆盖 |
@@ -50,17 +50,20 @@ security-track 在其上叠加安全校准。
 
 ## 审稿死循环的正确解法(重要)
 
-第一轮 `/ars-reviewer` 拿到判定后,**保存输出**。此后每一轮:
+首轮评审会在论文旁自动建 `ars-review/` 工作区(判定+任务清单+稿件快照
++Phase-0 表全部存档)。此后每一轮**零参数**:
 
 ```text
-/ars-reviewer re-review — target venue: NDSS 2027
-上轮判定与任务清单(原文):<粘贴>
-修改说明:T1 → §4.2 增加 adaptive 实验;T2 → ...
-修改稿:<全文或文件路径>
+/ars-reviewer re-review
 ```
 
+venue、上轮任务清单、论文路径全部从 `ars-review/state.json` 读取;
+修改映射(哪个修改对应哪个任务)由 agent 对比稿件快照自动生成,给你
+一行确认即可——也可以自己维护 `ars-review/round-N/changelog.md`(每行
+`T1 → §4.2 增加 adaptive 实验`),存在则优先采用。
+
 规则已由机制冻结:只对清单逐项判 RESOLVED/NOT、禁止对旧文本提新异议、
-判定收敛即终止。如果它违规冒出新问题,引用规则让它重来。
+判定收敛即终止。换机器丢失工作区时,手动粘贴上轮判定仍可用(无状态回退)。
 
 ## 首次使用的四点验证
 
