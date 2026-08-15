@@ -115,7 +115,26 @@ On `re-review`, NOTHING needs to be supplied. Defaults, in order:
    confirmation before judging. The mapping exists to keep verification
    mechanical and to suppress hallucinated regressions — it is the
    system's job to produce it, the user's only to correct it.
-3. Write the new round's outputs to `round-(N+1)/` and bump `state.json`.
+3. **Verify against artifacts, never against the changelog alone.** The
+   changelog is an index; every verdict must cite evidence of the class the
+   task demands:
+   - *Text task* (clarify, add section, fix claim) → quote the revised
+     manuscript text; the diff against the snapshot must show it.
+   - *Experiment/result task* (add adaptive evaluation, new baseline,
+     ablation, more devices) → the ledger (`./ledger/` or the paper's
+     provenance record) must contain a run for it, and the numbers in the
+     revised text must match the ledger. A new table with no ledger entry
+     is NOT RESOLVED — "numbers only from execution logs" applies to
+     verification too.
+   - *Code/artifact task* (release code, fix implementation, reproducibility)
+     → open the artifact: file exists, referenced path resolves, README/
+     scripts support the claim; run or spot-check when feasible.
+   - *Formalization task* (define threat model, prove/state property) →
+     the definition/proof appears in the manuscript and is consistent
+     with the claims that depend on it.
+   A task whose changelog line has no corresponding artifact evidence
+   is NOT RESOLVED regardless of what the changelog says.
+4. Write the new round's outputs to `round-(N+1)/` and bump `state.json`.
 
 Explicit arguments always override defaults. If `ars-review/` is absent
 on a re-review request, fall back to asking for the prior decision (the
