@@ -227,5 +227,10 @@ rebuttal 草稿写好后:🔍 `ars-rebuttal-audit — venue: <venue year>` + 意
 ## 冷启动与维护
 
 - **冷启动**:任何工具从流程中段开新会话时,若项目目录有锚文件(Step 0.2)则自动加载 skill;否则首条消息显式调用——Claude `/academic-research-skills:security-track <request>`,Codex `$security-track <request>`,opencode 用任一 `ars-*` 别名开场。
-- **更新**:Claude `/plugin update academic-research-skills`;Codex `codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`;opencode 跟随 symlink,`git pull` fork 即生效。上游同步:仓库内 `git sync-upstream`(自动刷新截稿日历)。
+- **更新(skill 每次改动后,三边一起做)**:
+  - 🧑‍🏫 Claude Code:`/plugin update academic-research-skills`(物化拷贝,需手动刷新)
+  - 🔍 Codex:`codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`(同上)
+  - 🎓 opencode:**无需操作**——symlink 直读 fork,`git pull` 后即最新
+  三个安装是三份独立拷贝;只更新一边会造成学生/导师/审稿人跑在不同版本的协议上。
+  上游同步:仓库内 `git sync-upstream`(自动刷新截稿日历)。
 - **CI 邮件** = 上游质量门在审我们的定制,按报错修。
