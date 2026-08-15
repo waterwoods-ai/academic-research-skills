@@ -1,87 +1,213 @@
-# HowTo — 在 Claude Code 中使用(安全顶会研究全流程)
+# HowTo — Claude Code 分步指南(从零到投稿)
 
-> 安装见 [`security-track/README.md`](security-track/README.md)。本文假设插件已装好
-> (`/plugin install academic-research-skills@academic-research-skills`)、已开新 session。
-> 全程默认:你的论文任务面向安全顶会(四大 + tier-2),security-track 覆盖层自动叠加。
+> 安装见 [`security-track/README.md`](security-track/README.md)。本文假设插件已装好、已开新 session。
+> 图例:🚦 = 人工决定门(agent 只提名,你拍板);📄 = 该步产出的存档物。
+> 通用规则:涉及投稿/审稿的输入**永远写明 `target venue: <会议> <年份>`**;
+> 截稿日期只认日历文件;已在某步有产出的信息不需要重复提供。
 
-## 核心习惯(先记这三条)
+---
 
-1. **涉及投稿/审稿的请求,永远写明目标会议**:`target venue: NDSS 2027`。
-   判定词汇、Phase-0 检查项、页数预算都依赖它。
-2. **截稿日期永远不要接受凭记忆的回答**——agent 被规定只从
-   `security-track/references/deadlines_current.md` 引用,超 7 天会先刷新。
-   如果它直接报了日期又没提日历,值得警惕。
-3. **审稿第二轮起用 re-review + 冻结清单**,不要重新跑全量评审(防死循环,见下)。
+## 阶段 0 · 一次性准备
 
-## 日常场景速查
+**Step 0.1 确认安装**:新开 session,问一句「NDSS 的 Major Revision 流程是什么」。
+agent 去读 `major_revision_playbook.md` 作答 = 正常;凭记忆直接答 = 覆盖层没生效,回 README 查安装。
 
-| 场景 | 输入 | 背后生效的机制 |
-|---|---|---|
-| 选会/投稿规划 | 直接问,或 `/ars-plan` | venue 档案 + 实时截稿日历 |
-| 文献综述 | `/ars-lit-review <主题>`,加一句「确保覆盖全面」 | 6 透镜视角检索 + 未用检索追问 |
-| 大纲 | `/ars-outline — target venue: ...` | 安全论文结构(Threat Model / Ethics 章) |
-| 全文写作 | `/ars-full — target venue: ...` | numeric 引用、双盲写法、页数预算 |
-| 模拟审稿 | `/ars-reviewer — target venue: ...` + 论文 | Phase-0 合规 → 安全合同盲态预提交 → 5 人安全面板 → 会议判定词汇 |
-| 修改后复审 | `/ars-reviewer re-review`(零参数,读 `ars-review/` 工作区) | 只判任务清单、禁止新异议、二元收敛 |
-| 收到真实审稿意见 | `/ars-revision-coach` + decision letter | 按 venue+判定档的 Roadmap + 响应包结构 + 倒排时间表 |
-| 检查 rebuttal 草稿 | `/ars-rebuttal-audit` + 意见 + 草稿 | venue 硬规则审计(S&P 500 词、禁未经要求新材料) |
-| 摘要/引用检查/格式转换 | `/ars-abstract`、`/ars-citation-check`、`/ars-format-convert` | stock ARS + numeric 引用覆盖 |
+**Step 0.2 首跑验证(建议)**:拿任一篇公开安全论文跑一次
+`/ars-reviewer — target venue: NDSS 2027`,对照四点:①质量评审前出现 Phase-0
+合规表;②预提交出现 `threat_model_soundness` 等维度名;③面板为 5 个安全
+persona;④判定只用 NDSS 四档词汇。四点全过,体系可信,开始正式使用。
 
-## 完整研究闭环(S0–S8)
+---
 
-从零开始一个课题,或在任意阶段切入(协议:`security-track/references/research_loop_protocol.md`):
+## 阶段 A · 选题(找课题 → 定课题 → 确认可做)
+
+**Step 1 文献综述与 gap 登记**
 
 ```text
-S0  「验证这个课题是否可做:<主题>」            → go/no-go(饱和/错框/可行)
-S1  /ars-lit-review <主题>,确保覆盖全面        → gap 登记(每个 gap 带检索证据)
-S2  「基于这些 gap 延伸课题」                   → RQ 卡片(威胁模型草图+会议适配+可行性)
-S3  「评估我的方法的 novelty 和 contribution」  → Contribution Card(search-bounded 判定)
-    或「为 RQ-2 提出新方法」
-S4  「为这个方法设计验证实验」                  → 按论文类型的反驳表 + 冻结成功标准
-S5  「实现并运行实验」                          → 溯源台账(数字只来自执行日志)
-S6  「结果不达标,改进方法」                    → 有界循环:每轮一个针对性修改,≤3 轮强制人工检查点
-S7  /ars-reviewer(方法+台账包)                → 投稿前对抗压测
-S8  /ars-full → Phase-0 → /ars-reviewer → 投稿  → 多轮评审生命周期按 playbook
+/ars-lit-review <你的大方向,如:ICS 传感器异常检测>,确保覆盖全面
 ```
 
-Claude Code 独有优势:装了 **novelty-engine 插件**的话,S0–S4 自动用它的
-8-agent 机制(topic_verifier / math_formalizer / experiment_falsifier 等),
-security-track 在其上叠加安全校准。
+- 📄 产出:文献综述 + gap 登记册——每个 gap 带三件套:失败的检索记录、
+  最近似论文及其不足、该 gap 卡住的安全问题
+- 你的动作:通读 gap 册,划掉不感兴趣的;没有检索证据的"gap"要求它补检索
 
-## 审稿死循环的正确解法(重要)
+**Step 2 课题延伸(RQ 生成)**
 
-首轮评审会在论文旁自动建 `ars-review/` 工作区(判定+任务清单+稿件快照
-+Phase-0 表全部存档)。此后每一轮**零参数**:
+```text
+基于这些 gap 延伸课题。我的资源:<如实填:有哪些测床/设备/数据集访问>
+```
+
+- 📄 产出:RQ 卡片(威胁模型草图 + 贡献类型 + 目标会议适配 + 可行性),
+  按 影响×可行性×新鲜度 排序
+- 🚦 你的决定:选 1–2 个候选。资源栏 agent 替你答不了,如实填
+
+**Step 3 课题可行性判定(go/no-go)**
+
+```text
+验证这个课题是否可做:<选中的 RQ>
+```
+
+- 📄 产出:三选一判定 + 证据——SATURATED(点名占坑论文)/
+  MISFRAMED(给出重述)/ VIABLE(点名空白地带)
+- 🚦 你的决定:go / pivot / stop。这道门防止在饱和方向烧半年
+
+**Step 4 找突破点(dogma 提取)**
+
+```text
+这个方向的先行工作共享哪些未言明的假设?哪条最值得挑战?
+```
+
+- 📄 产出:共识假设清单(例:"防御者假设攻击者碰不到训练数据")
+- 你的动作:选定要打破的那条——**打破被点名的 dogma 是最强 novelty 来源**
+
+---
+
+## 阶段 B · 方法(Propose 或深化评估)
+
+**Step 5 提出方法 / 评估你的方法**
+
+```text
+为 RQ-<n> 提出新方法               ← 从零提出
+评估我的方法的 novelty 和 contribution:<方法描述>   ← 带自己的方法进来
+```
+
+- 📄 产出:**Contribution Card**——3–5 条可证伪 claim、每条的 novelty 判定
+  (来自真实检索,判 KNOWN 当场丢弃)、与最近方法的逐维定位表、
+  数学/算法形式化 + 威胁模型、诚实弱点清单
+- 你的动作:确认形式化符合你的本意;INCREMENTAL 的 claim 要么给出定位论证要么砍
+
+**Step 6 确定"有效"的检验标准**
+
+agent 按论文类型自动选反驳标准(S4 反驳表,219 篇获奖论文校准):
+防御类=扛住 adaptive attacker / 攻击类=真实目标端到端 / 测量类=排除假象 /
+CPS=真测床+物理后果 / 工具类=真实软件胜最强基线 / 理论类=证明而非实验。
+
+- 你的动作:确认这个 bar 对——它将同时是你的实验标准和将来审你的标准
+
+---
+
+## 阶段 C · 实验(设计 → 执行 → 改进)
+
+**Step 7 设计实验(预注册 + 冻结)**
+
+```text
+为这个方法设计验证实验
+```
+
+- 📄 产出:验证计划——每条 claim 的实验、指标、**数值化成功标准**、
+  最强基线、消融、统计计划(种子/重复/检验)、artifact 计划
+- 🚦 你的决定:**DESIGN FREEZE**。仔细审成功标准——批准后终身冻结,
+  改进循环只许改方法、不许挪标准
+
+**Step 8 执行实验**
+
+```text
+实现并运行实验
+```
+
+- 📄 产出:代码 + **溯源台账**(实验号→claim 号、计划 vs 实际、原始日志
+  位置、MET/UNMET/INCONCLUSIVE)
+- 你的动作:抽查日志与台账一致;记住铁律——论文里的数字只准来自台账,
+  负结果记录在案不许删
+
+**Step 9 改进循环(仅当有 UNMET)**
+
+```text
+<claim-2> 的标准未达,改进方法
+```
+
+- 每轮机制:点名缺陷 → **一个**针对性修改(带机制假设)→ 只重跑受影响
+  实验 + 回归检查 → 记入方法版本链(M-v2、M-v3…)
+- 🚦 **3 轮硬上限**后强制检查点,三选一:再授权 3 轮 / pivot 回 Step 5 /
+  接受负结果如实报告(台账里的负结果是可发表内容)
+
+---
+
+## 阶段 D · 论文与投稿
+
+**Step 10 投稿前对抗压测**
+
+```text
+/ars-reviewer — target venue: <会议>,评审对象:方法 + 实验台账(还没写论文)
+```
+
+- 目的:趁便宜暴露致命异议;发现的问题按 Step 9 的方式修一轮
+
+**Step 11 写作**
+
+```text
+/ars-full — target venue: <会议>
+材料:Contribution Card + 台账 + 大纲(如有)
+```
+
+- 📄 产出:安全论文结构全文(Threat Model / Ethics 章、numeric 引用、
+  双盲写法、页数预算)
+
+**Step 12 首轮模拟评审(自动建档)**
+
+```text
+/ars-reviewer — target venue: <会议>, paper: ./paper.tex
+```
+
+- 📄 自动建 `ars-review/` 工作区:`round-1/decision.md`(判定+编号任务
+  清单)、`compliance.md`(Phase-0 表)、稿件快照、`state.json`
+- 你的动作:先看 Phase-0——有 FAIL 先修合规(桌拒救不回来),再看任务清单
+
+**Step 13 修改与复审,直到收敛**
+
+改论文,然后**零参数**:
 
 ```text
 /ars-reviewer re-review
 ```
 
-venue、上轮任务清单、论文路径全部从 `ars-review/state.json` 读取;
-修改映射(哪个修改对应哪个任务)由 agent 对比稿件快照自动生成,给你
-一行确认即可——也可以自己维护 `ars-review/round-N/changelog.md`(每行
-`T1 → §4.2 增加 adaptive 实验`),存在则优先采用。
+- venue/清单/路径全部从工作区读;修改映射由 agent diff 稿件快照自动生成,
+  你一行确认(也可自己维护 `round-N/changelog.md`,存在则优先)
+- 机制保证:只判清单、禁止对旧文本提新异议、判定收敛即终止。
+  循环 Step 13 直到 CONVERGED
 
-规则已由机制冻结:只对清单逐项判 RESOLVED/NOT、禁止对旧文本提新异议、
-判定收敛即终止。换机器丢失工作区时,手动粘贴上轮判定仍可用(无状态回退)。
+**Step 14 选轮次与投稿**
 
-## 首次使用的四点验证
-
-跑一次 `/ars-reviewer — target venue: NDSS 2027` + 任一篇安全论文,确认:
-
-1. 质量评审**之前**出现 Phase-0 合规表(P0-1~P0-7 PASS/FAIL)
-2. 盲态预提交出现 `threat_model_soundness` 等安全维度名(出现 `methodology_rigor` = 合同没加载)
-3. 面板 = PC Chair + CPS + IoT + Adversarial-ML + 威胁模型质疑者
-4. 判定只用 NDSS 四档词汇(换 S&P 目标应只剩 Accept/Reject)
-
-## 维护
-
-```bash
-git sync-upstream        # 同步上游 + 自动刷新截稿日历(在仓库目录内执行)
-/plugin update academic-research-skills   # Claude Code 内更新插件
+```text
+帮我做 <会议> 的投稿规划
 ```
 
-- 收到 GitHub Actions 失败邮件 = 上游 CI 在审我们的定制,按报错修即可
-  (skill 元数据契约:SKILL.md 必须声明 `data_access_level` + `task_type`)
-- 排名快照(`conference_ranking_2025.json`)每年随源更新一次
-- 明确不是安全研究的任务,说一句即可回退 stock ARS 行为
+- 截稿从日历读取(过期自动刷新);倒排时间表;投稿事务(注册冻结、
+  篇数上限、逐人签署)查 venue 档案 Submission logistics 行
+- 🚦 你的决定:投哪轮、是否赶得上
+
+**Step 15 真实审稿意见到达**
+
+```text
+/ars-revision-coach — venue: <会议>, decision: <判定档>
+<粘贴 decision letter 原文>
+```
+
+- 📄 产出:按 venue+判定档的 Revision Roadmap + 响应包结构(USENIX 四件套
+  惯例)+ 按重投窗口倒排的时间表
+- rebuttal 草稿写好后用 `/ars-rebuttal-audit` 过一遍 venue 硬规则
+  (S&P 500 词、禁未经要求的新材料);多轮机制细节见
+  `major_revision_playbook.md`(只有 NDSS 还有 Major Revision)
+
+---
+
+## 附:场景速查(不走全流程时单点使用)
+
+| 需要 | 输入 |
+|---|---|
+| 只查截稿/选会 | 直接问(日历自动刷新) |
+| 只出大纲 | `/ars-outline — target venue: ...` |
+| 只出摘要 / 查引用 / 转格式 | `/ars-abstract`、`/ars-citation-check`、`/ars-format-convert` |
+| 快速三问扫一篇论文 | `/ars-3w <论文>` |
+
+## 附:维护
+
+```bash
+git sync-upstream                          # 同步上游 + 刷新截稿日历(仓库目录内)
+/plugin update academic-research-skills    # 更新插件
+```
+
+CI 失败邮件 = 上游质量门在审我们的定制,按报错修(skill 元数据契约:
+`data_access_level` + `task_type`)。排名快照每年随源更新。非安全研究任务
+说一句即可回退 stock 行为。Claude Code 独有:装了 novelty-engine 插件时,
+阶段 A/B 自动用它的 8-agent 机制,本覆盖层叠加安全校准。
