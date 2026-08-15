@@ -178,12 +178,21 @@ ars-reviewer — target venue: <venue year>, paper: ./paper.tex
 📄 `ars-review/round-1/`:`decision.md`(判定 + 编号任务清单)、`compliance.md`(Phase-0 表)、稿件快照、`state.json`。
 你的动作:**先看 Phase-0**——有 FAIL 先修合规(桌拒救不回来);再看任务清单。核对一眼 `round-1/` 里的实际文件名(agent 未必严格照约定命名)。
 
-**Step 15 🎓 学生按清单修改 + 写 changelog**
+**Step 15 🎓 学生按清单修改 + 写 changelog**(通用版:不必先自己读 round-N 的文件)
 
 ```text
-Revise ./paper.tex against ./ars-review/round-1/decision.md (closed-world: only the numbered tasks; anything else is optional and must be labeled so). If a task is wrong or infeasible, do NOT silently skip it — write the substitute and the reason. Write ./ars-review/round-1/changelog.md mapping every task ID to the exact change made (section + one line). Numbers still come only from ./ledger/.
+A reviewer round has just been written to ./ars-review/. Find the latest round-N/ directory and read everything in it (the decision/review file, any verdict or traceability record, the compliance check).
+
+Phase 1 — report, no edits: (a) the overall decision and how many tasks are resolved / partially / not resolved / newly raised; (b) every open item with its ID, one-line residual gap, and the evidence class needed to close it (text change / experiment run recorded in ./ledger/ / code or artifact / formalization); (c) group open items into A = compliance or desk-reject risks, B = text-only fixes, C = anything needing an experiment or artifact.
+
+Phase 2 — execute A then B only, text-only, touching nothing outside those items and never editing the reviewer's files. Recompile and report the exact page count.
+
+Phase 3 — STOP: for each cluster-C item say in one line whether it is load-bearing for the target venue's contribution or removable by honest re-scoping, then wait for my decision on which to run and which to re-scope.
+
+Throughout: maintain ./ars-review/round-N/changelog.md with one line per item `ID → section/line → change`; experiment items must later cite their ledger run; re-scoped items must read `substituted: <what> — reason: <why>`. Manuscript numbers only from ./ledger/. End with: done / awaiting my decision / page count.
 ```
-📄 `round-1/changelog.md`
+🚦 Phase 3 停下后你回复决定(如 `Run REV-001, REV-002; re-scope REV-006`),它继续执行 cluster C(实验走 Step 10–11 的台账规则)。
+📄 `round-N/changelog.md`。规则:实验项必须引用 ledger run;替代方案必须显式写明,不许静默跳过。
 
 **Step 16 🔍 审稿人零参数复审 → 循环至收敛**
 
