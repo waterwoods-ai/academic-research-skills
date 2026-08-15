@@ -1,233 +1,231 @@
-# HowTo — Claude Code 分步指南(从零到投稿)
+# HOWTO — 三方协作分步指南:opencode(学生)× Claude Code(导师)× Codex(审稿人)
 
-> 安装见 [`security-track/README.md`](security-track/README.md)。本文假设插件已装好、已开新 session。
-> 图例:🚦 = 人工决定门(agent 只提名,你拍板);📄 = 该步产出的存档物。
-> 通用规则:涉及投稿/审稿的输入**永远写明 `target venue: <会议> <年份>`**;
-> 截稿日期只认日历文件;已在某步有产出的信息不需要重复提供。
-> **冷启动规则**:新会话从流程中段切入时(没有从 Step 1 开场),首条消息用
-> 显式调用 `/academic-research-skills:security-track <request>`(或用任一 `/ars-*` 命令开场) 保证 skill 加载;
-> 同一会话内的后续普通 prompt 自动继承。做过 Step 0.3 锚文件的项目目录可免。
+> 从零到投稿的完整操作手册。每一步标明 **用哪个工具/agent**、**复制哪段 prompt**(全英文,可直接粘贴)、
+> **产出什么文件**、**你要做什么决定**。本文件在两个 fork 中同源:本仓库(Claude Code 插件)与
+> `academic-research-skills-codex`(Codex 插件)。安装细节见 `security-track/README.md`。
+>
+> **本平台角色**:Claude Code 在此流程中是 🧑‍🏫 **导师**(Step 3/6/9/12/17/18);
+> 若你只有 Claude Code 一个工具,🎓 学生步骤也可在 Claude Code 里跑(用同样的 prompt,
+> 前缀改为对应 `/ars-*` 命令),但建议 🔍 审稿人步骤仍换到不同模型家族(Codex)以保持独立性。
+>
+> 图例:🎓 opencode(学生,执行)  🧑‍🏫 Claude Code(导师,判断)  🔍 Codex(审稿人,判定)  🚦 你的决定门  📄 产出文件
 
 ---
 
-## 阶段 0 · 一次性准备
+## 为什么这样分工
 
-**Step 0.1 确认安装**:新开 session,ask: `What is the NDSS Major Revision process?`。
-agent 去读 `major_revision_playbook.md` 作答 = 正常;凭记忆直接答 = 覆盖层没生效,回 README 查安装。
+| 角色 | 工具 | 干什么 | 为什么是它 |
+|---|---|---|---|
+| 🎓 学生 | opencode | 检索、写卡片、写代码跑实验、维护台账、改稿、写 changelog——所有**执行密集型**工作 | 通过 `~/.claude/skills` 加载全套 ARS + security-track;模型可换、上下文大、成本低 |
+| 🧑‍🏫 导师 | Claude Code | 5 道决定门**之前**的把关:选题值不值、novelty 诚不诚实、实验设计能否扛住反驳——**判断密集型** | 完整 ARS 机制(真多次独立调用、盲态隔离强、novelty-engine);最强推理 |
+| 🔍 审稿人 | Codex | 论文成稿**之后**的正式模拟评审 + re-review 循环——**判定型**,不讨论只对清单 | **不同模型家族**:没参与设计、对学生思路无"母爱";天然实现跨模型评审 |
 
-**Step 0.2 首跑验证(建议)**:拿任一篇公开安全论文跑一次
-`/ars-reviewer — target venue: NDSS 2027`,对照四点:①质量评审前出现 Phase-0
-合规表;②预提交出现 `threat_model_soundness` 等维度名;③面板为 5 个安全
-persona;④判定只用 NDSS 四档词汇。四点全过,体系可信,开始正式使用。
+三条纪律:**审稿人绝不参与设计**(S7 之后才进场);**导师绝不改稿**(只写批注到文件,改动全由学生执行);**决定门不外包**(五道门是你的,三个模型只提名)。
+三方全部通过**磁盘文件**交接,零对话依赖。
 
-**Step 0.3 项目锚文件(强烈建议,一次一分钟)**:把 skill 自带的模板
-`security-track/templates/project-anchor-CLAUDE.md` 复制到你的论文项目目录并改名
-`CLAUDE.md`,填上 venue / 阶段 / 论文路径。此后该目录里的**每个新会话都确定性
-加载 security-track**,与 prompt 措辞无关——这是三层保险里唯一 100% 的一层。
+---
 
-**Step 0.4 (可选)opencode 当"学生"时的接入**:opencode 从 `~/.claude/skills/` 发现 skill,
-把 fork 的 5 个 skill 目录 symlink 进去(**本机配置,不随仓库分发,换机器重做**):
+## 阶段 0 · 一次性环境准备
+
+**Step 0.1 三个工具都装好 skill**
+
+- 🧑‍🏫 Claude Code:`/plugin marketplace add waterwoods-ai/academic-research-skills` → `/plugin install academic-research-skills@academic-research-skills`
+- 🔍 Codex:`codex plugin marketplace add waterwoods-ai/academic-research-skills-codex --ref dev` → `codex plugin add ars-codex@ars-codex`
+- 🎓 opencode:它从 `~/.claude/skills/` 发现 skill。把 fork 的 5 个 skill 目录 symlink 进去(**本机配置,不随仓库分发,换机器重做**):
+  ```bash
+  SRC=/path/to/academic-research-skills   # 你 clone 的 fork(dev 分支)
+  cd ~/.claude/skills
+  for s in academic-paper academic-paper-reviewer academic-pipeline deep-research security-track; do
+    ln -sfn "$SRC/$s" "$s"; done
+  ls -la ~/.claude/skills | grep -E 'academic|security'    # 5 个链接指向 live fork,无悬空
+  ```
+
+**Step 0.2 建项目目录 + 锚文件(三方都读,确定性加载 skill)**
 
 ```bash
-SRC=/path/to/academic-research-skills    # 你 clone 的 fork(dev 分支)
-cd ~/.claude/skills && for s in academic-paper academic-paper-reviewer academic-pipeline deep-research security-track; do ln -sfn "$SRC/$s" "$s"; done
+mkdir my-paper && cd my-paper
+cp $SRC/security-track/templates/project-anchor-CLAUDE.md ./CLAUDE.md   # Claude Code 读
+cp $SRC/security-track/templates/project-anchor-AGENTS.md ./AGENTS.md   # Codex + opencode 读
+```
+编辑两个文件填三行:target venue、当前阶段、论文路径。以后**每次都在这个目录里启动三个工具**。
+
+**Step 0.3 各工具冒烟测试**(每个工具问同一句,应去读 playbook 而非凭记忆答):
+
+```text
+What is the NDSS Major Revision process, and which Big-4 venues still have one?
 ```
 
-三方协作(opencode 学生 × Claude Code 导师 × Codex 审稿人)的完整分步指南见 workspace 根目录
-`HOWTO.md`(每一步标明用哪个工具、复制哪段英文 prompt)。
-
+正确答案要点:只有 NDSS 还有;S&P 2024 起 Accept/Reject;USENIX '26 取消;CCS 只有 Minor revision。三个工具都答对 = 环境就绪。
 
 ---
 
-## 阶段 A · 选题(找课题 → 定课题 → 确认可做)
+## 阶段 A · 选题(Step 1–4)
 
-**Step 1 文献综述与 gap 登记**
-
-```text
-/ars-lit-review <your area, e.g. ICS sensor anomaly detection>, ensure broad coverage
-```
-
-- 📄 产出:文献综述 + gap 登记册——每个 gap 带三件套:失败的检索记录、
-  最近似论文及其不足、该 gap 卡住的安全问题
-- 你的动作:通读 gap 册,划掉不感兴趣的;没有检索证据的"gap"要求它补检索
-
-**Step 2 课题延伸(RQ 生成)**
+**Step 1 🎓 文献综述 + gap 登记**
 
 ```text
-Extend research topics from these gaps. My resources: <honestly list: testbeds / devices / dataset access you have>
+ars-lit-review <your area, e.g. physics-based sensor spoofing detection for ICS>, ensure broad coverage.
+Write the gap registry to ./gap_registry.md — each gap must carry: the search that failed to fill it (queries, indexes, date), the nearest-miss papers and why each falls short, and the security question the gap blocks.
 ```
+📄 `gap_registry.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
 
-- 📄 产出:RQ 卡片(威胁模型草图 + 贡献类型 + 目标会议适配 + 可行性),
-  按 影响×可行性×新鲜度 排序
-- 🚦 你的决定:选 1–2 个候选。资源栏 agent 替你答不了,如实填
-
-**Step 3 课题可行性判定(go/no-go)**
+**Step 2 🎓 课题延伸(RQ 卡片)**
 
 ```text
-Verify the research topic viability (go/no-go): <selected RQ>
+Extend research topics from ./gap_registry.md. My resources: <honestly list: testbeds / devices / dataset access you have>.
+Write ranked RQ cards to ./rq_cards.md — each with a threat-model sketch, contribution type (attack / defense / measurement / tool; note CCS rejects SoK), target-venue fit, feasibility against my resources, and the dogma it challenges if any. Rank by impact × feasibility × freshness.
 ```
+📄 `rq_cards.md`
 
-- 📄 产出:三选一判定 + 证据——SATURATED(点名占坑论文)/
-  MISFRAMED(给出重述)/ VIABLE(点名空白地带)
-- 🚦 你的决定:go / pivot / stop。这道门防止在饱和方向烧半年
-
-**Step 4 找突破点(dogma 提取)**
+**Step 3 🧑‍🏫 导师把关选题(go / no-go)** 🚦
 
 ```text
-What unstated assumptions do prior works in this area share? Which one is most worth challenging?
+Mentor review of ./rq_cards.md and ./gap_registry.md for a Big-4 security venue.
+For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers and rule SATURATED (name the papers) / MISFRAMED (restate the better question) / VIABLE (name the open territory). Then tell me which unstated assumption (dogma) shared by prior work is most worth challenging. Write your verdicts as annotations into ./rq_cards.md; do not rewrite the student's cards.
 ```
+🚦 **你决定**:选定 1 个 RQ,go / pivot / stop。这道门防止在饱和方向烧半年。
 
-- 📄 产出:共识假设清单(例:"防御者假设攻击者碰不到训练数据")
-- 你的动作:选定要打破的那条——**打破被点名的 dogma 是最强 novelty 来源**
+**Step 4 🎓 落定课题**
+
+```text
+Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_question.md: the RQ, threat model, the dogma being challenged, target venue, and why it fits that venue.
+```
+📄 `research_question.md`
 
 ---
 
-## 阶段 B · 方法(Propose 或深化评估)
+## 阶段 B · 方法与 novelty(Step 5–7)
 
-**Step 5 提出方法 / 评估你的方法**
+**Step 5 🎓 提出方法 / 深化你的方法 → Contribution Card**
 
 ```text
-Propose a new method for RQ-<n>                       ← from scratch
-Evaluate the novelty and contribution of my method: <description>   ← bring your own method
+Propose a new method for the RQ in ./research_question.md          ← from scratch
+   (or) Evaluate the novelty and contribution of my method: <description>   ← bring your own
+Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty verdict NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature with the nearest prior work cited; a positioning table vs the 3–5 closest methods; a one-paragraph delta statement in the community's own terms; formalization (math or algorithm + complexity) plus the threat model; and honest weaknesses.
 ```
+📄 `contribution_card.md`。规则:判 KNOWN 的 claim 当场丢弃;INCREMENTAL 需给出定位论证。
 
-- 📄 产出:**Contribution Card**——3–5 条可证伪 claim、每条的 novelty 判定
-  (来自真实检索,判 KNOWN 当场丢弃)、与最近方法的逐维定位表、
-  数学/算法形式化 + 威胁模型、诚实弱点清单
-- 你的动作:确认形式化符合你的本意;INCREMENTAL 的 claim 要么给出定位论证要么砍
+**Step 6 🧑‍🏫 导师审 novelty 与贡献** 🚦
 
-**Step 6 确定"有效"的检验标准**
+```text
+Mentor review of ./contribution_card.md. Independently re-verify each novelty verdict by real retrieval (do not trust the student's search). Which claim would a Big-4 reviewer kill first, and with which of the eight standard rejection anchors? Is the delta statement honest or inflated? Is the formalization actually a method (algorithm + threat model) or still a sketch? Annotate the card in place; do not rewrite it.
+```
+🚦 **你决定**:批准卡片,或退回 Step 5。
 
-agent 按论文类型自动选反驳标准(S4 反驳表,219 篇获奖论文校准):
-防御类=扛住 adaptive attacker / 攻击类=真实目标端到端 / 测量类=排除假象 /
-CPS=真测床+物理后果 / 工具类=真实软件胜最强基线 / 理论类=证明而非实验。
+**Step 7 🎓 按批注修卡**
 
-- 你的动作:确认这个 bar 对——它将同时是你的实验标准和将来审你的标准
+```text
+Revise ./contribution_card.md per the mentor annotations. Keep an M-v1 version tag at the top; every later method change bumps the version and is logged in ./method_changelog.md.
+```
 
 ---
 
-## 阶段 C · 实验(设计 → 执行 → 改进)
+## 阶段 C · 实验:设计 → 冻结 → 执行 → 改进(Step 8–12)
 
-**Step 7 设计实验(预注册 + 冻结)**
-
-```text
-Design validation experiments for this method
-```
-
-- 📄 产出:验证计划——每条 claim 的实验、指标、**数值化成功标准**、
-  最强基线、消融、统计计划(种子/重复/检验)、artifact 计划
-- 🚦 你的决定:**DESIGN FREEZE**。仔细审成功标准——批准后终身冻结,
-  改进循环只许改方法、不许挪标准
-
-**Step 8 执行实验**
+**Step 8 🎓 起草验证计划(按论文类型的反驳表)**
 
 ```text
-Implement and run the experiments
+Design validation experiments for the method in ./contribution_card.md. First classify the paper type (attack / defense / measurement / tool / CPS / IoT / ML-for-security / theory) and pick the matching row of the S4 refutation table in research_loop_protocol.md. Write ./validation_plan.md: per claim — the experiment or proof obligation, metrics, NUMERIC success criteria, strongest published baselines correctly tuned, ablations, statistical plan (seeds, repetitions, tests), and the artifact / open-science plan. Mark the file DRAFT.
 ```
+📄 `validation_plan.md (DRAFT)`
 
-- 📄 产出:代码 + **溯源台账**(实验号→claim 号、计划 vs 实际、原始日志
-  位置、MET/UNMET/INCONCLUSIVE)
-- 你的动作:抽查日志与台账一致;记住铁律——论文里的数字只准来自台账,
-  负结果记录在案不许删
-
-**Step 9 改进循环(仅当有 UNMET)**
+**Step 9 🧑‍🏫 导师审设计 → 冻结** 🚦
 
 ```text
-The criterion for <claim-2> is unmet — improve the method
+Review ./validation_plan.md as the mentor. Check: does each claim's validation survive the specific refutation a Big-4 reviewer of THIS paper type will attempt (adaptive adversary for defenses; real target end-to-end for attacks; artifact-ruling-out for measurement; real testbed + physical consequence for CPS; device diversity for IoT; base rates + temporal split for ML detection; proof for theory)? Are the success criteria numeric and pre-registered? Are the baselines the strongest published ones? Annotate in place. Do not change the criteria yourself — propose, and I decide.
 ```
+🚦 **DESIGN FREEZE**:你批准后把文件头改为 `FROZEN <date>`。**此后成功标准终身不动;改进循环只许改方法。**
 
-- 每轮机制:点名缺陷 → **一个**针对性修改(带机制假设)→ 只重跑受影响
-  实验 + 回归检查 → 记入方法版本链(M-v2、M-v3…)
-- 🚦 **3 轮硬上限**后强制检查点,三选一:再授权 3 轮 / pivot 回 Step 5 /
-  接受负结果如实报告(台账里的负结果是可发表内容)
+**Step 10 🎓 实现并运行(Codex 主场也可,但为保持单一作者建议仍由学生做)**
+
+```text
+Implement and run the experiments in ./validation_plan.md (FROZEN). Maintain ./ledger/ as the provenance ledger: one entry per run with experiment id → claim id, planned vs executed (name every deviation), raw log path, verdict against the pre-registered criterion (MET / UNMET / INCONCLUSIVE), and any negative or surprising result. Numbers in any later document may come only from this ledger.
+```
+📄 `ledger/`。你的动作:抽查日志与台账一致。
+
+**Step 11 🎓 改进循环(仅当有 UNMET)**
+
+```text
+The criterion for <claim-k> is UNMET per ./ledger. Improve the method: name the deficiency with ledger evidence; make ONE targeted change with a mechanism hypothesis ("criterion X fails because Y; change Z addresses Y"); re-run only the affected experiments plus a regression check on previously-MET criteria; log M-v<N+1> in ./method_changelog.md. The success criteria in ./validation_plan.md are frozen — do not touch them.
+```
+🚦 **3 轮硬上限**后停下找导师(Step 12)。
+
+**Step 12 🧑‍🏫 导师检查点(每 3 轮改进后,或改进达标后)** 🚦
+
+```text
+Mentor checkpoint. Read ./validation_plan.md (FROZEN), ./ledger/, ./method_changelog.md. Is the method converging on the frozen criteria, or are we chasing? Recommend exactly one of: authorize 3 more iterations / pivot back to method design with lessons recorded / accept-and-report honestly (negative results included). Then stress-test the method + ledger package as if you were the panel: what is the fatal objection, if any, before we spend effort writing the paper?
+```
+🚦 **你决定**:继续 / pivot / 如实报告。
 
 ---
 
-## 阶段 D · 论文与投稿
+## 阶段 D · 论文与评审循环(Step 13–17)
 
-**Step 10 投稿前对抗压测**
+**Step 13 🎓 写论文**
 
 ```text
-/ars-reviewer — target venue: <venue>, review target: method + experiment ledger (no paper yet)
+ars-full — target venue: <venue year>
+Materials: ./contribution_card.md (claims spine), ./ledger/ (all numbers), ./validation_plan.md, ./research_question.md.
+Security-paper structure (Intro / Threat Model / Design / Implementation / Evaluation / Discussion / Related Work / Ethics Considerations), numeric citations, double-blind, within the venue page budget. Every number must trace to a ledger entry. Output ./paper.tex.
 ```
+📄 `paper.tex`
 
-- 目的:趁便宜暴露致命异议;发现的问题按 Step 9 的方式修一轮
-
-**Step 11 写作**
+**Step 14 🔍 审稿人首轮评审(自动建档)**
 
 ```text
-/ars-full — target venue: <venue>
-Materials: Contribution Card + provenance ledger + outline (if any)
+ars-reviewer — target venue: <venue year>, paper: ./paper.tex
 ```
+📄 `ars-review/round-1/`:`decision.md`(判定 + 编号任务清单)、`compliance.md`(Phase-0 表)、稿件快照、`state.json`。
+你的动作:**先看 Phase-0**——有 FAIL 先修合规(桌拒救不回来);再看任务清单。核对一眼 `round-1/` 里的实际文件名(agent 未必严格照约定命名)。
 
-- 📄 产出:安全论文结构全文(Threat Model / Ethics 章、numeric 引用、
-  双盲写法、页数预算)
-
-**Step 12 首轮模拟评审(自动建档)**
+**Step 15 🎓 学生按清单修改 + 写 changelog**
 
 ```text
-/ars-reviewer — target venue: <venue>, paper: ./paper.tex
+Revise ./paper.tex against ./ars-review/round-1/decision.md (closed-world: only the numbered tasks; anything else is optional and must be labeled so). If a task is wrong or infeasible, do NOT silently skip it — write the substitute and the reason. Write ./ars-review/round-1/changelog.md mapping every task ID to the exact change made (section + one line). Numbers still come only from ./ledger/.
 ```
+📄 `round-1/changelog.md`
 
-- 📄 自动建 `ars-review/` 工作区:`round-1/decision.md`(判定+编号任务
-  清单)、`compliance.md`(Phase-0 表)、稿件快照、`state.json`
-- 你的动作:先看 Phase-0——有 FAIL 先修合规(桌拒救不回来),再看任务清单
-
-**Step 13 修改与复审,直到收敛**
-
-改论文,然后**零参数**:
+**Step 16 🔍 审稿人零参数复审 → 循环至收敛**
 
 ```text
-/ars-reviewer re-review
+ars-reviewer re-review
 ```
+它从工作区读 venue/清单/路径,优先采用学生的 `changelog.md`;只逐项判 RESOLVED / NOT;禁止对旧文本提新异议;输出到 `round-2/`。**重复 Step 15–16 直到 CONVERGED。**
 
-- venue/清单/路径全部从工作区读;修改映射由 agent diff 稿件快照自动生成,
-  你一行确认(也可自己维护 `round-N/changelog.md`,存在则优先)
-- 机制保证:只判清单、禁止对旧文本提新异议、判定收敛即终止。
-  循环 Step 13 直到 CONVERGED
-
-**Step 14 选轮次与投稿**
+**Step 17 🧑‍🏫 投稿前终审(高利害,换模型家族再看一次)**
 
 ```text
-Plan my submission to <venue>
+/ars-reviewer — target venue: <venue year>, paper: ./paper.tex
+Final independent pass before submission: run Phase-0, the security sprint contract, and the full five-persona panel with the venue's exact decision vocabulary. Do not read ./ars-review/ first — judge blind, then compare.
 ```
+🚦 **你决定**:投,或再修一轮。两个模型家族独立收敛 = 你能拿到的最强投稿前信号。
 
-- 截稿从日历读取(过期自动刷新);倒排时间表;投稿事务(注册冻结、
-  篇数上限、逐人签署)查 venue 档案 Submission logistics 行
-- 🚦 你的决定:投哪轮、是否赶得上
+---
 
-**Step 15 真实审稿意见到达**
+## 阶段 E · 投稿与真实评审(Step 18–19)
+
+**Step 18 🧑‍🏫 投稿规划**
 
 ```text
-/ars-revision-coach — venue: <venue>, decision: <decision tier>
+Plan my submission to <venue>: which cycle, deadline from the live calendar (refresh if stale), a work-back schedule, and the submission-logistics checklist for this venue (registration freeze, per-author cap, per-author attestations, artifact deadline).
+```
+🚦 **你决定**:投哪轮。
+
+**Step 19 真实审稿意见到达**
+
+🎓 或 🧑‍🏫 都可(判断为主时用导师):
+
+```text
+ars-revision-coach — venue: <venue year>, decision: <decision tier>
 <paste the decision letter verbatim>
+Produce the Revision Roadmap and the response-package structure for this venue's decision tier (verbatim criteria + change list + per-criterion mapping + diff), plus a work-back schedule against the resubmission window.
 ```
-
-- 📄 产出:按 venue+判定档的 Revision Roadmap + 响应包结构(USENIX 四件套
-  惯例)+ 按重投窗口倒排的时间表
-- rebuttal 草稿写好后用 `/ars-rebuttal-audit` 过一遍 venue 硬规则
-  (S&P 500 词、禁未经要求的新材料);多轮机制细节见
-  `major_revision_playbook.md`(只有 NDSS 还有 Major Revision)
+rebuttal 草稿写好后:🔍 `ars-rebuttal-audit — venue: <venue year>` + 意见 + 草稿(venue 硬规则:S&P 500 词、禁未经要求的新材料)。多轮机制细节见 `major_revision_playbook.md`。
 
 ---
 
-## 附:场景速查(不走全流程时单点使用)
+## 冷启动与维护
 
-| 需要 | 输入 |
-|---|---|
-| 只查截稿/选会 | 直接问(日历自动刷新) |
-| 只出大纲 | `/ars-outline — target venue: ...` |
-| 只出摘要 / 查引用 / 转格式 | `/ars-abstract`、`/ars-citation-check`、`/ars-format-convert` |
-| 快速三问扫一篇论文 | `/ars-3w <paper>` |
-
-## 附:维护
-
-```bash
-git sync-upstream                          # 同步上游 + 刷新截稿日历(仓库目录内)
-/plugin update academic-research-skills    # 更新插件
-```
-
-CI 失败邮件 = 上游质量门在审我们的定制,按报错修(skill 元数据契约:
-`data_access_level` + `task_type`)。排名快照每年随源更新。非安全研究任务
-说一句即可回退 stock 行为。Claude Code 独有:装了 novelty-engine 插件时,
-阶段 A/B 自动用它的 8-agent 机制,本覆盖层叠加安全校准。
+- **冷启动**:任何工具从流程中段开新会话时,若项目目录有锚文件(Step 0.2)则自动加载 skill;否则首条消息显式调用——Claude `/academic-research-skills:security-track <request>`,Codex `$security-track <request>`,opencode 用任一 `ars-*` 别名开场。
+- **更新**:Claude `/plugin update academic-research-skills`;Codex `codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`;opencode 跟随 symlink,`git pull` fork 即生效。上游同步:仓库内 `git sync-upstream`(自动刷新截稿日历)。
+- **CI 邮件** = 上游质量门在审我们的定制,按报错修。
