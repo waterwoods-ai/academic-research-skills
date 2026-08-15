@@ -128,7 +128,7 @@ The criterion for <claim-2> is unmet — improve the method
 **Step 10 投稿前对抗压测**
 
 ```text
-/ars-reviewer — target venue: <会议>,review target: method + experiment ledger (no paper yet)
+/ars-reviewer — target venue: <venue>, review target: method + experiment ledger (no paper yet)
 ```
 
 - 目的:趁便宜暴露致命异议;发现的问题按 Step 9 的方式修一轮
@@ -136,7 +136,7 @@ The criterion for <claim-2> is unmet — improve the method
 **Step 11 写作**
 
 ```text
-/ars-full — target venue: <会议>
+/ars-full — target venue: <venue>
 Materials: Contribution Card + provenance ledger + outline (if any)
 ```
 
@@ -146,7 +146,7 @@ Materials: Contribution Card + provenance ledger + outline (if any)
 **Step 12 首轮模拟评审(自动建档)**
 
 ```text
-/ars-reviewer — target venue: <会议>, paper: ./paper.tex
+/ars-reviewer — target venue: <venue>, paper: ./paper.tex
 ```
 
 - 📄 自动建 `ars-review/` 工作区:`round-1/decision.md`(判定+编号任务
@@ -179,7 +179,7 @@ Plan my submission to <venue>
 **Step 15 真实审稿意见到达**
 
 ```text
-/ars-revision-coach — venue: <会议>, decision: <判定档>
+/ars-revision-coach — venue: <venue>, decision: <decision tier>
 <paste the decision letter verbatim>
 ```
 
@@ -198,7 +198,7 @@ Plan my submission to <venue>
 | 只查截稿/选会 | 直接问(日历自动刷新) |
 | 只出大纲 | `/ars-outline — target venue: ...` |
 | 只出摘要 / 查引用 / 转格式 | `/ars-abstract`、`/ars-citation-check`、`/ars-format-convert` |
-| 快速三问扫一篇论文 | `/ars-3w <论文>` |
+| 快速三问扫一篇论文 | `/ars-3w <paper>` |
 
 ## 附:维护
 
