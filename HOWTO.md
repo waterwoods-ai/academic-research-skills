@@ -25,6 +25,18 @@ persona;④判定只用 NDSS 四档词汇。四点全过,体系可信,开始正�
 `CLAUDE.md`,填上 venue / 阶段 / 论文路径。此后该目录里的**每个新会话都确定性
 加载 security-track**,与 prompt 措辞无关——这是三层保险里唯一 100% 的一层。
 
+**Step 0.4 (可选)opencode 当"学生"时的接入**:opencode 从 `~/.claude/skills/` 发现 skill,
+把 fork 的 5 个 skill 目录 symlink 进去(**本机配置,不随仓库分发,换机器重做**):
+
+```bash
+SRC=/path/to/academic-research-skills    # 你 clone 的 fork(dev 分支)
+cd ~/.claude/skills && for s in academic-paper academic-paper-reviewer academic-pipeline deep-research security-track; do ln -sfn "$SRC/$s" "$s"; done
+```
+
+三方协作(opencode 学生 × Claude Code 导师 × Codex 审稿人)的完整分步指南见 workspace 根目录
+`HOWTO.md`(每一步标明用哪个工具、复制哪段英文 prompt)。
+
+
 ---
 
 ## 阶段 A · 选题(找课题 → 定课题 → 确认可做)
