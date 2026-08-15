@@ -35,7 +35,7 @@
 | S1 Gap registry | evidenced gap list | `/ars-lit-review` + perspective protocol + gap_analyzer | `ars-lit-review` + perspective protocol, gaps per §S1 |
 | S2 RQ generation | ranked candidate RQs | gap_analyzer + dogma_extractor | this protocol §S2 |
 | S3 Method / evaluation | Contribution Card | novelty_verifier + cross_domain_synthesizer + math_formalizer | this protocol §S3 |
-| S4 Experiment design | frozen falsification plan | experiment_falsifier | experiment-agent WORKFLOW planning + §S4 bars |
+| S4 Validation design | frozen validation plan (type-aware) | experiment_falsifier (defense/AI); proof obligation for crypto | experiment-agent WORKFLOW planning + §S4 table |
 | S5 Execution | provenance ledger | experiment_coder + session runs code | Codex writes & runs code + §S5 ledger |
 | S6 Improvement loop | method changelog M-v1→M-vN | this protocol §S6 (both runtimes) | same |
 | S7 Stress test | hardened method + results | `/ars-reviewer` w/ security contract | `ars-reviewer` w/ security contract |
@@ -86,7 +86,8 @@ whole loop optimizes:
 
 ```
 CONTRIBUTION CARD — <method name> (M-v1)
-1. Claims: 3–5 falsifiable claims (each will map to experiments in S4)
+1. Claims: 3–5 falsifiable claims (each maps to a validation in S4 — an
+   experiment, or a proof obligation for theory claims)
 2. Novelty status per claim: NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN
    — verdict from real retrieval against Big-4 + tier-2 literature,
    with the nearest prior work cited for every claim
@@ -102,25 +103,39 @@ Any claim graded KNOWN is dropped or reworked NOW — before a single
 experiment is designed. INCREMENTAL claims survive only with an explicit
 positioning argument.
 
-## S4 — Experiment design (falsification-first, security bars)
+## S4 — Validation design (refutation-shaped, by paper type)
 
-Design experiments to REFUTE each claim, not confirm it. Every design
-must satisfy the same bars the review contract (D2) will later judge:
+The validation goal is to SHOW THE CLAIM IS RIGHT — but at a Big-4 venue a
+claim is only believed once it has survived the specific attempt at
+refutation its subfield demands. Confirmatory demonstrations ("we ran our
+method and it worked") fail everywhere; surviving the community's standard
+attack on the claim wins everywhere. The form of that attack differs by
+paper type — verified against the 2020–2025 Big-4 best-paper corpus
+(`References/security top 4 best paper.xlsx`), where attack papers are the
+plurality (~40%), followed by crypto/formal-proof (~15%),
+measurement/empirical (~13%), defense/AI-security (~17%), and
+fuzzing/tool + usability the remainder. Pick the row that fits the claim:
 
-- Defense/AI-security claims → evaluated against ADAPTIVE adversaries
-  aware of the method; strongest published attacks as baselines,
-  correctly tuned.
-- CPS claims → real testbed or hardware-in-the-loop, or an explicit
-  simulation-fidelity argument; physical consequence measured.
-- IoT claims → device/vendor diversity matched to the claim's breadth.
-- ML-for-security detection claims → base rates realistic, datasets
-  temporally split, false-positive cost at deployment scale.
+| Paper / claim type | What "validation" means | The refutation you must survive |
+|---|---|---|
+| **Attack / offensive** | The paper IS a refutation of someone's security claim. Validation = the attack works END-TO-END on a REAL target (not a lab toy), with impact quantified and responsible disclosure. | "This only works in your idealized setup / preconditions already imply game-over." → demonstrate on real deployed systems, real CVEs, realistic attacker position. |
+| **Defense / AI-security** | The method resists attack. | ADAPTIVE adversary aware of the defense; strongest published attacks as correctly-tuned baselines; no gradient masking / security-by-obscurity (Carlini checklist). |
+| **Measurement / empirical** | The finding reflects reality, not method. | "Your result is a measurement artifact." → rule out alternative explanations, multiple vantage points, ground-truth validation, robustness to methodology choices. |
+| **Fuzzing / bug-finding / tool** | The tool finds real, deeper defects. | "You only beat baselines on toys." → real-world targets, comparison vs strongest existing tools, real bugs triaged (ideally reported/fixed). |
+| **CPS** | The attack/defense holds on real cyber-physical dynamics. | Real testbed or hardware-in-the-loop, or an explicit simulation-fidelity argument; PHYSICAL consequence measured, not packet-level success. |
+| **IoT** | The result generalizes past one device. | Device/vendor diversity matched to the breadth of the claim; root cause is a vulnerability CLASS, not one vendor's bug. |
+| **ML-for-security detection** | The detector works at deployment scale. | Realistic base rates, temporally-split datasets (no future leakage), false-positive cost at scale. |
+| **Crypto / formal / theory** | The construction is correct. | **This is the exception: validation is a PROOF, often machine-checked — not an experiment.** "Refutation" = soundness of the proof + cryptanalytic effort against the construction; empirical work here is performance benchmarking, not correctness validation. If your contribution is a theorem, S4/S5 are a proof obligation and (optionally) a performance study, not a falsification run. |
 
-Pre-register in the frozen **Falsification Plan**: per claim — the
-experiment(s), metrics, numeric success criteria, baselines, ablations,
-statistical plan (seeds, repetitions, tests), and the artifact/open-
-science plan. DESIGN FREEZE (human gate): after approval the success
-criteria are immutable for the life of the loop.
+Whichever row applies, pre-register the frozen **Validation Plan**: per
+claim — the experiment(s) OR proof obligation, metrics, numeric success
+criteria, baselines/comparators, ablations, statistical plan (seeds,
+repetitions, tests), and the artifact/open-science plan. The unifying
+discipline is not "try to break your own method" literally — for an attack
+or measurement paper that makes no sense — it is: **name, in advance, the
+refutation a Big-4 reviewer of THIS paper type will attempt, and design the
+validation to survive exactly that.** DESIGN FREEZE (human gate): after
+approval the success criteria are immutable for the life of the loop.
 
 ## S5 — Execution
 
