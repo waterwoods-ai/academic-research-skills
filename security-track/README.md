@@ -19,6 +19,7 @@
 | `references/deadlines_current.md` | 截稿日历（**生成文件，勿手改**，源：sec-deadlines.github.io） |
 | `scripts/fetch_deadlines.py` | 截稿日历拉取脚本（每次 `git sync-upstream` 自动执行） |
 | `contracts/reviewer/security_full.json` | 安全顶会版 sprint contract（盲态预提交标尺；Schema 13.2 验证通过，F 条件语法与上游一致） |
+| `references/research_loop_protocol.md` | 研究闭环协议：S0 选题→S1 gap→S2 课题延伸→S3 方法提出/评估（novelty+contribution）→S4 证伪实验设计→S5 执行→S6 有界改进循环→S7 对抗压测→S8 论文 |
 
 ## 安装（Claude Code）
 
@@ -58,6 +59,7 @@ AI security 等触发词，见 `SKILL.md` frontmatter）。用户档案为安全
 | 模拟审稿 | `/ars-reviewer` | 5 人安全面板 + 目标会议的准确判定词汇 |
 | 收到审稿意见 | `/ars-revision-coach` | 按 venue+判定档定制的 Roadmap 与响应包结构 |
 | 检查 rebuttal 草稿 | `/ars-rebuttal-audit` | 按 venue 硬规则审计（S&P 500 词等） |
+| 延伸课题 / 提方法 / 评估 novelty / 设计并跑实验 / 改进方法 | 直接说明所处阶段（如「评估我的方法的 novelty」） | 研究闭环协议 S0–S8，改进循环硬上限 3 轮 + 人工检查点 |
 
 **截稿日期铁律**：日期只从 `references/deadlines_current.md` 引用；超过 7 天
 先运行 `python3 security-track/scripts/fetch_deadlines.py`（需网络 +
