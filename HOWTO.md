@@ -4,6 +4,9 @@
 > 图例:🚦 = 人工决定门(agent 只提名,你拍板);📄 = 该步产出的存档物。
 > 通用规则:涉及投稿/审稿的输入**永远写明 `target venue: <会议> <年份>`**;
 > 截稿日期只认日历文件;已在某步有产出的信息不需要重复提供。
+> **冷启动规则**:新会话从流程中段切入时(没有从 Step 1 开场),首条消息用
+> 显式调用 `/academic-research-skills:security-track <request>`(或用任一 `/ars-*` 命令开场) 保证 skill 加载;
+> 同一会话内的后续普通 prompt 自动继承。做过 Step 0.3 锚文件的项目目录可免。
 
 ---
 
@@ -16,6 +19,11 @@ agent 去读 `major_revision_playbook.md` 作答 = 正常;凭记忆直接答 = �
 `/ars-reviewer — target venue: NDSS 2027`,对照四点:①质量评审前出现 Phase-0
 合规表;②预提交出现 `threat_model_soundness` 等维度名;③面板为 5 个安全
 persona;④判定只用 NDSS 四档词汇。四点全过,体系可信,开始正式使用。
+
+**Step 0.3 项目锚文件(强烈建议,一次一分钟)**:把 skill 自带的模板
+`security-track/templates/project-anchor-CLAUDE.md` 复制到你的论文项目目录并改名
+`CLAUDE.md`,填上 venue / 阶段 / 论文路径。此后该目录里的**每个新会话都确定性
+加载 security-track**,与 prompt 措辞无关——这是三层保险里唯一 100% 的一层。
 
 ---
 
@@ -44,7 +52,7 @@ Extend research topics from these gaps. My resources: <honestly list: testbeds /
 **Step 3 课题可行性判定(go/no-go)**
 
 ```text
-Verify the viability of this topic: <selected RQ>
+Verify the research topic viability (go/no-go): <selected RQ>
 ```
 
 - 📄 产出:三选一判定 + 证据——SATURATED(点名占坑论文)/
