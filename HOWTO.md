@@ -105,7 +105,12 @@ Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty v
 ```
 📄 `contribution_card.md`。规则:判 KNOWN 的 claim 当场丢弃;INCREMENTAL 需给出定位论证。
 
-> 需要精读某篇具体论文时(单篇,非综述):`Dissect this paper: <path> — full single-paper dissection per paper_dissection_protocol.md`。
+> **精读单篇论文(单篇,非综述)** — 用关键词 `peruse` 触发:
+> ```text
+> Peruse this paper: <path or title> — full single-paper dissection per paper_dissection_protocol.md
+> ```
+> 产出该篇的 8 问骨架、论证链与最弱环、Introduction P1–P7 标注、以及它的 evaluation 会招来哪些审稿人问题。
+> (需要多篇检索/覆盖面用 `ars-lit-review` + 「确保覆盖全面」;`ars-3w` 是轻量筛选。)
 
 **Step 6 🧑‍🏫 导师审 novelty 与贡献** 🚦
 
