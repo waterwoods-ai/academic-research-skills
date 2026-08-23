@@ -43,6 +43,23 @@ stated; "attacker on the same LAN" needs justification post-segmentation-era.
 AI-sec specifics: specify the attack surface (training data, model weights,
 query API, physical sensor channel) and the adaptive-adversary setting.
 
+Full 11-field template + the three stress tests (custom-fit / weaker-attacker
+/ stronger-attacker) + the "so what property was violated" test:
+`threat_model_workbench.md`.
+
+## Introduction argument structure (P1–P7)
+
+Security-venue introductions follow an argument order, not a fixed sentence
+pattern. Draft yours as seven moves (not every paper is exactly seven):
+
+P1 Context · P2 Security Problem · P3 Existing Gap · P4 Key Insight ·
+P5 Approach · P6 Results (headline numbers) · P7 Contributions.
+
+After each paragraph, check: *why does the next paragraph logically follow?*
+If a reader could not predict the next move, the argument has a gap. Avoid
+the weak-motivation anti-pattern ("AI is widely used… however AI has
+security problems… we propose X") — see `security_framing_protocol.md`.
+
 ## Evaluation norms (what reviewers check)
 
 - **CPS:** real testbed or hardware-in-the-loop strongly preferred; pure

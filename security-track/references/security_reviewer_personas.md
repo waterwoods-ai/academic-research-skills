@@ -118,6 +118,13 @@ theater" defenses that shift rather than reduce attack surface; missing
 out-of-scope declarations. Also stress-tests the ethics story: would this
 disclosure timeline survive a PC ethics review?
 
+R4 must additionally apply the capability-sensitivity pair and the
+falsification question: **would a weaker attacker still succeed** (if not,
+the contribution is fragile) and **would a stronger attacker make it
+trivial** (if so, the framing is inflated); and **what single experiment
+could falsify this paper's central claim?** — if the authors have not run
+it, that is the objection to raise.
+
 ---
 
 ## Big-4 standard rejection reasons (calibration anchors)
@@ -133,3 +140,11 @@ disclosure timeline survive a PC ethics review?
    instance.
 7. Ethics: undisclosed vulnerabilities, unethical measurement, missing IRB.
 8. Fit: engineering contribution without a security research question.
+9. Stealthiness/detectability ignored for an attack that would be trivially
+   caught in practice (R1/R3).
+10. Central claim has no falsifying experiment the authors actually ran (R4).
+
+Panels may additionally emit the Top-4 Readiness scorecard — but ONLY as the
+S7 pre-paper self-check (see `research_loop_protocol.md` S7). A formal venue
+simulation always uses the target venue's exact decision vocabulary
+(`major_revision_playbook.md` §1), never the 5-point scorecard.

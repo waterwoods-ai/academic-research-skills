@@ -97,6 +97,11 @@ CONTRIBUTION CARD — <method name> (M-v1)
    the contribution, in the community's own terms
 5. Formalization: math or algorithm (iron rule 5) + threat model
 6. Honest weaknesses: what the skeptic persona (R4) would attack first
+7. Security framing check: the framing chain filled + SECURITY FRAMING
+   RISK verdict, and each claim's novelty type(s) tagged
+   (technical/security/empirical/system/attack/defense) — per
+   `security_framing_protocol.md`. A claim whose only novelty is
+   technical/empirical is not yet a security contribution.
 ```
 
 Any claim graded KNOWN is dropped or reworked NOW — before a single
@@ -137,6 +142,23 @@ refutation a Big-4 reviewer of THIS paper type will attempt, and design the
 validation to survive exactly that.** DESIGN FREEZE (human gate): after
 approval the success criteria are immutable for the life of the loop.
 
+### Per-type evaluation checklists (fold into the plan for the matching row)
+
+The refutation table names the *bar*; these are the concrete experiments a
+hostile reviewer will ask for. Include the ones that apply, or state why not.
+
+- **Attack paper:** attack effectiveness · strongest baselines · multiple
+  targets/models/systems · varied attacker knowledge · varied capability ·
+  budget/cost · **stealthiness / detectability** · transferability ·
+  robustness · real-world feasibility · vs existing defenses · **vs adaptive
+  defenses** · ablation · failure cases.
+- **Defense paper:** everything above, PLUS **adaptive (defense-aware)
+  attacker** · bypass analysis · security–utility tradeoff · false-positive
+  rate at deployment scale · performance overhead · deployment cost.
+
+Closing question to force before freeze: **"What experiment would a hostile
+reviewer request?"** — then add it, or record why it is out of scope.
+
 ## S5 — Execution
 
 The coding agent implements and RUNS the experiments in the user's
@@ -176,6 +198,26 @@ package (not a drafted paper): security personas + security sprint
 contract + the eight rejection anchors. Purpose: surface the fatal
 objection while it is still cheap to fix. Findings route back as one
 S6-style bounded round; criteria-bound re-check, no re-litigation.
+
+**Optional S7 output — Top-4 Readiness scorecard.** For a quick self-check
+at this pre-paper stage (NOT a substitute for a venue decision), the panel
+may emit:
+
+```
+TOP-4 READINESS (self-check, pre-paper — not a venue verdict)
+Security significance   : ?/5      Threat model            : ?/5
+Novelty                 : ?/5      Evaluation completeness : ?/5
+Technical soundness     : ?/5      Practical relevance     : ?/5
+Writing / framing       : ?/5
+Major weaknesses: ...
+Likely reviewer objections: ...
+Missing experiments: ...
+Overall: Strong Reject / Reject / Borderline / Accept / Strong Accept
+```
+
+This scorecard is a formative instrument for S7 only. The formal venue
+simulation (S8 / HOWTO Step 14) MUST use the target venue's exact decision
+vocabulary from `major_revision_playbook.md` §1 — never this 5-point scale.
 
 ## S8 — Paper and submission loop
 

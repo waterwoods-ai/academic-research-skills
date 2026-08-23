@@ -101,9 +101,11 @@ Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_qu
 ```text
 Propose a new method for the RQ in ./research_question.md          ← from scratch
    (or) Evaluate the novelty and contribution of my method: <description>   ← bring your own
-Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty verdict NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature with the nearest prior work cited; a positioning table vs the 3–5 closest methods; a one-paragraph delta statement in the community's own terms; formalization (math or algorithm + complexity) plus the threat model; and honest weaknesses.
+Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty verdict NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature with the nearest prior work cited; a positioning table vs the 3–5 closest methods; a one-paragraph delta statement in the community's own terms; formalization (math or algorithm + complexity) plus the threat model; honest weaknesses; and a security framing check (framing chain + SECURITY FRAMING RISK verdict + each claim's novelty type) per security_framing_protocol.md.
 ```
 📄 `contribution_card.md`。规则:判 KNOWN 的 claim 当场丢弃;INCREMENTAL 需给出定位论证。
+
+> 需要精读某篇具体论文时(单篇,非综述):`Dissect this paper: <path> — full single-paper dissection per paper_dissection_protocol.md`。
 
 **Step 6 🧑‍🏫 导师审 novelty 与贡献** 🚦
 
