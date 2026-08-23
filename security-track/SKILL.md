@@ -40,7 +40,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Task | Read |
 |---|---|
 | Venue choice, submission planning | `references/big4_venue_profiles.md` + `references/deadlines_current.md` |
-| Writing / outlining / drafting / revising | `references/security_paper_conventions.md` |
+| Planning / outlining / writing / drafting / revising (ars-plan, ars-outline, ars-full) — use the security chapter structure, NOT IMRaD | `references/security_paper_conventions.md` |
 | New research idea — is this a security paper? (framing / novelty type) | `references/security_framing_protocol.md` |
 | Building or checking a threat model | `references/threat_model_workbench.md` |
 | Changing / improving / substituting a method, esp. to rescue a failing experiment (anti-rename) | `references/method_change_provenance.md` |
@@ -61,7 +61,15 @@ Read the relevant reference BEFORE the corresponding task:
    IMRaD. A security paper without an explicit threat-model section is
    structurally incomplete. USENIX Security additionally expects an Ethics
    Considerations appendix ('26 mandatory, '27 strongly encouraged) and
-   Open Science compliance.
+   Open Science compliance. **This override applies to PLANNING and
+   OUTLINING too** — `ars-plan` / `ars-outline` (and academic-paper plan/
+   outline modes) default to the IMRaD chapter list (Introduction →
+   Literature → Method → Results → Discussion → Conclusion); for a security
+   paper you MUST replace it with the security chapter structure above,
+   confirm the target venue first (it sets page budget + Ethics/Open-Science
+   requirements per `big4_venue_profiles.md`), and run the chapter-by-chapter
+   Socratic dialogue against the security structure — probing the Threat
+   Model chapter, not a generic Methods chapter.
 3. **Reviewer panel:** for security papers the `academic-paper-reviewer`
    panel MUST use the five personas in
    `references/security_reviewer_personas.md` (PC Chair, Systems/CPS,
