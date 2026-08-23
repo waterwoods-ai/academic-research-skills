@@ -143,6 +143,13 @@ it, that is the objection to raise.
 9. Stealthiness/detectability ignored for an attack that would be trivially
    caught in practice (R1/R3).
 10. Central claim has no falsifying experiment the authors actually ran (R4).
+11. Self-invented taxonomy/definition (D1/D2/D3…) with no lineage to an
+    established one, where a standard classification already exists (R3).
+12. A named mechanism that, once the name is stripped, matches published
+    prior art presented as novel — a rename, not a contribution
+    (e.g., a "new" OTA signing scheme identical to in-toto/SLSA/TUF/Uptane)
+    (R3). Reviewers must strip method names and search for the nearest
+    prior art before accepting a novelty claim.
 
 Panels may additionally emit the Top-4 Readiness scorecard — but ONLY as the
 S7 pre-paper self-check (see `research_loop_protocol.md` S7). A formal venue

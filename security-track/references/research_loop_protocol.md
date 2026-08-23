@@ -102,6 +102,10 @@ CONTRIBUTION CARD — <method name> (M-v1)
    (technical/security/empirical/system/attack/defense) — per
    `security_framing_protocol.md`. A claim whose only novelty is
    technical/empirical is not yet a security contribution.
+8. Taxonomy/definition provenance: any classification, taxonomy, named
+   category, or definition introduced (D1/D2/D3…) is checked against
+   established ones — adopt+cite, or extend with lineage, never a
+   self-invented scheme with no provenance (`security_framing_protocol.md`).
 ```
 
 Any claim graded KNOWN is dropped or reworked NOW — before a single
@@ -179,6 +183,18 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
    ledger shows.
 2. **One targeted change** to the method, with the mechanism hypothesis
    ("criterion X fails because Y; change Z addresses Y").
+2a. **Provenance guard (IRON RULE — the anti-偷梁换柱 rule).** If the change
+   introduces a new *mechanism* (not mere tuning), it must pass
+   `method_change_provenance.md` BEFORE the experiments re-run: (i) scenario
+   fidelity — does the substitute still solve the ORIGINAL problem at the
+   same point in the pipeline, or did it silently redefine the problem into
+   an easier one? (ii) prior-art identity — strip the new name and search;
+   a rescue method that matches published prior art once renamed is a RENAME
+   (e.g., a "new" OTA signing scheme = in-toto / SLSA / TUF / Uptane), not a
+   contribution; (iii) honest outcome — ADOPT+CITE (novelty claim dropped)
+   or GENUINE-DELTA re-verified NOVEL-WITHIN-SEARCH. A method born under
+   experiment-failure pressure gets the SAME topic-selection + novelty
+   verification as the S3 proposal — no exemptions.
 3. **Re-run only the affected experiments** (+ regression-check any
    previously-MET criterion the change could plausibly break).
 4. **Changelog entry**: M-vN, change, rationale, results delta.

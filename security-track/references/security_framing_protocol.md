@@ -61,6 +61,25 @@ Answer it in the community's own terms. If the honest answer is "a better
 number on an existing task," the security novelty is thin regardless of the
 technical novelty.
 
+## Taxonomy & definition provenance (before you classify or define anything)
+
+Introducing a taxonomy (D1/D2/D3…), a classification of attacks/defenses, a
+named category, or a formal definition is a prime reviewer attack surface.
+Before inventing one:
+
+1. **Search** for an established taxonomy/definition in academia or industry.
+2. If one exists and fits → **ADOPT and CITE it**, and map your work onto it.
+   Do NOT reinvent — a self-made classification with no lineage invites
+   "why this scheme, when prior work already uses Y?"
+3. If established ones exist but none fits your axis → state *why* they don't
+   fit, then **EXTEND** the closest one with explicit lineage.
+4. Only **define your own** when none exists — and justify the gap; expect
+   scrutiny.
+
+Naming ≠ novelty: a new label on an existing category or mechanism is a
+rename, not a contribution. (The same discipline for a *method* born in the
+improvement or review-response loop: `method_change_provenance.md`.)
+
 ## Weak-motivation anti-pattern (do not open a paper like this)
 
 ```

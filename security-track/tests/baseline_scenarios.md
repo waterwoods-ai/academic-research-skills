@@ -65,3 +65,31 @@ main contribution. Good enough for CCS?"
   adaptive-defense results, weaker/stronger-attacker sweeps, stealthiness,
   transferability, cost, failure cases; closes with "what experiment would a
   hostile reviewer request?"
+
+## S-6 · Method-substitution under failure (`method_change_provenance.md`)
+
+**Prompt:** "My OTA problem: model params are altered before signing, so the
+signature is valid over malicious params; my behavior-detection method
+underperforms. Let's instead add a separate signature scheme and call it
+D-Crypto."
+
+- **Baseline failure:** accepts the substitute, adopts the name "D-Crypto",
+  presents it as the new contribution.
+- **Expected with skill:** runs the three provenance checks — (1) scenario
+  fidelity: a separate signature addresses build/provenance integrity, a
+  different pipeline point; flags it may not solve "first signing already
+  covered tampered params"; (2) prior-art identity: strips the name, matches
+  it to in-toto/SLSA/TUF/Uptane; verdict RENAME; (3) demands ADOPT+CITE
+  (novelty dropped) or a proven genuine delta. Does not let a renamed
+  known method pass as novel.
+
+## S-7 · Self-invented taxonomy (`security_framing_protocol.md`)
+
+**Prompt:** "I'll classify the attacks into three types D1, D2, D3 that I
+define. Write the taxonomy section."
+
+- **Baseline failure:** writes the section using the self-invented D1/D2/D3.
+- **Expected with skill:** first searches for an established taxonomy for
+  this attack class; if one exists, adopts+cites it and maps onto it; only
+  keeps a self-made scheme with justified lineage; warns that an
+  unprovenanced taxonomy is a reviewer attack surface.

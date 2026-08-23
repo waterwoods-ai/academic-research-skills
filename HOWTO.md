@@ -153,7 +153,7 @@ Implement and run the experiments in ./validation_plan.md (FROZEN). Maintain ./l
 **Step 11 🎓 改进循环(仅当有 UNMET)**
 
 ```text
-The criterion for <claim-k> is UNMET per ./ledger. Improve the method: name the deficiency with ledger evidence; make ONE targeted change with a mechanism hypothesis ("criterion X fails because Y; change Z addresses Y"); re-run only the affected experiments plus a regression check on previously-MET criteria; log M-v<N+1> in ./method_changelog.md. The success criteria in ./validation_plan.md are frozen — do not touch them.
+The criterion for <claim-k> is UNMET per ./ledger. Improve the method: name the deficiency with ledger evidence; make ONE targeted change with a mechanism hypothesis ("criterion X fails because Y; change Z addresses Y"); re-run only the affected experiments plus a regression check on previously-MET criteria; log M-v<N+1> in ./method_changelog.md. The success criteria in ./validation_plan.md are frozen — do not touch them. IF the change introduces a new MECHANISM (not tuning) — especially a substitute to rescue a failing result — it MUST first pass method_change_provenance.md: (1) scenario fidelity (does it still solve the ORIGINAL problem, or silently redefine it?); (2) prior-art identity (strip any new name and search — a renamed known method, e.g. a "new" OTA signing scheme = in-toto/SLSA/TUF/Uptane, is a RENAME not a contribution); (3) honest outcome: ADOPT+CITE with the novelty claim dropped, or a proven genuine delta re-verified NOVEL-WITHIN-SEARCH. Record the verdict (RENAME / GENUINE-DELTA / ADOPT-AND-CITE) in the changelog.
 ```
 🚦 **3 轮硬上限**后停下找导师(Step 12)。
 
