@@ -20,9 +20,17 @@ Verdict vocabulary: use the TARGET venue's exact decision names (see
 Accept/Minor Revision/Major Revision/Reject; CCS: Accept/Minor
 revision/Reject; USENIX '26+: Accepted/Accepted on Shepherd
 Approval/Rejected. Never offer "Major Revision" when the venue has retired
-it. Major-Revision verdicts (NDSS) MUST carry a numbered binding task list. Each reviewer gives
-Novelty, Soundness, Evaluation, Presentation, and an overall merit score
-(1–5), plus reviewer expertise self-rating (1–4, Big-4 convention).
+it. Major-Revision verdicts (NDSS) MUST carry a numbered binding task list.
+
+Two scoring layers, do not conflate them:
+- **Conference rubric (narrative):** each reviewer gives Novelty, Soundness,
+  Evaluation, Presentation, an overall merit score (1–5), and an expertise
+  self-rating (1–4, Big-4 convention) — this is human-readable narrative for
+  the panel report, mirroring real conference forms.
+- **Machine sprint contract (`security_full.json`, Schema 13.2):** D1–D7 are
+  scored strictly per `eligible_roles`; a dimension outside a reviewer's role
+  scope is `not_assessed`, never a fabricated number. The narrative rubric
+  above never overrides the contract's role-scoped scoring.
 
 ---
 

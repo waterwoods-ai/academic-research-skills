@@ -211,7 +211,7 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
 
 Before writing, run the reviewer simulation on the METHOD + LEDGER
 package (not a drafted paper): security personas + security sprint
-contract + the eight rejection anchors. Purpose: surface the fatal
+contract + the standard rejection anchors. Purpose: surface the fatal
 objection while it is still cheap to fix. Findings route back as one
 S6-style bounded round; criteria-bound re-check, no re-litigation.
 

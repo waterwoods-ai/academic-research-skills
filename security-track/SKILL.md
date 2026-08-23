@@ -71,7 +71,7 @@ Read the relevant reference BEFORE the corresponding task:
    venue's exact decision names per `references/major_revision_playbook.md`
    §1 (S&P: Accept/Reject only; NDSS: 4-tier incl. Major Revision; CCS:
    Accept/Minor revision/Reject; USENIX '26+: Accepted/Shepherd
-   Approval/Rejected). Calibrate against the file's eight standard rejection anchors.
+   Approval/Rejected). Calibrate against the file's standard rejection anchors.
    Before the panel runs, R0 executes the Phase-0 manuscript-compliance
    check (personas file § Phase-0); any FAIL row prefixes the final verdict
    with "CONDITIONAL ON COMPLIANCE FIX". **Sprint contract:** the paper-blind

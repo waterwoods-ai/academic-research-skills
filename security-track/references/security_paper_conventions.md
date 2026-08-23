@@ -22,7 +22,11 @@
 8. **Discussion** — limitations, generalizability, countermeasures (for
    attacks), deployment cost (for defenses).
 9. **Related Work** — grouped thematically; positioning table if crowded field.
-10. **Ethics Considerations** — mandatory at USENIX, expected everywhere.
+10. **Ethics Considerations** — security-track writing default: always
+    include this section, regardless of venue-level mandate. Venue fact
+    (do not misreport a CFP): USENIX '25/'26 mandatory, '27 strongly
+    encouraged; S&P/CCS/NDSS expect it for ethically-fraught work. See
+    `big4_venue_profiles.md` for the per-edition CFP status.
 11. **Conclusion** — short; no new claims.
 
 ## Threat model section

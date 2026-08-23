@@ -115,7 +115,7 @@ Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty v
 **Step 6 🧑‍🏫 导师审 novelty 与贡献** 🚦
 
 ```text
-Mentor review of ./contribution_card.md. Independently re-verify each novelty verdict by real retrieval (do not trust the student's search). Which claim would a Big-4 reviewer kill first, and with which of the eight standard rejection anchors? Is the delta statement honest or inflated? Is the formalization actually a method (algorithm + threat model) or still a sketch? Annotate the card in place; do not rewrite it.
+Mentor review of ./contribution_card.md. Independently re-verify each novelty verdict by real retrieval (do not trust the student's search). Which claim would a Big-4 reviewer kill first, and with which of the standard rejection anchors? Is the delta statement honest or inflated? Is the formalization actually a method (algorithm + threat model) or still a sketch? Annotate the card in place; do not rewrite it.
 ```
 🚦 **你决定**:批准卡片,或退回 Step 5。
 
@@ -252,7 +252,7 @@ rebuttal 草稿写好后:🔍 `ars-rebuttal-audit — venue: <venue year>` + 意
 - **冷启动**:任何工具从流程中段开新会话时,若项目目录有锚文件(Step 0.2)则自动加载 skill;否则首条消息显式调用——Claude `/academic-research-skills:security-track <request>`,Codex `$security-track <request>`,opencode 用任一 `ars-*` 别名开场。
 - **更新(skill 每次改动后,三边一起做)**:
   - 🧑‍🏫 Claude Code:`/plugin update academic-research-skills`(物化拷贝,需手动刷新)
-  - 🔍 Codex:`codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`(同上)
+  - 🔍 Codex:`codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`(同上)。**注意**:上游插件版本号(0.1.24)由 upstream 拥有,我们不 bump(bump 会破坏零冲突同步)。若 upgrade 后仍是旧内容(security-track 改动没生效),强制清缓存重装:`rm -rf ~/.codex/plugins/cache/ars-codex && codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`
   - 🎓 opencode:**无需操作**——symlink 直读 fork,`git pull` 后即最新
   三个安装是三份独立拷贝;只更新一边会造成学生/导师/审稿人跑在不同版本的协议上。
   上游同步:仓库内 `git sync-upstream`(自动刷新截稿日历)。

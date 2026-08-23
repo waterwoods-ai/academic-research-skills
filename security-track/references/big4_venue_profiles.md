@@ -93,9 +93,10 @@ Track choice matters: the same paper can meet very different reviewer pools.
 
 **Fit notes:** Systems-heavy, pragmatic reviewing culture; large volume
 (≈230 papers/year). Very strong venue for IoT/embedded measurement and
-large-scale studies. The mandatory ethics + open-science sections are
-structural: budget page space for them from the first outline, and plan the
-artifact release before submission, not after acceptance.
+large-scale studies. The ethics + open-science sections are structural
+(ethics: '25/'26 mandatory, '27 strongly encouraged — see the Ethics row):
+budget page space for them from the first outline, and plan the artifact
+release before submission, not after acceptance.
 
 ---
 
