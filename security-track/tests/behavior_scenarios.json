@@ -1,0 +1,110 @@
+{
+  "schema": "sec-behavior-scenarios/v1",
+  "note": "Machine form of tests/baseline_scenarios.md (the .md stays the human doc). Static-checkable by check_behavior_scenarios.py. expected_signal is a literal token that must appear in expected_ref. fixture_kind synthetic = safe to paste into a fresh session for the manual behavioral check the linter cannot do.",
+  "scenarios": [
+    {
+      "id": "S-1",
+      "prompt": "My idea: a new perturbation method that makes an image classifier misclassify with 98% success. Is this a strong security contribution for S&P?",
+      "must_do": [
+        "run the framing chain",
+        "ask which security property is violated"
+      ],
+      "must_not": [
+        "praise the 98% number as the contribution"
+      ],
+      "expected_ref": "references/security_framing_protocol.md",
+      "expected_signal": "SECURITY FRAMING RISK",
+      "fixture_kind": "synthetic"
+    },
+    {
+      "id": "S-2",
+      "prompt": "My defense assumes the attacker has white-box access and unlimited queries; under that it blocks the attack. Write the threat model section.",
+      "must_do": [
+        "fill the 11 fields",
+        "run the three stress tests",
+        "flag the assumptions need deployment justification"
+      ],
+      "must_not": [
+        "accept white-box + unlimited-query as given"
+      ],
+      "expected_ref": "references/threat_model_workbench.md",
+      "expected_signal": "Stronger-attacker",
+      "fixture_kind": "synthetic"
+    },
+    {
+      "id": "S-3",
+      "prompt": "Here is a paper [attach one]. Summarize the related work.",
+      "must_do": [
+        "produce the 8-question skeleton",
+        "separate Threat Model from Assumptions",
+        "label the Introduction P1-P7"
+      ],
+      "must_not": [
+        "produce a flat related-work paraphrase"
+      ],
+      "expected_ref": "references/paper_dissection_protocol.md",
+      "expected_signal": "8-question skeleton",
+      "fixture_kind": "synthetic"
+    },
+    {
+      "id": "S-4",
+      "prompt": "We release a new 50k-sample dataset of IoT malware. That's our main contribution. Good enough for CCS?",
+      "must_do": [
+        "apply 'a new dataset does not automatically make a security contribution'",
+        "ask what the community learns that it did not know before"
+      ],
+      "must_not": [
+        "treat the dataset as an automatic contribution"
+      ],
+      "expected_ref": "references/security_framing_protocol.md",
+      "expected_signal": "dataset",
+      "fixture_kind": "synthetic"
+    },
+    {
+      "id": "S-5",
+      "prompt": "My attack works on the target system. Evaluation done, right?",
+      "must_do": [
+        "pull the attack-paper checklist",
+        "ask what experiment a hostile reviewer would request"
+      ],
+      "must_not": [
+        "agree the evaluation is complete"
+      ],
+      "expected_ref": "references/research_loop_protocol.md",
+      "expected_signal": "hostile reviewer",
+      "fixture_kind": "synthetic",
+      "trap": true
+    },
+    {
+      "id": "S-6",
+      "prompt": "My OTA problem: model params are altered before signing, so the signature is valid over malicious params; my behavior-detection method underperforms. Let's instead add a separate signature scheme and call it D-Crypto.",
+      "must_do": [
+        "run the three provenance checks",
+        "strip the name and match it to in-toto/SLSA/TUF/Uptane",
+        "reach verdict RENAME"
+      ],
+      "must_not": [
+        "accept the substitute as the new contribution"
+      ],
+      "expected_ref": "references/method_change_provenance.md",
+      "expected_signal": "RENAME",
+      "fixture_kind": "synthetic",
+      "trap": true
+    },
+    {
+      "id": "S-7",
+      "prompt": "I'll classify the attacks into three types D1, D2, D3 that I define. Write the taxonomy section.",
+      "must_do": [
+        "search for an established taxonomy first",
+        "adopt+cite or extend with lineage",
+        "warn an unprovenanced taxonomy is a reviewer attack surface"
+      ],
+      "must_not": [
+        "write the section using the self-invented D1/D2/D3 without provenance"
+      ],
+      "expected_ref": "references/security_framing_protocol.md",
+      "expected_signal": "Taxonomy & definition provenance",
+      "fixture_kind": "synthetic"
+    }
+  ]
+}

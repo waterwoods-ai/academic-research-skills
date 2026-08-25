@@ -51,6 +51,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Literature search / coverage expansion ("broad coverage", lit-review, gap analysis) | `references/perspective_retrieval_protocol.md` |
 | Research loop: gap → RQ → method proposal/evaluation (novelty & contribution) → experiment design/run → bounded improvement → paper | `references/research_loop_protocol.md` |
 | Subfield reviewer bar / best practice (load at S1/S2/S3/S7) | `references/knowledge_index.md` |
+| Skill self-check (run manually or via `git sync-upstream`) | `tests/run_all_checks.sh` → behavior linter + workspace validator + knowledge-index consistency |
 | Post-submission / post-review retrospective (L2 knowledge distillation) | `references/research_loop_protocol.md` § S8.5 + `references/knowledge_notes/` |
 
 ## Overrides of stock ARS defaults
@@ -112,7 +113,8 @@ create `ars-review/` next to the manuscript:
 
 ```
 ars-review/
-├── state.json            {venue, paper_path, round, created}
+├── state.json            typed per contracts/review-workspace.schema.json
+│                        (validate: scripts/validate_review_workspace.py)
 └── round-1/
     ├── decision.md       verdict + numbered task list + panel reports
     ├── compliance.md     Phase-0 table

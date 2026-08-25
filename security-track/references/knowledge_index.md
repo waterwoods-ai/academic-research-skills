@@ -15,6 +15,13 @@
 > lesson from one paper is a hypothesis, not a law — mark it `provisional`
 > until a second project confirms it.
 
+> **Dual layer (RW atoms pattern):** the canonical machine store is
+> `knowledge_index.jsonl` (one reviewer-bar atom per row, with `applies_when`
+> / `fails_when` / `severity` / `status`); this `.md` is its rendered human
+> view. The S8.5 retrospective appends/promotes JSONL rows;
+> `scripts/check_knowledge_index.py` guards the two layers against drift and
+> keeps `status` orthogonal to `confidence`.
+
 ## How to use
 
 1. Identify the paper's subfield(s) — many papers span two (e.g. an IoT

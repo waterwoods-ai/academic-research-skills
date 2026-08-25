@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sec-review-workspace/v1",
+  "title": "Security-track Review Workspace state.json",
+  "description": "Typed replacement for the ad-hoc ars-review/state.json. Per-submission, per-venue, multi-round review state. Structural contract only — a valid workspace is NOT an approved round; the human checkpoint is never replaced by validation.",
+  "type": "object",
+  "required": ["schema_version", "venue", "paper_path", "round", "created", "rounds"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": { "const": "sec-review-workspace/v1" },
+    "venue": { "type": "string", "description": "e.g. 'NDSS 2027' — vocabulary is sourced from major_revision_playbook.md §1" },
+    "paper_path": { "type": "string" },
+    "round": { "type": "integer", "minimum": 1, "description": "must equal max(rounds[].round)" },
+    "created": { "type": "string" },
+    "updated_at": { "type": "string" },
+    "frozen_criteria_hash": { "type": "string", "description": "sha256 of the S4 design-freeze success criteria; unchanged across rounds absent a new freeze event" },
+    "ledger_pointer": { "type": "string", "description": "path to ./ledger/ — the only source of experiment numbers" },
+    "artifacts_pointer": { "type": "string" },
+    "rounds": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["round", "decision", "tasks"],
+        "additionalProperties": true,
+        "properties": {
+          "round": { "type": "integer", "minimum": 1 },
+          "decision": { "type": "string", "description": "the TARGET venue's exact vocabulary; 'Major Revision' is valid only for NDSS" },
+          "decision_file": { "type": "string" },
+          "compliance_file": { "type": "string" },
+          "manuscript_snapshot": {
+            "type": "object",
+            "required": ["file", "content_sha256"],
+            "properties": { "file": { "type": "string" }, "content_sha256": { "type": "string" } }
+          },
+          "panel": { "type": "array", "items": { "type": "string" } },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "status"],
+              "additionalProperties": true,
+              "properties": {
+                "id": { "type": "string", "pattern": "^[TR][0-9]+$" },
+                "type": { "enum": ["text", "experiment", "code", "formalization"] },
+                "status": { "enum": ["open", "resolved", "partially_resolved", "not_resolved", "withdrawn"] },
+                "evidence_class_required": { "type": "string" },
+                "evidence_pointer": { "type": "string" },
+                "ledger_run_id": { "type": "string", "description": "REQUIRED when type=experiment and status=resolved" },
+                "changelog_line": { "type": "string" }
+              }
+            }
+          },
+          "round_decision_credential": {
+            "type": "object",
+            "description": "write-once record of the frozen task list at decision time",
+            "required": ["content_hash", "human_confirmed"],
+            "properties": {
+              "frozen_task_ids": { "type": "array", "items": { "type": "string" } },
+              "issued_by": { "type": "string" },
+              "human_confirmed": { "type": "boolean", "description": "a terminal accept/reject requires this true — the model may not self-certify" },
+              "record_pointer": { "type": "string" },
+              "content_hash": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
