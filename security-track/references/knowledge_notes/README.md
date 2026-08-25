@@ -31,6 +31,15 @@ security-track sharper each project instead of static.
   PROPOSED, awaiting human promotion + a second confirming project>
 ```
 
+## Companion file: `abandoned.md` (per project)
+
+The Abandoned-Approaches Ledger (S2 + S6 + S8): one running list per project
+of dead ends — rejected RQs, methods ruled RENAME/ADOPT+CITE by the
+provenance guard, reviewer objections already resolved — each with a one-line
+reason. It stops a long engagement from re-proposing what was already killed,
+and feeds the S8.5 retrospective's failure side. Lives in the project's own
+tree next to `<project-slug>.md`.
+
 ## Rules
 
 - Provisional by default; promote to L1 only on a second confirming project.

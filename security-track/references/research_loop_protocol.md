@@ -71,6 +71,19 @@ dogma it challenges, if any (shared assumption in prior work — e.g.,
 a named dogma is the strongest novelty source). Rank by
 impact × feasibility × freshness. HUMAN selects.
 
+**Distinctness rule (before ranking):** discard any candidate RQ that
+collapses to the SAME threat-model delta as a higher-ranked one — present
+the human genuinely distinct framings, not near-duplicates. This is diverse
+ideation + prune-the-redundant; it is NOT auto-pruning by a quality score
+(writing has no automatic scalar — selection stays human-gated).
+
+**Abandoned-Approaches Ledger:** RQs the human rejects here are appended to
+`abandoned.md` (per project) with a one-line reason, so a long engagement
+never re-proposes a dead end. It also collects, later, methods the S6/S8
+provenance guard rules RENAME or ADOPT+CITE, and reviewer objections already
+resolved. This is the "what was tried-and-killed" record; the S6 changelog
+records "what changed". Both feed the S8.5 retrospective.
+
 ## S3 — Method proposal OR deep evaluation (novelty & contribution focus)
 
 Two entry modes, same output artifact:
@@ -276,6 +289,37 @@ without letting a single noisy result rewrite the standard.
 Iron rules carried in: numbers/claims in the takeaway trace to the
 Provenance Ledger and the actual review artifacts (`ars-review/`), never to
 memory; the takeaway records what happened, it never inflates a result.
+
+## Knowledge streams (two, keep them named)
+
+The overlay's knowledge evolves on two streams (AIBuildAI-2 dual-update
+shape, arXiv:2605.27873):
+- **External / field-tracking:** `deadlines_current.md` (refreshed via
+  `fetch_deadlines.py` under the >7-day iron rule) + `perspective_retrieval_
+  protocol.md` (pulls new attack papers / SoKs). A periodic pass should also
+  refresh per-venue CFP idiosyncrasies (page limits, ethics/open-science
+  status) into `big4_venue_profiles.md`.
+- **Internal / own-experience:** the S8.5 retrospective → `knowledge_notes/`
+  → promotions into `knowledge_index.md`. This is the stream that did not
+  exist before and is why the overlay now sharpens per project.
+
+## State-Diagnosis Router (advisory — agent proposes, human decides)
+
+When you are mid-loop and unsure where to re-enter, the agent reads the
+current artifact and RECOMMENDS a stage (it never auto-jumps — the S0/S4/S6/
+S8 human gates remain the arbiter):
+
+| Symptom in the current artifact | Recommended re-entry |
+|---|---|
+| Framing weak or ML-shaped; SECURITY FRAMING RISK | S3 (`security_framing_protocol.md`) |
+| A claim lacks nearest-prior support / novelty unverified | S1 lit-search + `knowledge_index.md` bar |
+| A pre-registered criterion is UNMET | S6 bounded improvement |
+| A rescue/substitute method proposed | S6 step 2a (`method_change_provenance.md`) |
+| Over page budget / format non-compliant / missing ethics | S8 R0 Phase-0 check |
+| Decision received / review round done | S8.5 retrospective |
+
+Because writing has no scalar progress signal, the router only classifies
+the artifact's state; it cannot self-schedule the way an auto-ML loop does.
 
 ## Invocation
 
