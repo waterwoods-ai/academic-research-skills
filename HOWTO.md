@@ -1,5 +1,7 @@
 # HOWTO — 三方协作分步指南:opencode(学生)× Claude Code(导师)× Codex(审稿人)
 
+> 只想 5 分钟跑起来?看 [`QuickStart.md`](QuickStart.md)。本文件是完整参考。
+>
 > 从零到投稿的完整操作手册。每一步标明 **用哪个工具/agent**、**复制哪段 prompt**(全英文,可直接粘贴)、
 > **产出什么文件**、**你要做什么决定**。本文件在两个 fork 中同源:本仓库(Claude Code 插件)与
 > `academic-research-skills-codex`(Codex 插件)。安装细节见 `security-track/README.md`。
@@ -68,6 +70,8 @@ ars-lit-review <your area, e.g. physics-based sensor spoofing detection for ICS>
 Write the gap registry to ./gap_registry.md — each gap must carry: the search that failed to fill it (queries, indexes, date), the nearest-miss papers and why each falls short, and the security question the gap blocks.
 ```
 📄 `gap_registry.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
+
+> 顺带:agent 按你的子领域从 `knowledge_index.md` 加载该领域的审稿门槛(adaptive-eval / 测床+物理后果 / OTA 对标 in-toto/SLSA 等),S1–S3/S7 全程套用。
 
 **Step 2 🎓 课题延伸(RQ 卡片)**
 
@@ -225,6 +229,18 @@ Final independent pass before submission: run Phase-0, the security sprint contr
 
 ---
 
+**Step 17.5 🧑‍🏫/🎓 每轮评审 / 投稿决定后:蒸馏经验(L2 retrospective)**
+
+```text
+Run the S8.5 retrospective: distill this review round / decision into
+knowledge_notes/<project>.md — framing that survived at which venue, which
+rejection anchor fired, what was ruled out and why — and PROPOSE (do not
+auto-apply) a knowledge_index edit. Mark it provisional.
+```
+
+- 📄 `knowledge_notes/<项目>.md` + 提议的 knowledge_index 增补(交你审,不自动写)
+- 意义:你每篇论文学到的东西(哪个 framing 在 NDSS 活下来、哪条 anchor 触发)沉淀进活知识层,下一篇更准。单项目=假设,第二个项目确认才升为定律。
+
 ## 阶段 E · 投稿与真实评审(Step 18–19)
 
 **Step 18 🧑‍🏫 投稿规划**
@@ -246,6 +262,17 @@ Produce the Revision Roadmap and the response-package structure for this venue's
 rebuttal 草稿写好后:🔍 `ars-rebuttal-audit — venue: <venue year>` + 意见 + 草稿(venue 硬规则:S&P 500 词、禁未经要求的新材料)。多轮机制细节见 `major_revision_playbook.md`。
 
 ---
+
+## 随手工具(不走全流程时)
+
+| 需要 | 用法 | 谁 |
+|---|---|---|
+| 精读单篇论文(非综述) | `Peruse this paper: <path> — full single-paper dissection` | 🎓/🧑‍🏫 |
+| 快速三维扫一批论文 | `ars-3w <主题>`(WHY/HOW/WHAT 筛选) | 🎓 |
+| 查某子领域的审稿门槛 | 直接问「NDSS 对 side-channel 论文的评估门槛」(读 knowledge_index) | 🧑‍🏫 |
+| 只查截稿/选会 | 直接问(日历自动刷新,>7 天先重拉) | 🧑‍🏫 |
+| 改方法时防"偷梁换柱" | 自动触发:改进/替换方法时走 method_change_provenance(剥名搜先例→RENAME 判定) | 🎓 |
+| 自检 skill 是否完好 | `bash security-track/tests/run_all_checks.sh`(behavior + workspace + knowledge 三项静态校验) | 你 |
 
 ## 冷启动与维护
 
