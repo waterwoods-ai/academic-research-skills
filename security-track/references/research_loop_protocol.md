@@ -245,6 +245,38 @@ target venue's vocabulary, and the multi-round submission lifecycle per
 `major_revision_playbook.md`. Venue choice + deadline from the live
 calendar; work-back schedule from the deadline.
 
+## S8.5 — Retrospective Takeaway (the L2 knowledge-evolution engine)
+
+Fires after a submission decision AND after each significant review round.
+Adapted from AIBuildAI-2's L2 Builder (arXiv:2605.27873): distill the loop
+into durable, structured knowledge so the system gets sharper each project
+instead of relearning from scratch. Both successes and FAILURES are captured
+— a dead-end teaches as much as a win.
+
+Produce a bounded takeaway (append to `knowledge_notes/<project>.md`):
+
+1. **What framing survived, at which venue** — the Contribution Card version
+   that reached Accept-level, and the one(s) that did not.
+2. **Which reviewer/rejection anchor actually fired** — the concrete
+   objections that landed (map to the anchors in `security_reviewer_personas.md`).
+3. **What was ruled out and why** — RQs abandoned (S2), methods judged
+   RENAME/ADOPT+CITE (`method_change_provenance.md`), evaluations that did
+   not convince, dead-end literature searches.
+4. **Subfield lesson** — one line, tagged `provisional`, phrased as a
+   candidate row/edit for `knowledge_index.md` (which subfield, what bar or
+   best practice the project revealed).
+
+Then emit a PROPOSED additive edit to `knowledge_index.md` (a new row, or a
+sharpened bar) — **proposed, never auto-applied**: it is surfaced to the
+human gate. A lesson from ONE project is a hypothesis; mark it `provisional`
+and promote it into the L1 cards only when a second project confirms it,
+citing both projects + venues. This keeps the knowledge layer evolving
+without letting a single noisy result rewrite the standard.
+
+Iron rules carried in: numbers/claims in the takeaway trace to the
+Provenance Ledger and the actual review artifacts (`ars-review/`), never to
+memory; the takeaway records what happened, it never inflates a result.
+
 ## Invocation
 
 Say what stage you are at; the protocol meets you there. Examples:
