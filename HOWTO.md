@@ -2,6 +2,8 @@
 
 > 只想 5 分钟跑起来?看 [`QuickStart.md`](QuickStart.md)。本文件是完整参考。
 >
+> 想要**一步一步被带着走**(而不是照这 19 步自己推进)?说 `Be my security research mentor` 或 `一步一步指导我` —— 触发 `security_mentor_protocol`:有状态、一次一步、苏格拉底式,从选题带到投稿,进度存 `paper_progress.md` 可随时停/续。它和 `ars-plan`(一次性出整篇计划)相反。
+>
 > 从零到投稿的完整操作手册。每一步标明 **用哪个工具/agent**、**复制哪段 prompt**(全英文,可直接粘贴)、
 > **产出什么文件**、**你要做什么决定**。本文件在两个 fork 中同源:本仓库(Claude Code 插件)与
 > `academic-research-skills-codex`(Codex 插件)。安装细节见 `security-track/README.md`。
