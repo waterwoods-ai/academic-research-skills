@@ -34,7 +34,11 @@
 11. **Security impact** — which property is actually violated:
     **confidentiality / integrity / availability / authenticity / privacy**.
     Name the one(s). This field is where a "results" claim becomes a
-    "security" claim.
+    "security" claim. Also check whether the adversary behavior maps to a
+    real **MITRE ATT&CK** technique and whether a known/new **CVE** applies —
+    establish the mapping with verifiable ids per `cve_attack_mapping.md`
+    (a correct mapping grounds the threat model; a forced or fabricated one
+    is a credibility hit).
 
 ## Three stress tests (a threat model must pass all three)
 

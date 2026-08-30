@@ -49,6 +49,7 @@
 | **Privacy (PETs / inference attacks)** | Quantify the privacy property against a stated adversary | Realistic auxiliary-knowledge assumption; privacy metric matches the threat (not just "similarity"); utility cost stated |
 | **Usable security / human factors** | Methodological rigor + disconfirming evidence sought | Sampling justified; inter-coder reliability; rival interpretations considered; IRB |
 | **SoK / systematization** | A genuine organizing insight, not a survey | New taxonomy with lineage (not self-invented, `security_framing_protocol.md`); note CCS does not accept SoK |
+| **CVE / MITRE ATT&CK mapping (cross-cutting)** | Connect to a real CVE / ATT&CK technique when it genuinely applies, with verifiable ids | Correct, verifiable mapping (NVD-resolving CVE; real Txxxx in the stated version, ICS matrix for CPS); a forced/fabricated one is worse than none (`cve_attack_mapping.md`) |
 | **Disclosure / ethics (cross-cutting)** | Coordinated-disclosure narrative with dates/CVEs/embargo | Adequacy judged, not just presence; IRB not a safe harbor; USENIX Ethics Considerations section (`security_paper_conventions.md`) |
 
 ## Per-venue quick reminders (details in `big4_venue_profiles.md`)
