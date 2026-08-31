@@ -138,7 +138,7 @@ Revise ./contribution_card.md per the mentor annotations. Keep an M-v1 version t
 **Step 8 🎓 起草验证计划(按论文类型的反驳表)**
 
 ```text
-Design validation experiments for the method in ./contribution_card.md. First classify the paper type (attack / defense / measurement / tool / CPS / IoT / ML-for-security / theory) and pick the matching row of the S4 refutation table in research_loop_protocol.md. Write ./validation_plan.md: per claim — the experiment or proof obligation, metrics, NUMERIC success criteria, strongest published baselines correctly tuned, ablations, statistical plan (seeds, repetitions, tests), and the artifact / open-science plan. Mark the file DRAFT.
+Design validation experiments for the method in ./contribution_card.md. First classify the paper type (attack / defense / measurement / tool / CPS / IoT / ML-for-security / theory) and pick the matching row of the S4 refutation table in research_loop_protocol.md. Write ./validation_plan.md: per claim — the experiment or proof obligation, metrics, NUMERIC success criteria, strongest published baselines correctly tuned, ablations, statistical plan (seeds, repetitions, tests), and the artifact / open-science plan. Apply the evaluation-integrity rules (research_integrity_protocol.md §2): plan to report ALL testbeds/datasets/devices with regressions disclosed (no cherry-picking), fix a held-out split that method development never touches, and set a utility non-regression bound. Mark the file DRAFT.
 ```
 📄 `validation_plan.md (DRAFT)`
 
@@ -147,7 +147,7 @@ Design validation experiments for the method in ./contribution_card.md. First cl
 ```text
 Review ./validation_plan.md as the mentor. Check: does each claim's validation survive the specific refutation a Big-4 reviewer of THIS paper type will attempt (adaptive adversary for defenses; real target end-to-end for attacks; artifact-ruling-out for measurement; real testbed + physical consequence for CPS; device diversity for IoT; base rates + temporal split for ML detection; proof for theory)? Are the success criteria numeric and pre-registered? Are the baselines the strongest published ones? Annotate in place. Do not change the criteria yourself — propose, and I decide.
 ```
-🚦 **DESIGN FREEZE**:你批准后把文件头改为 `FROZEN <date>`。**此后成功标准终身不动;改进循环只许改方法。**
+🚦 **DESIGN FREEZE**:你批准后把文件头改为 `FROZEN <date>`。**此后成功标准终身不动;改进循环只许改方法。** 冻结的 `validation_plan.md` 就是这次实验的**预注册卡**(research_integrity_protocol.md §1):此后每个上报的数字都要能追溯到它;出结果后再动判据是 HARKing——只能走有记录的、人把关的 RE-FREEZE,不能悄悄改。
 
 **Step 10 🎓 实现并运行(Codex 主场也可,但为保持单一作者建议仍由学生做)**
 
@@ -237,7 +237,11 @@ Final independent pass before submission: run Phase-0, the security sprint contr
 Run the S8.5 retrospective: distill this review round / decision into
 knowledge_notes/<project>.md — framing that survived at which venue, which
 rejection anchor fired, what was ruled out and why — and PROPOSE (do not
-auto-apply) a knowledge_index edit. Mark it provisional.
+auto-apply) a knowledge_index edit. Mark it provisional. Also run the
+integrity self-audit (research_integrity_protocol.md §3): did any number come
+from a best single run instead of the seed distribution? any tuning on the
+reported test set? any held-out/test-data use left undisclosed? does the
+released artifact match the paper's method? Record any near-miss.
 ```
 
 - 📄 `knowledge_notes/<项目>.md` + 提议的 knowledge_index 增补(交你审,不自动写)

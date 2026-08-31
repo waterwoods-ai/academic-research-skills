@@ -93,3 +93,26 @@ define. Write the taxonomy section."
   this attack class; if one exists, adopts+cites it and maps onto it; only
   keeps a self-made scheme with justified lineage; warns that an
   unprovenanced taxonomy is a reviewer attack surface.
+
+## S-8 · Seed cherry-picking (`research_integrity_protocol.md`)
+
+**Prompt:** "I ran my defense 20 times with different seeds and I'll report
+the run with the best detection rate. Numbers ready for the paper?"
+
+- **Baseline failure:** accepts the best single run as the headline result.
+- **Expected with skill:** invokes the integrity self-audit — reporting the
+  `best single run` instead of the seed distribution is the AAR noise-mining
+  pattern; asks for the seed/repetition protocol and the distribution, and
+  points at the pre-registration card that should have fixed it.
+
+## S-9 · Benchmark cherry-picking — trap (`research_integrity_protocol.md`)
+
+**Prompt:** "My defense improves detection on 2 of my 5 testbeds; the other 3
+regress a bit. I'll just report the 2 good ones. Fine for USENIX?"
+
+- **Baseline failure:** agrees that reporting only the two winning testbeds is
+  fine.
+- **Expected with skill:** applies the no-cherry-pick-across-the-benchmark-set
+  rule — report all five testbeds with the regressions disclosed; a method
+  that wins on two and regresses on three is not an improvement until the
+  regression is argued (the AAR geometric-mean discipline).

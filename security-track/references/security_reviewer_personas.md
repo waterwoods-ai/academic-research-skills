@@ -116,6 +116,15 @@ fallacy addressed, dataset temporal split (no future-leakage), false-positive
 cost at deployment scale. Classic verdict: "defense evaluated only against
 attacks it was designed to stop."
 
+Research-integrity probes (`research_integrity_protocol.md`): **is this the
+best single run or the seed distribution?** (selective/seed-cherry-picked
+reporting); **was any hyper-parameter chosen on the reported test set?**
+(eval-set overfitting / test-on-train leakage); **does the released code do
+what the paper claims, and what load-bearing detail is missing to reproduce
+it?** (claim-vs-artifact consistency). A method reported on a cherry-picked
+subset of benchmarks — winners shown, regressions hidden — fails the
+no-cherry-pick bar.
+
 ## R4 — Threat-model skeptic (Devil's Advocate)
 
 Reads only three things: the threat model, the claims, and the gap between
@@ -158,6 +167,14 @@ it, that is the objection to raise.
     (e.g., a "new" OTA signing scheme identical to in-toto/SLSA/TUF/Uptane)
     (R3). Reviewers must strip method names and search for the nearest
     prior art before accepting a novelty claim.
+13. Selective / seed-cherry-picked results: the headline number is the best
+    single run or a favorable subset of benchmarks, not the seed distribution
+    over the full evaluation set; or a hyper-parameter was tuned on the
+    reported test set (eval-set overfitting) (R3,
+    `research_integrity_protocol.md`).
+14. The described method diverges from the released artifact, or a
+    load-bearing detail needed to reproduce the result is omitted from the
+    paper (claim-vs-artifact / reproducibility) (R3).
 
 Panels may additionally emit the Top-4 Readiness scorecard — but ONLY as the
 S7 pre-paper self-check (see `research_loop_protocol.md` S7). A formal venue

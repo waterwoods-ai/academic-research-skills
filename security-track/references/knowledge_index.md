@@ -51,6 +51,8 @@
 | **SoK / systematization** | A genuine organizing insight, not a survey | New taxonomy with lineage (not self-invented, `security_framing_protocol.md`); note CCS does not accept SoK |
 | **CVE / MITRE ATT&CK mapping (cross-cutting)** | Connect to a real CVE / ATT&CK technique when it genuinely applies, with verifiable ids | Correct, verifiable mapping (NVD-resolving CVE; real Txxxx in the stated version, ICS matrix for CPS); a forced/fabricated one is worse than none (`cve_attack_mapping.md`) |
 | **Disclosure / ethics (cross-cutting)** | Coordinated-disclosure narrative with dates/CVEs/embargo | Adequacy judged, not just presence; IRB not a safe harbor; USENIX Ethics Considerations section (`security_paper_conventions.md`) |
+| **Research integrity — pre-registration (cross-cutting)** | Freeze method + evaluation plan + numeric success criteria before running; reported numbers trace to the frozen plan | Moving a criterion/metric/threat-model after seeing results is HARKing, not a finding; a re-freeze is human-gated and documented (`research_integrity_protocol.md` §1) |
+| **Evaluation integrity (cross-cutting)** | Report the full evaluation set with regressions disclosed; keep an untouched held-out; hold utility ≥ baseline; report the seed distribution | No cherry-picking a favorable subset; no tuning on the reported test set; not the best single run; utility non-regression stated up front (`research_integrity_protocol.md` §2–§3) |
 
 ## Per-venue quick reminders (details in `big4_venue_profiles.md`)
 

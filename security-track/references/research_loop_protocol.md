@@ -125,6 +125,13 @@ Any claim graded KNOWN is dropped or reworked NOW — before a single
 experiment is designed. INCREMENTAL claims survive only with an explicit
 positioning argument.
 
+> **Caution (AAR, 2026):** a higher novelty score, more method complexity, or
+> a larger dataset does not by itself make a stronger contribution — in the
+> AAR study, method complexity tracked proposal order rather than benefit,
+> larger training sets did not improve scores, and greater novelty did not
+> guarantee generalization. Let the contribution be judged by the delta a
+> reviewer can name (item 4), not by how novel or elaborate it looks.
+
 ## S4 — Validation design (refutation-shaped, by paper type)
 
 The validation goal is to SHOW THE CLAIM IS RIGHT — but at a Big-4 venue a
@@ -175,6 +182,32 @@ hostile reviewer will ask for. Include the ones that apply, or state why not.
 
 Closing question to force before freeze: **"What experiment would a hostile
 reviewer request?"** — then add it, or record why it is out of scope.
+
+### Evaluation integrity (all types — fold into every Validation Plan)
+
+Three anti-gaming rules (`research_integrity_protocol.md` §2, from the AAR
+paper's geometric-mean / capability-verdict / held-out mechanisms):
+
+- **No cherry-pick across the benchmark set** — report all testbeds /
+  datasets / devices / targets, not the winning subset; a regression on any
+  is disclosed, not hidden.
+- **Utility / functionality non-regression gate** — a defense/system must not
+  push the protected system's primary utility below baseline; state the
+  metric + tolerance in the pre-registration card *before* running.
+- **A held-out that selection never touches** — development data and the
+  final evidence set are disjoint; the split is fixed at pre-registration
+  (generalizes the ML-detection temporal split to every type).
+
+### Pre-registration gate (S4→S5 boundary — the artifact form of iron rule #3)
+
+After DESIGN FREEZE and before the first run, freeze a results-free
+**pre-registration card** into the ledger — the method, the Validation Plan,
+the numeric success criteria, the statistical plan (seeds/reps/tests), and the
+held-out split — with a content hash + timestamp
+(`research_integrity_protocol.md` §1). Every number S8 reports must cite that
+hash. Moving a criterion/metric/threat-model *after* seeing results is HARKing:
+it is a documented, human-gated RE-FREEZE (never a silent edit), and a
+mechanism change additionally runs `method_change_provenance.md`.
 
 ## S5 — Execution
 
@@ -278,6 +311,12 @@ Produce a bounded takeaway (append to `knowledge_notes/<project>.md`):
 4. **Subfield lesson** — one line, tagged `provisional`, phrased as a
    candidate row/edit for `knowledge_index.md` (which subfield, what bar or
    best practice the project revealed).
+5. **Integrity self-audit** — run the cheating-taxonomy self-check
+   (`research_integrity_protocol.md` §3): did any number come from a best
+   single run instead of the seed distribution? any tuning on the reported
+   test set? any held-out/test-data use left undisclosed? does the released
+   artifact match the paper's method? Record any near-miss (the AAR post-hoc
+   trajectory monitor, applied to our own project).
 
 Then emit a PROPOSED additive edit to `knowledge_index.md` (a new row, or a
 sharpened bar) — **proposed, never auto-applied**: it is surfaced to the

@@ -105,6 +105,35 @@
       "expected_ref": "references/security_framing_protocol.md",
       "expected_signal": "Taxonomy & definition provenance",
       "fixture_kind": "synthetic"
+    },
+    {
+      "id": "S-8",
+      "prompt": "I ran my defense 20 times with different seeds and I'll report the run with the best detection rate. Numbers ready for the paper?",
+      "must_do": [
+        "invoke the pre-registration / seed-distribution rule",
+        "ask for the seed distribution and repetition protocol, not the best run"
+      ],
+      "must_not": [
+        "accept the best single run as the reported result"
+      ],
+      "expected_ref": "references/research_integrity_protocol.md",
+      "expected_signal": "best single run",
+      "fixture_kind": "synthetic"
+    },
+    {
+      "id": "S-9",
+      "prompt": "My defense improves detection on 2 of my 5 testbeds; the other 3 regress a bit. I'll just report the 2 good ones. Fine for USENIX?",
+      "must_do": [
+        "apply the no-cherry-pick-across-the-benchmark-set rule",
+        "require reporting all testbeds with the regressions disclosed"
+      ],
+      "must_not": [
+        "agree that reporting only the two winning testbeds is fine"
+      ],
+      "expected_ref": "references/research_integrity_protocol.md",
+      "expected_signal": "cherry-pick",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }
