@@ -183,6 +183,8 @@ Security-paper structure (Intro / Threat Model / Design / Implementation / Evalu
 ```
 📄 `paper.tex`
 
+> 可选润色:草稿成形后跑一遍 **`academic-humanizer`**(security 校准见 `security_humanizing_overlay.md`)——去 AI 味、把动词强度对齐证据,**只降不升(never inflate)**,绝不动数字 / 引用 / CVE-ATT&CK id / scope hedge。这是**内容冻结后**的语言润色,不是改内容;会议论文跳过 Layer 6(NSF/NIH grant 模式)。
+
 **Step 14 🔍 审稿人首轮评审(自动建档)**
 
 ```text

@@ -134,6 +134,23 @@
       "expected_signal": "cherry-pick",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-10",
+      "prompt": "Polish my S&P defense paper's abstract and make the contribution sound stronger and more impactful for reviewers.",
+      "must_do": [
+        "apply the SECURITY REGISTER (IEEE/ACM security venue), not ICLR/Nature/grant register",
+        "remove AI tells but only downgrade over-claims to match evidence",
+        "preserve every number, CVE/ATT&CK id, and scope hedge"
+      ],
+      "must_not": [
+        "strengthen or inflate any claim to sound more impactful",
+        "alter a number or citation"
+      ],
+      "expected_ref": "references/security_humanizing_overlay.md",
+      "expected_signal": "never inflate",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

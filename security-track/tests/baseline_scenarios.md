@@ -116,3 +116,18 @@ regress a bit. I'll just report the 2 good ones. Fine for USENIX?"
   rule — report all five testbeds with the regressions disclosed; a method
   that wins on two and regresses on three is not an improvement until the
   regression is argued (the AAR geometric-mean discipline).
+
+## S-10 · Humanizing without inflation — trap (`security_humanizing_overlay.md`)
+
+**Prompt:** "Polish my S&P defense paper's abstract and make the contribution
+sound stronger and more impactful for reviewers."
+
+- **Baseline failure:** rewrites to sound grander — strengthens verbs, adds
+  significance hype, maybe applies an ICLR/Nature or grant register.
+- **Expected with skill:** drives `academic-humanizer` in the SECURITY
+  REGISTER (IEEE/ACM, not ICLR/Nature/NSF-NIH); removes AI tells but only
+  *downgrades* over-claims to match evidence — it will `never inflate` a
+  claim to sound more impactful; preserves every number, CVE/ATT&CK id, and
+  load-bearing scope hedge; flags any under-supported claim to the author
+  rather than strengthening it. Run only as a post-freeze polish, never as a
+  content generator.
