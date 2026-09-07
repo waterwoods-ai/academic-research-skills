@@ -112,6 +112,13 @@ Read the relevant reference BEFORE the corresponding task:
 
 ## Review Workspace (stateful multi-round reviews)
 
+**IRON RULE — all review output lands in `ars-review/`.** Every review
+artifact — each round's decision + numbered task list + panel reports, the
+Phase-0 compliance table, the manuscript snapshot, and every re-review
+verdict — is written under `ars-review/round-N/` next to the manuscript,
+never delivered only in chat. This is what makes re-review zero-argument and
+the review history auditable.
+
 Standalone reviewer invocations MUST be stateful so the user never
 re-pastes prior rounds. On the FIRST `ars-reviewer` run for a paper,
 create `ars-review/` next to the manuscript:
@@ -170,6 +177,17 @@ than 7 days, refresh first: `python3 scripts/fetch_deadlines.py`
 fails, state that the calendar is stale and give the source URL
 (https://sec-deadlines.github.io) — NEVER fill in deadline dates from
 model memory.
+
+## Execution environment (local Python)
+
+Any security-track task that runs Python locally — the review-workspace
+validator (`scripts/validate_review_workspace.py`), the knowledge-index and
+behavior linters (`tests/run_all_checks.sh`), `scripts/fetch_deadlines.py`, or
+any review/experiment helper — MUST use the shared `~/.venv` virtual
+environment: `source ~/.venv/bin/activate` first, then run. Do not use system
+Python or an ad-hoc venv. (Remote GPU model training/inference keeps its own
+compute environment per the user's compute rules; this `~/.venv` rule is for
+local review + tooling Python.)
 
 ## Maintenance
 

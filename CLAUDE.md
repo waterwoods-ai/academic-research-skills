@@ -62,3 +62,17 @@ say the calendar is stale — do not fill in dates from model memory.
   `.claude-plugin/marketplace.json` (keep that edit minimal when resolving
   any future sync conflict). Never edit other upstream-owned files — that is
   what keeps `git sync-upstream` conflict-free.
+
+## Review & execution conventions
+
+- **All review output goes to `ars-review/`.** Every `ars-reviewer` / re-review
+  round writes its decision + numbered task list, the Phase-0 compliance table,
+  the panel reports, and the manuscript snapshot under `ars-review/round-N/`
+  next to the manuscript — never only to chat. This keeps re-review
+  zero-argument and the review history auditable (see
+  `security-track/SKILL.md` § Review Workspace).
+- **Local Python runs in `~/.venv`.** When a task needs to run Python locally
+  (the review-workspace validator, the knowledge-index / behavior linters,
+  `fetch_deadlines.py`, or any review/experiment helper), activate the shared
+  `~/.venv` first (`source ~/.venv/bin/activate`) — not system Python or an
+  ad-hoc venv. Remote GPU experiments keep their own compute environment.
