@@ -102,6 +102,30 @@ security problems… we propose X") — see `security_framing_protocol.md`.
 | Anonymity | Often single-blind | Strict double-blind incl. artifacts |
 | Word-count gates | Journal word limits | Hard page limits (12–13pp excl. refs) |
 
+## Tables and figures (must fit the column — two-column LaTeX)
+
+Overflow past the column/page edge is the most common formatting defect in
+two-column conference PDFs. When generating or formatting a paper, size every
+table and figure to the layout — never a hardcoded `cm`/`pt` width:
+
+- **Figures:** `\includegraphics[width=\columnwidth,keepaspectratio]{...}`. A
+  figure too wide for one column goes in `figure*` at `width=\textwidth`
+  (spans both columns) — never scaled past the column with a fixed size.
+- **Tables:** wrap a wide table to `\columnwidth` — `\resizebox{\columnwidth}{!}{ … }`,
+  or `\begin{adjustbox}{max width=\columnwidth}` (does not upscale small tables),
+  or `tabularx` with an `X` column. Too wide for one column → `table*` with
+  `\resizebox{\textwidth}{!}{ … }`.
+- **Compress before scaling** (keeps fonts legible): `booktabs` (drop vertical
+  rules), `\small`/`\footnotesize`, `\setlength{\tabcolsep}{4pt}`,
+  `\renewcommand{\arraystretch}{0.95}`, `p{width}`/`X` columns to wrap text.
+- **Self-check after compile:** `grep -n "Overfull" main.log` — any
+  "… too wide" is an overflow to fix; a temporary `\setlength{\overfullrule}{3pt}`
+  paints black bars at overflow points in the PDF. A generated paper is not
+  done while any table/figure overflows the column.
+
+Rule of thumb: table/figure widths use only `\columnwidth` (single column) or
+`\textwidth` (`*` float, both columns) — no absolute `cm`/`pt`.
+
 ## Anonymization checklist (double-blind)
 
 - Own prior work cited in third person ("Doe et al. [3]" not "our prior work").
