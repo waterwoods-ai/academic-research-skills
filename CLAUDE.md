@@ -76,3 +76,21 @@ say the calendar is stale — do not fill in dates from model memory.
   `fetch_deadlines.py`, or any review/experiment helper), activate the shared
   `~/.venv` first (`source ~/.venv/bin/activate`) — not system Python or an
   ad-hoc venv. Remote GPU experiments keep their own compute environment.
+
+## Research disposition (standing rule)
+
+- **Aim = novelty + improving existing methods.** Position the work as
+  advancing/extending prior work — cited as the baseline to beat and build on,
+  never as an exercise in exposing other researchers' faults in their
+  published papers.
+- **A negative / unmet experimental result is a lead to investigate, never a
+  stopping point.** Go deep for the ROOT CAUSE (a bug? a mis-tuned baseline? a
+  wrong assumption? a mechanism gap?), fix it and improve — or rigorously
+  establish whether the approach is genuinely workable. Do NOT settle with
+  "let's just honestly report the negative"; reach that outcome only by
+  evidence of unworkability, after the root cause is understood.
+- This changes the DISPOSITION, not the integrity rules: numbers still come
+  only from the ledger, claims stay calibrated to evidence, success criteria
+  stay frozen, no goalpost-moving or cherry-picking
+  (`research_integrity_protocol.md`). Dig deeper — never fabricate, never
+  p-hack.

@@ -166,7 +166,7 @@ The criterion for <claim-k> is UNMET per ./ledger. Improve the method: name the 
 **Step 12 🧑‍🏫 导师检查点(每 3 轮改进后,或改进达标后)** 🚦
 
 ```text
-Mentor checkpoint. Read ./validation_plan.md (FROZEN), ./ledger/, ./method_changelog.md. Is the method converging on the frozen criteria, or are we chasing? Recommend exactly one of: authorize 3 more iterations / pivot back to method design with lessons recorded / accept-and-report honestly (negative results included). Then stress-test the method + ledger package as if you were the panel: what is the fatal objection, if any, before we spend effort writing the paper?
+Mentor checkpoint. Read ./validation_plan.md (FROZEN), ./ledger/, ./method_changelog.md. Is the method converging on the frozen criteria, or are we chasing? First diagnose the ROOT CAUSE of any unmet criterion from ./ledger/ (bug? mis-tuned baseline? wrong assumption? mechanism gap?) — a negative result is a lead to investigate, not a stopping point. Then recommend exactly one of: authorize 3 more iterations (pursue the root cause and improve) / pivot back to method design (replace an unpromising approach, keep the problem) / report what works and what does not — but ONLY once the root cause is understood and a fix is either found or proven out of reach, never as a "just honestly report the negative" shortcut (integrity holds: numbers from ./ledger, criteria frozen, no cherry-picking). Then stress-test the method + ledger package as if you were the panel: what is the fatal objection, if any, before we spend effort writing the paper?
 ```
 🚦 **你决定**:继续 / pivot / 如实报告。
 

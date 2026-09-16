@@ -26,6 +26,16 @@
 5. **Every method must be formalized** — mathematics or explicit
    algorithm (pseudocode with complexity), plus a threat model. A method
    that cannot be formalized is not yet a method.
+6. **Constructive stance + dig, don't settle (the researcher's default).**
+   The aim is novelty and *improving* existing methods — prior work is the
+   baseline to beat and build on, cited respectfully, never a target to
+   discredit or an exercise in exposing others' faults. A negative / unmet
+   experimental result is a lead to INVESTIGATE: find the root cause and
+   improve, or rigorously establish whether the approach is genuinely
+   unworkable — NEVER settle for "let's just honestly report the negative."
+   Digging deeper never licenses fabrication, goalpost-moving, or
+   cherry-picking (`research_integrity_protocol.md`): change the disposition,
+   not the integrity rules.
 
 ## Stage map and runtime routing
 
@@ -225,8 +235,10 @@ is the ONLY source S8 may cite numbers from.
 Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
 (M-v1 → M-v2 → …):
 
-1. **Name the deficiency**: which claim, which criterion, what the
-   ledger shows.
+1. **Diagnose the root cause** — not just which claim/criterion is UNMET, but
+   WHY it failed: a bug, a mis-tuned baseline, a wrong assumption, an
+   insufficient signal, a mechanism gap? Read the actual logs/artifacts. A
+   negative result is a lead to investigate, never a stopping point.
 2. **One targeted change** to the method, with the mechanism hypothesis
    ("criterion X fails because Y; change Z addresses Y").
 2a. **Provenance guard (IRON RULE — the anti-偷梁换柱 rule).** If the change
@@ -247,11 +259,16 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
 5. **Criteria stay frozen** (iron rule 3). If the criteria themselves
    were wrong, that is a human decision to RE-FREEZE at a documented
    checkpoint — never a silent adjustment.
-6. **Hard bound: 3 iterations**, then a MANDATORY human checkpoint with
-   exactly three options: continue (re-authorize 3 more), pivot (back to
-   S3/S2 with lessons recorded), or accept-and-report (an honest paper
-   about what works and what does not — negative results at the bar of
-   iron rule 2 are publishable content, not failure).
+6. **Hard bound: 3 iterations**, then a MANDATORY human checkpoint. Default
+   disposition: KEEP DIGGING — pursue the root cause and improve, or prove the
+   approach genuinely unworkable. Options: continue (re-authorize 3 more),
+   pivot (back to S3/S2 with lessons — replace an unpromising *approach*, do
+   not abandon the *problem*), or — ONLY after the root cause is understood
+   and a fix is either found or shown out of reach — report what works and
+   what does not. "Just honestly report the negative" is NOT a first-line
+   exit; it is earned by evidence of unworkability, never reached by giving
+   up. Integrity holds throughout (iron rule 6): numbers from the ledger,
+   criteria frozen, no cherry-picking.
 
 ## S7 — Adversarial stress test (pre-paper)
 
