@@ -25,7 +25,15 @@
    researcher decides.
 5. **Every method must be formalized** — mathematics or explicit
    algorithm (pseudocode with complexity), plus a threat model. A method
-   that cannot be formalized is not yet a method.
+   that cannot be formalized is not yet a method. **For algorithm-heavy work,
+   check every claim against the underlying mathematical theory** —
+   correctness, complexity, convergence, and the assumptions the theory
+   requires are proven or cited, not asserted. **Any hypothesis must state its
+   fundamentals** — WHY it should hold, from first principles or known results
+   — then be **decomposed into its constituent sub-claims with each part
+   verified** (a proof, a derivation, or a targeted experiment). A hypothesis
+   is never assumed whole; an unstated or unverified assumption is a hole a
+   reviewer will find.
 6. **Constructive stance + dig, don't settle (the researcher's default).**
    The aim is novelty and *improving* existing methods — prior work is the
    baseline to beat and build on, cited respectfully, never a target to

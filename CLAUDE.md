@@ -89,6 +89,11 @@ say the calendar is stale — do not fill in dates from model memory.
   establish whether the approach is genuinely workable. Do NOT settle with
   "let's just honestly report the negative"; reach that outcome only by
   evidence of unworkability, after the root cause is understood.
+- **Algorithm-heavy work is checked against the math.** Correctness,
+  complexity, and convergence are proven or cited from the underlying theory,
+  never asserted. A hypothesis must state WHY it should hold (its
+  fundamentals, from first principles or known results), be broken into
+  sub-claims, and each part verified — never assumed whole.
 - This changes the DISPOSITION, not the integrity rules: numbers still come
   only from the ledger, claims stay calibrated to evidence, success criteria
   stay frozen, no goalpost-moving or cherry-picking
