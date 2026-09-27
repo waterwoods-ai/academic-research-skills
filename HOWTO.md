@@ -152,7 +152,7 @@ Review ./validation_plan.md as the mentor. Check: does each claim's validation s
 **Step 10 🎓 实现并运行(Codex 主场也可,但为保持单一作者建议仍由学生做)**
 
 ```text
-Implement and run the experiments in ./validation_plan.md (FROZEN). Maintain ./ledger/ as the provenance ledger: one entry per run with experiment id → claim id, planned vs executed (name every deviation), raw log path, verdict against the pre-registered criterion (MET / UNMET / INCONCLUSIVE), and any negative or surprising result. Numbers in any later document may come only from this ledger.
+Implement and run the experiments in ./validation_plan.md (FROZEN). First re-run the strongest baseline in this environment and log it in ./ledger/ — every gain is measured against that reproduced number, never a paper-reported one. Screen candidate changes on a development subset (never the held-out split) before full runs. Maintain ./ledger/ as the provenance ledger: one entry per run with experiment id → claim id, planned vs executed (name every deviation), raw log path, verdict against the pre-registered criterion (MET / UNMET / INCONCLUSIVE), and any negative or surprising result. Numbers in any later document may come only from this ledger.
 ```
 📄 `ledger/`。你的动作:抽查日志与台账一致。
 

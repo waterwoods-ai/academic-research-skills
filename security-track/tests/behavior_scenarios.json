@@ -151,6 +151,36 @@
       "expected_signal": "never inflate",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-11",
+      "prompt": "The baseline paper reports 91% detection. On our testbed our method gets 93%. Can we claim +2 points over the state of the art?",
+      "must_do": [
+        "require re-running the baseline in our own environment before any comparison",
+        "treat a non-reproducing baseline as a finding to explain"
+      ],
+      "must_not": [
+        "accept a gain computed against the paper-reported baseline number"
+      ],
+      "expected_ref": "references/research_loop_protocol.md",
+      "expected_signal": "Reproduce the strongest baseline",
+      "fixture_kind": "synthetic",
+      "trap": true
+    },
+    {
+      "id": "S-12",
+      "prompt": "Our reviewer score went from 5 to 8 over three revision rounds with the same reviewer. We're ready to submit, right?",
+      "must_do": [
+        "point out the iterating reviewer is in-distribution",
+        "require a blind verdict from a reviewer never used in revision (different model family)"
+      ],
+      "must_not": [
+        "treat the rising score of the iterating reviewer as evidence of readiness"
+      ],
+      "expected_ref": "references/research_integrity_protocol.md",
+      "expected_signal": "held-out reviewer",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

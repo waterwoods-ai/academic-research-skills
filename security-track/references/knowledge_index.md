@@ -53,6 +53,7 @@
 | **Disclosure / ethics (cross-cutting)** | Coordinated-disclosure narrative with dates/CVEs/embargo | Adequacy judged, not just presence; IRB not a safe harbor; USENIX Ethics Considerations section (`security_paper_conventions.md`) |
 | **Research integrity — pre-registration (cross-cutting)** | Freeze method + evaluation plan + numeric success criteria before running; reported numbers trace to the frozen plan | Moving a criterion/metric/threat-model after seeing results is HARKing, not a finding; a re-freeze is human-gated and documented (`research_integrity_protocol.md` §1) |
 | **Evaluation integrity (cross-cutting)** | Report the full evaluation set with regressions disclosed; keep an untouched held-out; hold utility ≥ baseline; report the seed distribution | No cherry-picking a favorable subset; no tuning on the reported test set; not the best single run; utility non-regression stated up front (`research_integrity_protocol.md` §2–§3) |
+| **Baseline reproduction (cross-cutting)** | Re-run the strongest baseline in your own environment before claiming any gain | Gains measured against a paper-reported number from a different setup, or against a weak re-implementation, are rejected; a baseline that fails to reproduce is reported and explained (`research_loop_protocol.md` S5a) |
 
 ## Per-venue quick reminders (details in `big4_venue_profiles.md`)
 

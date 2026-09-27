@@ -87,6 +87,12 @@ Fold them into the S4 Validation Plan for every paper type.
   temporal-split rule (`knowledge_index.md`) to every paper type: development
   data and the final evidence set are disjoint, and the split is fixed in the
   pre-registration card.
+- **A held-out reviewer, too.** (ScientistTwo, arXiv:2609.19644: 7.5/10 on the
+  AI reviewer its drafts were revised against, 5.7/10 on a held-out one.) The
+  same logic applies to review: a reviewer used to iterate the draft is
+  development data. Its improving score does not show the paper is ready. The
+  readiness verdict comes from a reviewer never used during revision — a
+  different model family, reading blind.
 
 ## 3. Integrity self-audit (the cheating taxonomy)
 
@@ -107,6 +113,21 @@ the released artifact, and **any load-bearing detail omitted from the paper is
 a defect**, not an appendix nicety. This is the reproducibility bar the
 re-review artifact check (`SKILL.md` § Review Workspace) enforces at the
 method level.
+
+**Pre-submission 4-check audit** (the CoE Integrity Audit used by ScientistTwo,
+arXiv:2609.19644 §4.2 — run it before S8 submission and record the result in
+the ledger):
+
+1. **Score re-verification** — from a clean checkout of the released artifact,
+   run its own scripts; every number reported in the paper must reproduce.
+   Scripts must be self-contained enough to do this without the author.
+2. **Specification compliance** — the code obeys the task rules and the threat
+   model as stated; no step quietly relaxes them (the reward-hacking check).
+3. **Reference verification** — every citation exists (ARS citation-existence
+   gate), and every CVE / ATT&CK id resolves (`cve_attack_mapping.md`).
+4. **Method-code alignment** — produce a short audit report comparing the
+   Method section against the code; fix the text (or the code) until they
+   agree.
 
 ## Reviewer angle (why a Big-4 panel cares)
 

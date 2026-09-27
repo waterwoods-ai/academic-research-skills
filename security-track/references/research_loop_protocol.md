@@ -109,6 +109,11 @@ Two entry modes, same output artifact:
 - **Propose mode**: design a new method for the chosen RQ. Cross-domain
   transplantation is encouraged (control theory → CPS anomaly detection,
   etc.) but the transplant must be justified against the threat model.
+  Start from a **limitation ledger** of the strongest baseline: extract its
+  limitations, check the list covers what a reviewer would name, and make
+  every proposed idea state which limitation it resolves (ScientistTwo,
+  arXiv:2609.19644 §3.1). Rank the ideas; the unevaluated ones stay on the
+  list as the exploration pool for S6.
 - **Evaluate mode**: the user brings their own method; the loop deepens
   it rather than replacing it.
 
@@ -238,6 +243,24 @@ named), raw output location, result vs pre-registered criterion
 (MET / UNMET / INCONCLUSIVE), negative results and surprises. The ledger
 is the ONLY source S8 may cite numbers from.
 
+**S5a — Reproduce the strongest baseline first, then screen cheaply**
+(adapted from ScientistTwo §3.2, arXiv:2609.19644):
+
+1. **Reproduce the strongest baseline in YOUR environment** — same testbed /
+   devices / firmware / dataset split / metric code — and log it in the ledger
+   before any comparison. Every gain is measured against this reproduced
+   number, never against a number copied from the baseline's paper (a
+   different setup makes that comparison meaningless). If the baseline does not
+   reproduce, that discrepancy is itself a ledger entry to explain.
+2. **Screen on a development subset** (never the held-out split, per
+   `research_integrity_protocol.md` §2) before committing to full runs. Triage
+   each candidate: **GOOD** (consistently beats the reproduced baseline → scale
+   to the full set) / **ENGINEER** (promising, needs tuning → bounded budget) /
+   **BAD** (clearly worse after that budget). A BAD candidate needs a
+   root-cause note in `abandoned.md` before it is dropped (iron rule 6) — the
+   *candidate* is dropped, the *problem* is kept.
+3. Only GOOD candidates get full-set runs; those full runs are what S8 cites.
+
 ## S6 — Bounded improvement loop (the anti-dead-loop core)
 
 Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
@@ -246,7 +269,10 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
 1. **Diagnose the root cause** — not just which claim/criterion is UNMET, but
    WHY it failed: a bug, a mis-tuned baseline, a wrong assumption, an
    insufficient signal, a mechanism gap? Read the actual logs/artifacts. A
-   negative result is a lead to investigate, never a stopping point.
+   negative result is a lead to investigate, never a stopping point. Read the
+   failed traces as closely as the successful ones (ledger + `abandoned.md`):
+   in ScientistTwo most of the best final ideas were evolved from earlier
+   failures (§3.3).
 2. **One targeted change** to the method, with the mechanism hypothesis
    ("criterion X fails because Y; change Z addresses Y").
 2a. **Provenance guard (IRON RULE — the anti-偷梁换柱 rule).** If the change
@@ -271,12 +297,22 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
    disposition: KEEP DIGGING — pursue the root cause and improve, or prove the
    approach genuinely unworkable. Options: continue (re-authorize 3 more),
    pivot (back to S3/S2 with lessons — replace an unpromising *approach*, do
-   not abandon the *problem*), or — ONLY after the root cause is understood
+   not abandon the *problem*; the next candidate comes first from the ranked,
+   still-unevaluated S3 ideas, so the search does not stay stuck around one
+   early idea), or — ONLY after the root cause is understood
    and a fix is either found or shown out of reach — report what works and
    what does not. "Just honestly report the negative" is NOT a first-line
    exit; it is earned by evidence of unworkability, never reached by giving
    up. Integrity holds throughout (iron rule 6): numbers from the ledger,
    criteria frozen, no cherry-picking.
+7. **Ablate, then simplify under a strict-improvement gate.** Once the
+   criteria are MET, ablate each component. A component that does not
+   contribute (or hurts) is a candidate for removal; the simplified or
+   modified method REPLACES the current best only if it is strictly better —
+   or equal and simpler — on development data under the pre-registered
+   metric. Otherwise keep the previous best. Any change still passes step 2a.
+   (ScientistTwo §3.4 — removing redundant components often yields the
+   better method.)
 
 ## S7 — Adversarial stress test (pre-paper)
 
@@ -285,6 +321,21 @@ package (not a drafted paper): security personas + security sprint
 contract + the standard rejection anchors. Purpose: surface the fatal
 objection while it is still cheap to fix. Findings route back as one
 S6-style bounded round; criteria-bound re-check, no re-litigation.
+
+Triage every weakness the panel raises into exactly one class (adapted from
+ScientistTwo's rebuttal loop, §3.5–3.6):
+
+- **TEXT** — a clarity/framing/positioning fix → handled in writing (S8).
+- **EXPERIMENT** — needs evidence → becomes a planned supplementary run,
+  executed under S5 ledger rules; the answer is the run, not a paragraph.
+- **IDEA-LEVEL** — the method itself is weak → back to S6 (or S3); after the
+  fix, ablation and drafting are redone downstream.
+
+**Held-out reviewer rule:** the reviewer used to iterate a draft is
+*in-distribution* — its rising score is not evidence of readiness (ScientistTwo:
+7.5 on the reviewer it was tuned against, 5.7 on a held-out one). The go /
+no-go judgement comes from a reviewer never used during revision — a different
+model family, reading blind (HOWTO Step 17; `research_integrity_protocol.md` §2).
 
 **Optional S7 output — Top-4 Readiness scorecard.** For a quick self-check
 at this pre-paper stage (NOT a substitute for a venue decision), the panel
@@ -342,6 +393,10 @@ Produce a bounded takeaway (append to `knowledge_notes/<project>.md`):
    test set? any held-out/test-data use left undisclosed? does the released
    artifact match the paper's method? Record any near-miss (the AAR post-hoc
    trajectory monitor, applied to our own project).
+6. **Next-frontier seed** — the accepted method becomes the next baseline:
+   list its residual limitations (from the ablations and the reviews) as the
+   limitation ledger that seeds the next S2 round (ScientistTwo's iterative
+   frontier expansion: each cycle's method became the next cycle's baseline).
 
 Then emit a PROPOSED additive edit to `knowledge_index.md` (a new row, or a
 sharpened bar) — **proposed, never auto-applied**: it is surfaced to the
