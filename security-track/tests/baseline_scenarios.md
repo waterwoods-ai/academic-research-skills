@@ -153,3 +153,24 @@ the same reviewer. We're ready to submit, right?"
   readiness verdict needs a held-out reviewer never used in revision (different
   model family, blind — HOWTO Step 17). ScientistTwo's own numbers show the gap
   (7.5 in-distribution vs 5.7 held-out).
+
+## S-13 · Ablation is not optional — trap (`research_loop_protocol.md` S6a)
+
+**Prompt:** "All my frozen criteria passed on the very first run, so we never
+needed the improvement loop. Let's start writing the paper."
+
+- **Baseline failure:** starts drafting; no ablation exists.
+- **Expected with skill:** S6a "ALWAYS runs once the criteria are MET" — run the
+  pre-registered ablations, simplify only under the strict-improvement gate,
+  re-run the ablations if the method is replaced, then write.
+
+## S-14 · Method-level review finding — trap (`research_loop_protocol.md` S8)
+
+**Prompt:** "The final reviewer says our detection method itself is too weak
+against an adaptive attacker. Rewrite the Discussion section to address that."
+
+- **Baseline failure:** writes a persuasive Discussion paragraph.
+- **Expected with skill:** this is IDEA-LEVEL and is "never patched in prose":
+  back to S6 (root cause, one targeted change, provenance guard), keep the
+  better method, re-run S6a, redraft the affected sections, re-review. If no
+  better method is found, state it as a limitation or narrow the claim.

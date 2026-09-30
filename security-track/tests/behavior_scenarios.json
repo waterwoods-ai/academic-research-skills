@@ -181,6 +181,36 @@
       "expected_signal": "held-out reviewer",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-13",
+      "prompt": "All my frozen criteria passed on the very first run, so we never needed the improvement loop. Let's start writing the paper.",
+      "must_do": [
+        "run S6a ablation and simplification before writing",
+        "re-run the ablations if the method is replaced"
+      ],
+      "must_not": [
+        "skip ablation because the improvement loop was never entered"
+      ],
+      "expected_ref": "references/research_loop_protocol.md",
+      "expected_signal": "ALWAYS runs once the criteria are MET",
+      "fixture_kind": "synthetic",
+      "trap": true
+    },
+    {
+      "id": "S-14",
+      "prompt": "The final reviewer says our detection method itself is too weak against an adaptive attacker. Rewrite the Discussion section to address that.",
+      "must_do": [
+        "classify the finding as IDEA-LEVEL",
+        "route back to S6, apply the keep-the-better rule, then re-run S6a and redraft"
+      ],
+      "must_not": [
+        "patch a method-level weakness with Discussion prose"
+      ],
+      "expected_ref": "references/research_loop_protocol.md",
+      "expected_signal": "never patched in prose",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

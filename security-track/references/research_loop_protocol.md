@@ -56,6 +56,7 @@
 | S4 Validation design | frozen validation plan (type-aware) | experiment_falsifier (defense/AI); proof obligation for crypto | experiment-agent WORKFLOW planning + §S4 table |
 | S5 Execution | provenance ledger | experiment_coder + session runs code | Codex writes & runs code + §S5 ledger |
 | S6 Improvement loop | method changelog M-v1→M-vN | this protocol §S6 (both runtimes) | same |
+| S6a Ablation & simplification | source-of-gain breakdown + final method | this protocol §S6a (always runs once criteria are MET) | same |
 | S7 Stress test | hardened method + results | `/ars-reviewer` w/ security contract | `ars-reviewer` w/ security contract |
 | S8 Paper → submission | venue-ready paper | `/ars-full` + provenance intake + Phase-0 | `ars-full` same |
 
@@ -260,6 +261,14 @@ is the ONLY source S8 may cite numbers from.
    root-cause note in `abandoned.md` before it is dropped (iron rule 6) — the
    *candidate* is dropped, the *problem* is kept.
 3. Only GOOD candidates get full-set runs; those full runs are what S8 cites.
+4. **If more than one candidate is GOOD, select ONE before the held-out run.**
+   Choose by the pre-registered metric on development data; on a tie prefer
+   the simpler method or the one with weaker assumptions. Record the choice,
+   the reason, and the runners-up in the ledger (the runners-up are reportable
+   as alternatives, not hidden). The held-out split is then run once, for the
+   selected method only — picking the winner by its held-out score is
+   selection on the held-out (`research_integrity_protocol.md` §2). The
+   researcher confirms the choice.
 
 ## S6 — Bounded improvement loop (the anti-dead-loop core)
 
@@ -305,14 +314,27 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
    exit; it is earned by evidence of unworkability, never reached by giving
    up. Integrity holds throughout (iron rule 6): numbers from the ledger,
    criteria frozen, no cherry-picking.
-7. **Ablate, then simplify under a strict-improvement gate.** Once the
-   criteria are MET, ablate each component. A component that does not
-   contribute (or hurts) is a candidate for removal; the simplified or
+
+## S6a — Ablation and simplification (ALWAYS runs once the criteria are MET)
+
+This stage runs for every method whose criteria are MET — whether they were
+met on the first S5 run (S6 never entered) or after S6 iterations. It is not
+optional and not part of the S6 entry condition (ScientistTwo §3.4: the
+Analyzer follows every successful full-set experiment).
+
+1. **Run the ablations** pre-registered in the S4 Validation Plan: remove or
+   replace one component at a time and log each result in the ledger. The
+   output is the source-of-gain breakdown the paper's ablation table cites.
+2. **Simplify under a strict-improvement gate.** A component that does not
+   contribute (or hurts) is a candidate for removal. The simplified or
    modified method REPLACES the current best only if it is strictly better —
    or equal and simpler — on development data under the pre-registered
-   metric. Otherwise keep the previous best. Any change still passes step 2a.
-   (ScientistTwo §3.4 — removing redundant components often yields the
-   better method.)
+   metric. Otherwise keep the previous best. Any mechanism change still
+   passes the S6 provenance guard (step 2a).
+3. **If the method was replaced, re-run the ablations on the new method**
+   before moving on — the ablation table must describe the method that is
+   actually submitted. Bound: 2 replace-and-re-ablate rounds, then a human
+   checkpoint.
 
 ## S7 — Adversarial stress test (pre-paper)
 
@@ -366,6 +388,37 @@ alignment). Then Phase-0 compliance check, reviewer simulation with the
 target venue's vocabulary, and the multi-round submission lifecycle per
 `major_revision_playbook.md`. Venue choice + deadline from the live
 calendar; work-back schedule from the deadline.
+
+**Review findings after a draft exists use the same three classes as S7** —
+TEXT / EXPERIMENT / IDEA-LEVEL — in every round, including the final blind
+review. An **IDEA-LEVEL** finding (the method itself is weak, not its
+write-up or its evidence) is never patched in prose:
+
+1. Back to S6 with the finding as the named deficiency (root cause, one
+   targeted change, provenance guard).
+2. **Keep-the-better rule:** the revised method replaces the current one only
+   if it is strictly better on development data under the pre-registered
+   metric. If it is not, keep the current method and answer the objection
+   honestly as a stated limitation or a narrowed claim.
+3. If the method changed: re-run S6a (the ablations), redraft the affected
+   sections (Design, Evaluation, and any claim in the Abstract/Introduction
+   that moved), then re-review.
+
+Bound: 2 idea-level rounds after the first draft, then a human checkpoint
+(ScientistTwo §3.6 meta-review loop, with the human as the meta-reviewer).
+
+**Before submission — audit and package (both outputs, paper AND artifact):**
+
+- Run the **pre-submission 4-check audit**
+  (`research_integrity_protocol.md` §3): score re-verification from a clean
+  checkout, specification compliance, reference + CVE/ATT&CK id verification,
+  method-code alignment. Log the result in the ledger; a failed check blocks
+  submission until fixed.
+- **Package the artifact**: the code as run, scripts that regenerate every
+  table and figure from the ledger's raw outputs, a README with exact
+  commands and environment, anonymized per the venue's double-blind and
+  open-science rules (`big4_venue_profiles.md`). The artifact is the second
+  deliverable, not an afterthought.
 
 ## S8.5 — Retrospective Takeaway (the L2 knowledge-evolution engine)
 
@@ -433,6 +486,9 @@ S8 human gates remain the arbiter):
 | Framing weak or ML-shaped; SECURITY FRAMING RISK | S3 (`security_framing_protocol.md`) |
 | A claim lacks nearest-prior support / novelty unverified | S1 lit-search + `knowledge_index.md` bar |
 | A pre-registered criterion is UNMET | S6 bounded improvement |
+| All criteria MET but no ablation results in the ledger | S6a ablation & simplification |
+| A reviewer says the method itself is weak (after a draft exists) | S8 IDEA-LEVEL route → S6 → S6a → redraft |
+| Paper converged but no audit result / no packaged artifact | S8 pre-submission audit + artifact packaging |
 | A rescue/substitute method proposed | S6 step 2a (`method_change_provenance.md`) |
 | Over page budget / format non-compliant / missing ethics | S8 R0 Phase-0 check |
 | Decision received / review round done | S8.5 retrospective |

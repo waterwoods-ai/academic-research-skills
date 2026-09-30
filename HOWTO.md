@@ -170,6 +170,13 @@ Mentor checkpoint. Read ./validation_plan.md (FROZEN), ./ledger/, ./method_chang
 ```
 🚦 **你决定**:继续 / pivot / 如实报告。
 
+**Step 12.5 🎓 消融与简化(所有判据达标后必做——即使第一次就达标、没进过改进循环)**
+
+```text
+All frozen criteria in ./validation_plan.md are MET per ./ledger. Run S6a from research_loop_protocol.md: (1) run the pre-registered ablations, one component at a time, and log each in ./ledger/; (2) if a component does not contribute, propose the simplified method — it replaces the current one ONLY if strictly better (or equal and simpler) on development data under the pre-registered metric, otherwise keep the current method; (3) if the method was replaced, re-run the ablations on the new method. Do not touch the held-out split. If more than one candidate was GOOD, confirm which one was selected on development data and why (ledger entry). End with the source-of-gain table.
+```
+📄 `ledger/` 里的消融记录 + source-of-gain 表。这是论文消融表的唯一来源。
+
 ---
 
 ## 阶段 D · 论文与评审循环(Step 13–17)
@@ -198,15 +205,15 @@ ars-reviewer — target venue: <venue year>, paper: ./paper.tex
 ```text
 A reviewer round has just been written to ./ars-review/. Find the latest round-N/ directory and read everything in it (the decision/review file, any verdict or traceability record, the compliance check).
 
-Phase 1 — report, no edits: (a) the overall decision and how many tasks are resolved / partially / not resolved / newly raised; (b) every open item with its ID, one-line residual gap, and the evidence class needed to close it (text change / experiment run recorded in ./ledger/ / code or artifact / formalization); (c) group open items into A = compliance or desk-reject risks, B = text-only fixes, C = anything needing an experiment or artifact.
+Phase 1 — report, no edits: (a) the overall decision and how many tasks are resolved / partially / not resolved / newly raised; (b) every open item with its ID, one-line residual gap, and the evidence class needed to close it (text change / experiment run recorded in ./ledger/ / code or artifact / formalization); (c) group open items into A = compliance or desk-reject risks, B = text-only fixes, C = anything needing an experiment or artifact, D = idea-level (the method itself is judged weak — not its write-up, not its evidence).
 
 Phase 2 — execute A then B only, text-only, touching nothing outside those items and never editing the reviewer's files. Recompile and report the exact page count.
 
-Phase 3 — STOP: for each cluster-C item say in one line whether it is load-bearing for the target venue's contribution or removable by honest re-scoping, then wait for my decision on which to run and which to re-scope.
+Phase 3 — STOP: for each cluster-C item say in one line whether it is load-bearing for the target venue's contribution or removable by honest re-scoping; for each cluster-D item state the root cause in one line and the one targeted method change you would try. Never patch a D item in prose. Then wait for my decision on which to run, which to re-scope, and which D items go back to the method.
 
 Throughout: maintain ./ars-review/round-N/changelog.md with one line per item `ID → section/line → change`; experiment items must later cite their ledger run; re-scoped items must read `substituted: <what> — reason: <why>`. Manuscript numbers only from ./ledger/. End with: done / awaiting my decision / page count.
 ```
-🚦 Phase 3 停下后你回复决定(如 `Run REV-001, REV-002; re-scope REV-006`),它继续执行 cluster C(实验走 Step 10–11 的台账规则)。
+🚦 Phase 3 停下后你回复决定(如 `Run REV-001, REV-002; re-scope REV-006`),它继续执行 cluster C(实验走 Step 10–11 的台账规则)。**cluster D(方法本身被判弱)不在稿子里修**:回 Step 11 改方法(过 provenance guard)→ 新方法只有在开发集上严格更好才替换,否则保留原方法并把异议写成 limitation / 收窄 claim → 若方法变了,重跑 Step 12.5 消融 → 重写受影响章节 → 再 Step 16。上限 2 轮,之后找导师。
 📄 `round-N/changelog.md`。规则:实验项必须引用 ledger run;替代方案必须显式写明,不许静默跳过。
 
 **Step 16 🔍 审稿人零参数复审 → 循环至收敛**
@@ -232,6 +239,13 @@ Final independent pass before submission: run Phase-0, the security sprint contr
   重提已解决项 / 重提有意重定范围项」分类后再决定修哪些、驳哪些。
 
 ---
+
+**Step 17.2 🎓 投稿前完整性审计 + artifact 打包(两个交付物:论文 和 代码)**
+
+```text
+Run the pre-submission 4-check audit from research_integrity_protocol.md §3 and write the result to ./ledger/audit.md: (1) score re-verification — from a clean checkout of the artifact, run its own scripts and confirm every number in ./paper.tex reproduces; (2) specification compliance — the code obeys the task rules and the threat model as stated; (3) reference verification — every citation exists and every CVE / ATT&CK id resolves; (4) method-code alignment — compare the Method section against the code and list every mismatch. Then package the artifact: code as run, scripts that regenerate every table and figure from the raw outputs, a README with exact commands and environment, anonymized for double-blind review. Report PASS/FAIL per check; do not fix silently — list what failed.
+```
+🚦 任何一项 FAIL 都先修再投。📄 `ledger/audit.md` + 打包好的 artifact 目录。
 
 **Step 17.5 🧑‍🏫/🎓 每轮评审 / 投稿决定后:蒸馏经验(L2 retrospective)**
 
