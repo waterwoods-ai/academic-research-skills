@@ -9,7 +9,7 @@
     {
       "name": "academic-research-skills",
       "source": "./",
-      "description": "5 skills (incl. security-track overlay) + 27 modes + Material Passport pipeline. Includes v3.6.7 cross-model audit gate and v3.6.8 generator-evaluator contract.",
+      "description": "9 skills (incl. security-track overlay, topic scouting, novelty-engine) + 27 modes + Material Passport pipeline. Includes v3.6.7 cross-model audit gate and v3.6.8 generator-evaluator contract.",
       "version": "3.19.0",
       "license": "CC-BY-NC-4.0",
       "skills": [
@@ -17,7 +17,11 @@
         "./academic-paper-reviewer",
         "./academic-pipeline",
         "./deep-research",
-        "./security-track"
+        "./security-track",
+        "./find-research-topic",
+        "./verify-research-topic",
+        "./develop-novel-method",
+        "./novelty-engine"
       ]
     }
   ]

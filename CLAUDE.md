@@ -56,12 +56,18 @@ say the calendar is stale — do not fill in dates from model memory.
 ## Repo conventions (fork hygiene)
 
 - `main` mirrors upstream (ff-only); ALL personal work goes on `dev`.
-- Customizations are additive only: the `security-track/` skill, its
-  `skills/security-track` symlink, and this file. Sole permitted upstream-file
-  edit: the one-line `"./security-track"` entry in
+- Customizations are additive only: the five user-owned skills
+  (`security-track/`, `find-research-topic/`, `verify-research-topic/`,
+  `develop-novel-method/`, `novelty-engine/`), their `skills/<name>` symlinks,
+  and this file. Sole permitted upstream-file edit: their `"./<name>"` entries
+  (plus the skill count in the description) in
   `.claude-plugin/marketplace.json` (keep that edit minimal when resolving
   any future sync conflict). Never edit other upstream-owned files — that is
   what keeps `git sync-upstream` conflict-free.
+- Upstream lints pin the top-level `agents/` and `commands/` inventories and
+  flag any `*/agents/*.md` or `*_agent.md` file they do not roster, so
+  user-owned agent prompts live in `novelty-engine/roles/` (no `agents`
+  folder, no `_agent` suffix) and user-owned skills add no slash commands.
 
 ## Review & execution conventions
 

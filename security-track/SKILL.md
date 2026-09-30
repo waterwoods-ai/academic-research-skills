@@ -17,6 +17,7 @@ metadata:
     - find-research-topic
     - verify-research-topic
     - develop-novel-method
+    - novelty-engine
 ---
 
 # Security Track Overlay

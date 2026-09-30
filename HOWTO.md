@@ -35,13 +35,13 @@
 
 - 🧑‍🏫 Claude Code:`/plugin marketplace add waterwoods-ai/academic-research-skills` → `/plugin install academic-research-skills@academic-research-skills`
 - 🔍 Codex:`codex plugin marketplace add waterwoods-ai/academic-research-skills-codex --ref dev` → `codex plugin add ars-codex@ars-codex`
-- 🎓 opencode:它从 `~/.claude/skills/` 发现 skill。把 fork 的 5 个 skill 目录 symlink 进去(**本机配置,不随仓库分发,换机器重做**):
+- 🎓 opencode:它从 `~/.claude/skills/` 发现 skill。把 fork 的 6 个 skill 目录 symlink 进去(5 个 ARS / security-track + 生成器 `novelty-engine`;另外 3 个选题 skill 需要浏览器,opencode 用不了,不必链接;**本机配置,不随仓库分发,换机器重做**):
   ```bash
   SRC=/path/to/academic-research-skills   # 你 clone 的 fork(dev 分支)
   cd ~/.claude/skills
-  for s in academic-paper academic-paper-reviewer academic-pipeline deep-research security-track; do
+  for s in academic-paper academic-paper-reviewer academic-pipeline deep-research security-track novelty-engine; do
     ln -sfn "$SRC/$s" "$s"; done
-  ls -la ~/.claude/skills | grep -E 'academic|security'    # 5 个链接指向 live fork,无悬空
+  ls -la ~/.claude/skills | grep -E 'academic|security|novelty'    # 6 个链接指向 live fork,无悬空
   ```
 
 **Step 0.2 建项目目录 + 锚文件(三方都读,确定性加载 skill)**
@@ -112,6 +112,12 @@ Propose a new method for the RQ in ./research_question.md          ← from scra
 Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty verdict NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature with the nearest prior work cited; a positioning table vs the 3–5 closest methods; a one-paragraph delta statement in the community's own terms; formalization (math or algorithm + complexity) plus the threat model; honest weaknesses; and a security framing check (framing chain + SECURITY FRAMING RISK verdict + each claim's novelty type) per security_framing_protocol.md.
 ```
 📄 `contribution_card.md`。规则:判 KNOWN 的 claim 当场丢弃;INCREMENTAL 需给出定位论证。
+
+> **从零提方法时的生成器:`novelty-engine`**(已并入本套件,三个工具都能用):
+> ```text
+> Run novelty-engine Phases 1–4 for the RQ in ./research_question.md (direct route: the papers are the ones cited in ./gap_registry.md). Phase 1: extract the unstated assumptions prior work shares and where each breaks. Phase 2: pre-check novelty of each breaking point. Phase 3: propose 2–3 methods, each importing a mechanism from a distant field and stating which baseline limitation it resolves. Phase 4: formalize the one I pick (definitions, assumptions, algorithm + complexity, at least one theorem or bound). Stop for my choice after Phase 1 and Phase 3. Write the result into ./contribution_card.md.
+> ```
+> Claude Code 里 8 个 agent 作为独立子代理运行;Codex / opencode 逐个角色顺序执行。只有一篇基线论文时改用 `develop-novel-method` 建 limitation ledger 并查新——它擅长过滤、不擅长生成,候选全 `saturated` 就回到这里。
 
 > **精读单篇论文(单篇,非综述)** — 用关键词 `peruse` 触发:
 > ```text

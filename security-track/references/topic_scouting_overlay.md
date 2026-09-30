@@ -1,13 +1,15 @@
 # Topic Scouting Overlay (Custom — Security Track)
 
-> Binds four standalone skills to stages S0–S3 of `research_loop_protocol.md`:
-> `find-research-topic`, `verify-research-topic`, `develop-novel-method`
-> (the researcher's own skills; they drive Elicit, Litmaps, ChatGPT and
-> Claude.ai in a headed Chrome window) and `research-gaps` (Elicit API +
-> Litmaps Zotero Sync + Zotero). They are **search and filter front-ends**.
-> They find leads faster than index queries alone; they do not decide. The
-> loop's own gates (S1 gap rules, S3 full-text novelty check, the human gates)
-> still decide.
+> Binds five skills to stages S0–S3 of `research_loop_protocol.md`.
+> `novelty-engine` (the idea generator) ships in both editions of this suite.
+> `find-research-topic`, `verify-research-topic` and `develop-novel-method`
+> drive Elicit, Litmaps, ChatGPT and Claude.ai in a headed Chrome window, so
+> they ship in the Claude Code edition only. The fifth, `research-gaps`
+> (Elicit API + Litmaps Zotero Sync + Zotero), comes from the separate
+> zotero-literature plugin. The three browser skills and `research-gaps` are
+> **search and filter front-ends**: they find leads faster than index queries
+> alone; they do not decide. The loop's own gates (S1 gap rules, S3 full-text
+> novelty check, the human gates) still decide.
 
 ## Which tool at which stage
 
@@ -17,7 +19,7 @@
 | S1 | Topic chosen: systematic, repeatable gap evidence, filed in Zotero | `research-gaps` (Elicit API — needs **Elicit Pro**; Litmaps Pro for Zotero Sync) | Claude Code |
 | S2 → S3 | Is this RQ worth committing to? | `topic_verification_gate.md` (12 questions); optional blind second opinion through `verify-research-topic` | Gate: every runtime. ChatGPT pass: Claude Code |
 | S3 | Build on ONE baseline paper: limitation ledger, candidate methods, novelty check | `develop-novel-method` | Claude Code |
-| S3 | Generate ideas problem-first (break a shared assumption, import a distant mechanism) | novelty-engine `dogma_extractor` + `cross_domain_synthesizer` | Claude Code |
+| S3 | Generate ideas problem-first (break a shared assumption, import a distant mechanism), then formalize | `novelty-engine` Phases 1–4 (`dogma_extractor`, `novelty_verifier`, `cross_domain_synthesizer`, `math_formalizer`) | Every runtime (subagents on Claude Code; role by role elsewhere) |
 
 - **With Elicit Pro, prefer the API for Elicit work** (`research-gaps`): it is
   repeatable, needs no browser, and allows up to 20 extraction columns. Keep

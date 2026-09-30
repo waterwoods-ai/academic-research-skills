@@ -5,7 +5,7 @@
 > evaluation of the user's method) → novelty & contribution sharpening →
 > experiment design → execution → bounded improvement iterations →
 > adversarial stress test → paper. Runs on both runtimes: Claude Code
-> (where the novelty-engine plugin supplies stages S0–S4 machinery) and
+> (where the suite's `novelty-engine` skill supplies stages S0–S4 machinery) and
 > Codex (where this protocol + the suite's experiment-agent workflow carry
 > the loop inline). Security-conference calibration applies at every stage.
 
@@ -131,10 +131,14 @@ Two entry modes, same output artifact:
   limitations, check the list covers what a reviewer would name, and make
   every proposed idea state which limitation it resolves (ScientistTwo,
   arXiv:2609.19644 §3.1). Rank the ideas; the unevaluated ones stay on the
-  list as the exploration pool for S6. When the starting point is one
-  baseline paper, `develop-novel-method` builds this ledger and
-  novelty-checks the candidates; if every candidate comes back `saturated`,
-  generate problem-first instead (`topic_scouting_overlay.md`).
+  list as the exploration pool for S6. **Generate the candidates with the
+  `novelty-engine` skill**: Phase 1 names the shared assumption to break,
+  Phase 2 pre-checks novelty, Phase 3 imports a mechanism from a distant
+  field, Phase 4 formalizes the result (iron rule 5). When the starting
+  point is one baseline paper, `develop-novel-method` builds the ledger and
+  novelty-checks the candidates; it filters well and generates weakly, so if
+  every candidate comes back `saturated`, return to the `novelty-engine`
+  phases above (`topic_scouting_overlay.md`).
 - **Evaluate mode**: the user brings their own method; the loop deepens
   it rather than replacing it.
 
@@ -525,7 +529,7 @@ Say what stage you are at; the protocol meets you there. Examples:
 - "为这个方法设计证伪实验" → S4
 - "跑实验/结果不达标，改进方法" → S5–S6
 - Full loop from scratch: state the topic → S0 onward.
-  On Claude Code with the novelty-engine plugin installed, prefer its
-  richer S0–S4 agents (this protocol supplies the security calibration
-  on top); on Codex, this protocol + experiment-agent WORKFLOW carry
-  every stage.
+  On Claude Code, prefer the `novelty-engine` skill's richer S0–S4 agents
+  (shipped in this suite; this protocol supplies the security calibration
+  on top). On Codex the same skill runs role by role without subagents, or
+  this protocol + experiment-agent WORKFLOW carry every stage.
