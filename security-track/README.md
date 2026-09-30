@@ -4,6 +4,8 @@
 
 > 本 fork 在上游 ARS（4 个 skill）之上增加第 5 个 skill `security-track`：
 > 面向安全顶会（四大 + tier-2）研究的覆盖层，校准方向为 CPS / IoT / AI 安全。
+> 同一插件另带 4 个自有 skill：`find-research-topic`、`verify-research-topic`、
+> `novelty-filter`（选题与查新前端，需浏览器）和 `novelty-engine`（想法生成器）。
 > 上游文件零改动（唯一例外：`marketplace.json` 注册行），`main` 分支保持
 > upstream 纯净镜像，全部定制在 `dev` 分支（GitHub 默认分支已设为 `dev`）。
 

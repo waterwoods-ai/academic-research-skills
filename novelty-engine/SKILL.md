@@ -64,6 +64,12 @@ rules and gates govern; this skill supplies the machinery.
 | 4.5b experiment code | S5, S5a | Reproduce the strongest baseline first; every number comes from the ledger |
 | 5 stress test | S7 | The five security reviewer personas; output under `ars-review/` |
 
+**Entering at Phase 1 from the loop.** When the research question has already
+passed the topic verification gate (a recorded `go` on the RQ card or in
+`research_question.md`), that verdict stands in for the Phase 0d GO: start at
+Phase 1 and do not re-run Phases 0a–0d. The papers are the ones the gap
+registry cites.
+
 A failed torture test is a lead, not a verdict (iron rule 6): find the root
 cause before redesigning or dropping the method.
 

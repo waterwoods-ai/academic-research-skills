@@ -65,6 +65,16 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 
 ## 阶段 A · 选题(Step 1–4)
 
+> **从零开始,先看你手里有什么:**
+>
+> | 你现在有 | 从哪里进 |
+> |---|---|
+> | 只有一个大方向,没有题目 | 🧑‍🏫 Claude Code:`find-research-topic <大方向>` 拿 3–7 个候选题目,选一个再进 Step 1 |
+> | 有具体方向,没有论文 | 直接 Step 1——ARS 自己检索,不需要你提供文献 |
+> | 有方向 + 自己攒的论文(Zotero / PDF 文件夹) | Step 1,在 prompt 里写明论文位置;ARS 先筛你的,再补检索没覆盖的部分 |
+> | 有一篇想在其上改进的基线论文 | Step 1–4 照常定题;到 Step 5 先跑 `novelty-filter <论文>` 建 limitation ledger |
+> | 已经有自己的方法 | 跳到 Step 5 的 `Evaluate…` 分支 |
+
 **Step 1 🎓 文献综述 + gap 登记**
 
 ```text
