@@ -69,7 +69,7 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 >
 > | 你现在有 | 从哪里进 |
 > |---|---|
-> | 只有一个大方向,没有题目 | 🧑‍🏫 Claude Code:`find-research-topic <大方向>` 拿 3–7 个候选题目,选一个再进 Step 1 |
+> | 只有一个大方向,没有题目 | 🧑‍🏫 Claude Code:`find-research-topic <大方向>` 拿 3–7 个候选题目,选一个再进 Step 1(它的 `runs/<日期>-<slug>/report.md` 是 Step 1 的输入) |
 > | 有具体方向,没有论文 | 直接 Step 1——ARS 自己检索,不需要你提供文献 |
 > | 有方向 + 自己攒的论文(Zotero / PDF 文件夹) | Step 1,在 prompt 里写明论文位置;ARS 先筛你的,再补检索没覆盖的部分 |
 > | 有一篇想在其上改进的基线论文 | Step 1–4 照常定题;到 Step 5 先跑 `novelty-filter <论文>` 建 limitation ledger |
@@ -79,9 +79,11 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 
 ```text
 ars-lit-review <your area, e.g. physics-based sensor spoofing detection for ICS>, ensure broad coverage.
+If a find-research-topic report (./runs/*/report.md) or a research-gaps gap-report.md exists, start from it: carry its candidate gaps and evidence papers in, then complete each gap to the form below.
 Write the gap registry to ./gap_registry.md — each gap must carry: the search that failed to fill it (queries, indexes, date), the nearest-miss papers and why each falls short, and the security question the gap blocks.
+Save every included paper to ./literature.md (citation, one-line finding, which gap it bears on) — later steps read it.
 ```
-📄 `gap_registry.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
+📄 `gap_registry.md`、`literature.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
 
 > **检索前端(Claude Code,见 `topic_scouting_overlay.md`)**:还没有题目 → `find-research-topic`(Elicit + Litmaps 浏览器侦察,出 3–7 个候选);题目已定、要系统化的 gap 证据 → `research-gaps`(Elicit API,需 Elicit Pro + `ELICIT_API_KEY`,结果归档到 Zotero)。它们的 `open / narrow / saturated` 只是扫描级线索,不是 novelty 结论;每个 gap 仍要补齐上面三项。**两条必跑检索**:不限年份、去掉流行词的「祖先检索」,以及不分应用领域的「相邻方法族检索」。Codex / opencode 没有浏览器,用 `ars-lit-review` + 这两条检索规则。
 
@@ -106,7 +108,7 @@ For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/
 **Step 4 🎓 落定课题**
 
 ```text
-Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_question.md: the RQ, threat model, the dogma being challenged, target venue, and why it fits that venue.
+Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_question.md: the RQ, threat model, the dogma being challenged, target venue, why it fits that venue, and the topic-gate verdict with its date (copied from the mentor annotation).
 ```
 📄 `research_question.md`
 
@@ -116,18 +118,25 @@ Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_qu
 
 **Step 5 🎓 提出方法 / 深化你的方法 → Contribution Card**
 
+从零提方法分两步:**5a 生成**(候选方法 + 形式化)→ **5b 建卡**。已经有自己的方法:跳过 5a,直接 5b 用 `Evaluate…` 那一行。
+
+**5a 🎓 生成器 `novelty-engine`**(已并入本套件,三个工具都能用)
+
 ```text
-Propose a new method for the RQ in ./research_question.md          ← from scratch
+Run novelty-engine Phases 1–4 for the RQ in ./research_question.md. Inputs (direct route): the papers in ./literature.md, the gaps in ./gap_registry.md, and — if it exists — the limitation ledger ./runs/*/weaknesses.md from novelty-filter. The topic-gate verdict recorded in ./research_question.md stands in for Phase 0; do not re-run it. Phase 1: starting from the dogma named in ./research_question.md, extract the unstated assumptions prior work shares and where each breaks. Phase 2: pre-check novelty of each breaking point. Phase 3: propose 2–3 methods, each importing a mechanism from a distant field and stating which baseline limitation it resolves. Phase 4: formalize the one I pick (definitions, assumptions, algorithm + complexity, at least one theorem or bound). Stop for my choice after Phase 1 and Phase 3. Keep all outputs in ./novelty_engine/; do not write the Contribution Card yet.
+```
+📄 `novelty_engine/01_dogma_scan/dogma_scan.md`、`02_novelty_check/novelty_verification.md`、`03_hybrid_methods/hybrid_methods.md`、`04_formal_spec/formal_specification.md`。Claude Code 里 8 个角色作为独立子代理运行;Codex / opencode 逐个角色顺序执行。
+
+> 可选查新(仅 Claude Code):`novelty-filter <基线论文>`(原名 develop-novel-method)——只过滤、不生成。**5a 之前跑**:它的 `runs/<日期>-method-<slug>/weaknesses.md` 就是 5a 读的 limitation ledger。**5a 之后跑**:把 `novelty_engine/03_hybrid_methods/hybrid_methods.md` 里的候选交给它判 open / narrow / saturated,结论写进 5b 的卡片。
+
+**5b 🎓 建卡**
+
+```text
+Build the Contribution Card for the method I picked in ./novelty_engine/03_hybrid_methods/hybrid_methods.md, as formalized in ./novelty_engine/04_formal_spec/formal_specification.md, for the RQ in ./research_question.md          ← from scratch (after 5a)
    (or) Evaluate the novelty and contribution of my method: <description>   ← bring your own
 Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty verdict NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature with the nearest prior work cited; a positioning table vs the 3–5 closest methods; a one-paragraph delta statement in the community's own terms; formalization (math or algorithm + complexity) plus the threat model; honest weaknesses; and a security framing check (framing chain + SECURITY FRAMING RISK verdict + each claim's novelty type) per security_framing_protocol.md.
 ```
 📄 `contribution_card.md`。规则:判 KNOWN 的 claim 当场丢弃;INCREMENTAL 需给出定位论证。
-
-> **从零提方法时的生成器:`novelty-engine`**(已并入本套件,三个工具都能用):
-> ```text
-> Run novelty-engine Phases 1–4 for the RQ in ./research_question.md (direct route: the papers are the ones cited in ./gap_registry.md). Phase 1: extract the unstated assumptions prior work shares and where each breaks. Phase 2: pre-check novelty of each breaking point. Phase 3: propose 2–3 methods, each importing a mechanism from a distant field and stating which baseline limitation it resolves. Phase 4: formalize the one I pick (definitions, assumptions, algorithm + complexity, at least one theorem or bound). Stop for my choice after Phase 1 and Phase 3. Write the result into ./contribution_card.md.
-> ```
-> Claude Code 里 8 个 agent 作为独立子代理运行;Codex / opencode 逐个角色顺序执行。只有一篇基线论文时先用 `novelty-filter`(原名 develop-novel-method)建 limitation ledger;生成器出的候选也交给它查新——它只过滤、不生成。
 
 > **精读单篇论文(单篇,非综述)** — 用关键词 `peruse` 触发:
 > ```text
@@ -146,8 +155,9 @@ Mentor review of ./contribution_card.md. Independently re-verify each novelty ve
 **Step 7 🎓 按批注修卡**
 
 ```text
-Revise ./contribution_card.md per the mentor annotations. Keep an M-v1 version tag at the top; every later method change bumps the version and is logged in ./method_changelog.md.
+Revise ./contribution_card.md per the mentor annotations. Keep an M-v1 version tag at the top. Write ./method_changelog.md with the M-v1 entry (the approved method, one paragraph); every later method change bumps the version and is logged there.
 ```
+📄 `contribution_card.md`(M-v1)、`method_changelog.md`
 
 ---
 
@@ -177,7 +187,7 @@ Implement and run the experiments in ./validation_plan.md (FROZEN). First re-run
 **Step 11 🎓 改进循环(仅当有 UNMET)**
 
 ```text
-The criterion for <claim-k> is UNMET per ./ledger. Improve the method: name the deficiency with ledger evidence; make ONE targeted change with a mechanism hypothesis ("criterion X fails because Y; change Z addresses Y"); re-run only the affected experiments plus a regression check on previously-MET criteria; log M-v<N+1> in ./method_changelog.md. The success criteria in ./validation_plan.md are frozen — do not touch them. IF the change introduces a new MECHANISM (not tuning) — especially a substitute to rescue a failing result — it MUST first pass method_change_provenance.md: (1) scenario fidelity (does it still solve the ORIGINAL problem, or silently redefine it?); (2) prior-art identity (strip any new name and search — a renamed known method, e.g. a "new" OTA signing scheme = in-toto/SLSA/TUF/Uptane, is a RENAME not a contribution); (3) honest outcome: ADOPT+CITE with the novelty claim dropped, or a proven genuine delta re-verified NOVEL-WITHIN-SEARCH. Record the verdict (RENAME / GENUINE-DELTA / ADOPT-AND-CITE) in the changelog.
+The criterion for <claim-k> is UNMET per ./ledger. Improve the method: name the deficiency with ledger evidence; make ONE targeted change with a mechanism hypothesis ("criterion X fails because Y; change Z addresses Y"); re-run only the affected experiments plus a regression check on previously-MET criteria; log M-v<N+1> in ./method_changelog.md and update the method description and version tag in ./contribution_card.md to match (the card always describes the current method). The success criteria in ./validation_plan.md are frozen — do not touch them. IF the change introduces a new MECHANISM (not tuning) — especially a substitute to rescue a failing result — it MUST first pass method_change_provenance.md: (1) scenario fidelity (does it still solve the ORIGINAL problem, or silently redefine it?); (2) prior-art identity (strip any new name and search — a renamed known method, e.g. a "new" OTA signing scheme = in-toto/SLSA/TUF/Uptane, is a RENAME not a contribution); (3) honest outcome: ADOPT+CITE with the novelty claim dropped, or a proven genuine delta re-verified NOVEL-WITHIN-SEARCH. Record the verdict (RENAME / GENUINE-DELTA / ADOPT-AND-CITE) in the changelog.
 ```
 🚦 **3 轮硬上限**后停下找导师(Step 12)。
 
@@ -191,7 +201,7 @@ Mentor checkpoint. Read ./validation_plan.md (FROZEN), ./ledger/, ./method_chang
 **Step 12.5 🎓 消融与简化(所有判据达标后必做——即使第一次就达标、没进过改进循环)**
 
 ```text
-All frozen criteria in ./validation_plan.md are MET per ./ledger. Run S6a from research_loop_protocol.md: (1) run the pre-registered ablations, one component at a time, and log each in ./ledger/; (2) if a component does not contribute, propose the simplified method — it replaces the current one ONLY if strictly better (or equal and simpler) on development data under the pre-registered metric, otherwise keep the current method; (3) if the method was replaced, re-run the ablations on the new method. Do not touch the held-out split. If more than one candidate was GOOD, confirm which one was selected on development data and why (ledger entry). End with the source-of-gain table.
+All frozen criteria in ./validation_plan.md are MET per ./ledger. Run S6a from research_loop_protocol.md: (1) run the pre-registered ablations, one component at a time, and log each in ./ledger/; (2) if a component does not contribute, propose the simplified method — it replaces the current one ONLY if strictly better (or equal and simpler) on development data under the pre-registered metric, otherwise keep the current method; (3) if the method was replaced, re-run the ablations on the new method and update ./contribution_card.md and ./method_changelog.md to the new version. Do not touch the held-out split. If more than one candidate was GOOD, confirm which one was selected on development data and why (ledger entry). End with the source-of-gain table.
 ```
 📄 `ledger/` 里的消融记录 + source-of-gain 表。这是论文消融表的唯一来源。
 
@@ -203,7 +213,7 @@ All frozen criteria in ./validation_plan.md are MET per ./ledger. Run S6a from r
 
 ```text
 ars-full — target venue: <venue year>
-Materials: ./contribution_card.md (claims spine), ./ledger/ (all numbers), ./validation_plan.md, ./research_question.md.
+Materials: ./contribution_card.md (claims spine, current method version), ./method_changelog.md (what changed and why), ./ledger/ (all numbers), ./validation_plan.md, ./research_question.md, ./literature.md and ./gap_registry.md (related work).
 Security-paper structure (Intro / Threat Model / Design / Implementation / Evaluation / Discussion / Related Work / Ethics Considerations), numeric citations, double-blind, within the venue page budget. Every number must trace to a ledger entry. Output ./paper.tex.
 ```
 📄 `paper.tex`

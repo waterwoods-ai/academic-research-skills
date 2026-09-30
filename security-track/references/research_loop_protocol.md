@@ -322,7 +322,9 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
    verification as the S3 proposal — no exemptions.
 3. **Re-run only the affected experiments** (+ regression-check any
    previously-MET criterion the change could plausibly break).
-4. **Changelog entry**: M-vN, change, rationale, results delta.
+4. **Changelog entry**: M-vN, change, rationale, results delta. Update the
+   Contribution Card to the same version — it always describes the current
+   method (the same holds when S6a replaces the method).
 5. **Criteria stay frozen** (iron rule 3). If the criteria themselves
    were wrong, that is a human decision to RE-FREEZE at a documented
    checkpoint — never a silent adjustment.

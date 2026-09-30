@@ -67,8 +67,10 @@ rules and gates govern; this skill supplies the machinery.
 **Entering at Phase 1 from the loop.** When the research question has already
 passed the topic verification gate (a recorded `go` on the RQ card or in
 `research_question.md`), that verdict stands in for the Phase 0d GO: start at
-Phase 1 and do not re-run Phases 0a–0d. The papers are the ones the gap
-registry cites.
+Phase 1 and do not re-run Phases 0a–0d. The papers are in `literature.md`
+(saved at S1) and the gap registry; a limitation ledger from `novelty-filter`
+(`runs/*/weaknesses.md`), if present, is read too. Outputs stay in
+`novelty_engine/`; the Contribution Card is built from them afterwards.
 
 A failed torture test is a lead, not a verdict (iron rule 6): find the root
 cause before redesigning or dropping the method.
