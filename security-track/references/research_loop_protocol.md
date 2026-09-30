@@ -52,7 +52,7 @@
 | S0 Topic viability | go / no-go verdict | novelty-engine Phase 0a (topic_verifier) | deep-research quick + this protocol §S0 |
 | S1 Gap registry | evidenced gap list | `/ars-lit-review` + perspective protocol + gap_analyzer | `ars-lit-review` + perspective protocol, gaps per §S1 |
 | S2 RQ generation | ranked candidate RQs | gap_analyzer + dogma_extractor | this protocol §S2 |
-| S3 Method / evaluation | Contribution Card | novelty_verifier + cross_domain_synthesizer + math_formalizer | this protocol §S3 |
+| S3 Method / evaluation | candidate cards → screening → Contribution Card | cross_domain_synthesizer + limitation_resolver + novelty_verifier + math_formalizer | the same `novelty-engine` roles, run one at a time + this protocol §S3 |
 | S4 Validation design | frozen validation plan (type-aware) | experiment_falsifier (defense/AI); proof obligation for crypto | experiment-agent WORKFLOW planning + §S4 table |
 | S5 Execution | provenance ledger | experiment_coder + session runs code | Codex writes & runs code + §S5 ledger |
 | S6 Improvement loop | method changelog M-v1→M-vN | this protocol §S6 (both runtimes) | same |
@@ -124,26 +124,53 @@ proceeds to S3. The researcher confirms.
 
 Two entry modes, same output artifact:
 
-- **Propose mode**: design a new method for the chosen RQ. Cross-domain
-  transplantation is encouraged (control theory → CPS anomaly detection,
-  etc.) but the transplant must be justified against the threat model.
-  Start from a **limitation ledger** of the strongest baseline: extract its
-  limitations, check the list covers what a reviewer would name, and make
-  every proposed idea state which limitation it resolves (ScientistTwo,
-  arXiv:2609.19644 §3.1). Rank the ideas; the unevaluated ones stay on the
-  list as the exploration pool for S6. **Generate the candidates with the
-  `novelty-engine` skill**: Phase 1 names the shared assumption to break,
-  Phase 2 pre-checks novelty, Phase 3 imports a mechanism from a distant
-  field, Phase 4 formalizes the result (iron rule 5). When the starting
-  point is one baseline paper, `novelty-filter` builds the ledger and
-  novelty-checks the candidates; it filters well and generates weakly, so if
-  every candidate comes back `saturated`, return to the `novelty-engine`
-  phases above (`topic_scouting_overlay.md`).
+- **Propose mode**: design a new method for the chosen RQ. Generate
+  candidates with the `novelty-engine` skill in two modes, and run both when
+  their inputs exist:
+  - *Assumption-breaking* (Phases 1 → 2 → 3A): name an assumption prior work
+    shares, pre-check it, import a mechanism from a distant field.
+    Cross-domain transplantation is encouraged (control theory → CPS anomaly
+    detection, etc.) but the transplant must be justified against the threat
+    model.
+  - *Limitation-driven* (Phase 3B): start from a **limitation ledger** of the
+    strongest baseline — extract its limitations and check the list covers
+    what a reviewer would name (ScientistTwo, arXiv:2609.19644 §3.1) — and
+    propose mechanisms that remove their causes. One mechanism may resolve
+    several limitations; one patch per limitation is a checklist, not a
+    method. `novelty-filter` can build the ledger (Claude Code); any tool can
+    supply one directly.
+
+  **Common candidate checks (Phase 3.5), both modes.** Every candidate gets a
+  candidate card: the mechanism, its own falsifiable claims, the security
+  consequence (what the community would learn), the nearest prior work, and
+  its cheapest decisive test with a pass criterion stated in advance. The
+  mechanism itself is novelty-checked again after generation — an unexplored
+  assumption does not make the method built on it new. A candidate is
+  *eligible* only if it passes that novelty re-check, the security framing
+  check and a feasibility check. **Shortlist at most three eligible
+  candidates.** When both modes have eligible candidates, one slot is
+  reserved for each; an ineligible candidate is never carried to represent
+  its mode, and no single novelty score decides the list. The rest stay as
+  the exploration pool for S6.
+
+  **Screening before commitment.** The shortlisted candidates share one
+  **screening plan**, frozen before the first candidate runs: the development
+  data, the strongest baseline to reproduce, the comparison criterion, and
+  the same implementation and tuning budget for every candidate. Each
+  candidate runs its cheapest decisive test on development data only, under
+  the S5a rules (reproduce the baseline first; GOOD / ENGINEER / BAD; a BAD
+  candidate gets a root-cause note). Select ONE on development evidence by the
+  frozen criterion; the researcher confirms; the runners-up and their results
+  are logged and reportable. If none is GOOD, do not lower the bar: return to
+  generation with the failure causes. The Contribution Card is written for
+  the selected method, and the development data used here can never become
+  the held-out (`research_integrity_protocol.md` §2).
 - **Evaluate mode**: the user brings their own method; the loop deepens
   it rather than replacing it.
 
-Both modes MUST produce the **Contribution Card** — the artifact the
-whole loop optimizes:
+Both entry modes MUST end in the **Contribution Card** — the artifact the
+whole loop optimizes. In propose mode it is written for the ONE method that
+screening selected:
 
 ```
 CONTRIBUTION CARD — <method name> (M-v1)
@@ -269,7 +296,9 @@ named), raw output location, result vs pre-registered criterion
 is the ONLY source S8 may cite numbers from.
 
 **S5a — Reproduce the strongest baseline first, then screen cheaply**
-(adapted from ScientistTwo §3.2, arXiv:2609.19644):
+(adapted from ScientistTwo §3.2, arXiv:2609.19644). S3 screening uses these
+same rules on the development data to choose among the shortlisted
+candidates; here they apply to the selected method and any later variants:
 
 1. **Reproduce the strongest baseline in YOUR environment** — same testbed /
    devices / firmware / dataset split / metric code — and log it in the ledger

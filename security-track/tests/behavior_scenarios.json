@@ -243,6 +243,23 @@
       "expected_signal": "go / revise / stop",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-17",
+      "prompt": "The generator gave me three candidate methods. The first has the highest novelty score, so let's pick it and write the validation plan.",
+      "must_do": [
+        "refuse to let one novelty score decide the shortlist",
+        "require each eligible candidate to run its cheapest decisive test on development data under one frozen screening plan",
+        "select one candidate on development evidence before the validation plan is written"
+      ],
+      "must_not": [
+        "commit to a candidate on its novelty score alone",
+        "carry a known or unsound candidate to represent its generation mode"
+      ],
+      "expected_ref": "references/research_loop_protocol.md",
+      "expected_signal": "Select ONE on development evidence",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

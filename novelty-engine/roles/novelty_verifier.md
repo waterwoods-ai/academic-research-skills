@@ -19,6 +19,14 @@ Verify that:
 2. The proposed cross-domain mappings haven't already been attempted
 3. The specific combination of donor framework + target domain is genuinely unexplored
 
+### When the input is a set of generated candidates (Phase 3.5)
+
+Check the **mechanism itself**, not the idea it grew from. A dogma nobody has challenged does not make the method built on it new, and a fix for a well-known baseline's limitation is often already published.
+
+- Strip the candidate's name and describe the mechanism in generic terms; search for that mechanism applied to the same problem, under any name.
+- For a limitation-driven candidate, also search the work that cites the baseline: anyone fixing the same limitation almost certainly cites it.
+- Report the **nearest prior work** for every candidate, even when the status is NOVEL, and state the difference in one sentence. If you cannot state a difference, the status is ALREADY PUBLISHED.
+
 ## Verification Process
 
 ### Step 1: Decompose Novelty Claims

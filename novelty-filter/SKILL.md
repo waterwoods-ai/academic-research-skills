@@ -19,7 +19,7 @@ Take one paper. Find what is wrong with it or missing from it, confirm those wea
 
 **Stance.** The weaknesses are inputs to an improvement, never the contribution. The output is a better method built on the paper, which is cited as the baseline to beat; it is not a paper about the authors' faults.
 
-**What this skill is, and is not.** It is a reliable novelty *filter*, not an idea *generator*. The candidates it drafts itself in step 6 are the obvious improvements, and on a recent, heavily-followed paper those are usually already published (in two real runs on such papers, no candidate came back `open`). For real generation use the sibling [novelty-engine](../novelty-engine/SKILL.md) skill (Phase 1 breaks a shared assumption, Phase 3 imports a mechanism from a distant field, Phase 4 formalizes it), then bring its candidates here to be filtered.
+**What this skill is, and is not.** It is a reliable novelty *filter*, not an idea *generator*. The candidates it drafts itself in step 6 are the obvious improvements, and on a recent, heavily-followed paper those are usually already published (in two real runs on such papers, no candidate came back `open`). For real generation use the sibling [novelty-engine](../novelty-engine/SKILL.md) skill (one mode breaks a shared assumption and imports a mechanism from a distant field; the other takes this skill's `weaknesses.md` and proposes mechanisms that remove the limitations' causes), then bring its candidates here to be filtered.
 
 **Reuse the sibling skills' operating notes.** Read the notes for a tool before touching it:
 - Chrome gate, Elicit, Litmaps: [find-research-topic](../find-research-topic/SKILL.md) step 0, plus [elicit.md](../find-research-topic/references/elicit.md) and [litmaps.md](../find-research-topic/references/litmaps.md).
@@ -125,7 +125,7 @@ Merge `analysis.md`, the P2 answers from both tools, the Elicit Limitations colu
 - Mark the items raised by both you and ChatGPT as high confidence.
 
 ### 6. Collect candidate improvements
-1. **Write the candidates into `candidates.md`** with the spec in [references/critique.md](references/critique.md) §3. Take first the ones the user or `novelty-engine` already produced; if there are none, draft 2–4 quick ones. Each must remove at least one `confirmed` weakness.
+1. **Write the candidates into `candidates.md`** with the spec in [references/critique.md](references/critique.md) §3. Take first the ones the user or `novelty-engine` already produced; if there are none, run `novelty-engine`'s limitation-driven mode on `weaknesses.md`, or draft 2–4 quick ones here if that skill is not available. Each must remove at least one `confirmed` weakness.
 2. **Draw on every idea source:** P3 answers, Litmaps bridges (Similar Text neighbours the paper never cites), stale foundations, and methods from the adjacent community. Record each candidate's source.
 3. **Prefer mechanism changes over "same method, new domain".** A domain transfer alone is at most `narrow`.
 

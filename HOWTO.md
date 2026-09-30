@@ -77,7 +77,7 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 > | 只有一个大方向,没有题目 | 🧑‍🏫 Claude Code:`find-research-topic <大方向>` 拿 3–7 个候选题目,选一个再进 Step 1(它的 `runs/<日期>-<slug>/report.md` 是 Step 1 的输入) |
 > | 有具体方向,没有论文 | 直接 Step 1——ARS 自己检索,不需要你提供文献 |
 > | 有方向 + 自己攒的论文(Zotero / PDF 文件夹) | Step 1,在 prompt 里写明论文位置;ARS 先筛你的,再补检索没覆盖的部分 |
-> | 有一篇想在其上改进的基线论文 | Step 1–4 照常定题;到 Step 5 先跑 `novelty-filter <论文>` 建 limitation ledger |
+> | 有一篇想在其上改进的基线论文 | Step 1–4 照常定题;到 Step 5 先跑 `novelty-filter <论文>` 建 limitation 列表(5a 的方式 B 从它出发) |
 > | 已经有自己的方法 | 跳到 Step 5 的 `Evaluate…` 分支 |
 
 **Step 1 🎓 文献综述 + gap 登记**
@@ -119,26 +119,38 @@ Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_qu
 
 ---
 
-## 阶段 B · 方法与 novelty(Step 5–7)
+## 阶段 B · 方法与 novelty(Step 5–7.5)
 
-**Step 5 🎓 提出方法 / 深化你的方法 → Contribution Card**
+**Step 5 🎓 提出方法 / 深化你的方法 → 候选卡**
 
-从零提方法分两步:**5a 生成**(候选方法 + 形式化)→ **5b 建卡**。已经有自己的方法:跳过 5a,直接 5b 用 `Evaluate…` 那一行。
+从零提方法的顺序:**5a 生成**(两种方式 + 统一检查,最多留 3 个候选)→ **5b 候选卡 + 筛选计划** → Step 6 导师审 → Step 7 修卡 → **Step 7.5 便宜实验筛选,选定 1 个** → Contribution Card。
+已经有自己的方法:跳过 5a 和 7.5,在 5b 用 `Evaluate…` 那段直接写 `contribution_card.md`。
 
-**5a 🎓 生成器 `novelty-engine`**(已并入本套件,三个工具都能用)
+**5a 🎓 生成器 `novelty-engine`**(三个工具都能用)
 
 ```text
-Run novelty-engine Phases 1–4 for the RQ in ./research_question.md. Inputs (direct route): the papers in ./literature.md, the gaps in ./gap_registry.md, and — if it exists — the limitation ledger ./runs/*/weaknesses.md from novelty-filter. The topic-gate verdict recorded in ./research_question.md stands in for Phase 0; do not re-run it. Phase 1: starting from the dogma named in ./research_question.md, extract the unstated assumptions prior work shares and where each breaks. Phase 2: pre-check novelty of each breaking point. Phase 3: propose 2–3 methods, each importing a mechanism from a distant field and stating which baseline limitation it resolves. Phase 4: formalize the one I pick (definitions, assumptions, algorithm + complexity, at least one theorem or bound). Stop for my choice after Phase 1 and Phase 3. Keep all outputs in ./novelty_engine/; do not write the Contribution Card yet.
+Run novelty-engine candidate generation for the RQ in ./research_question.md. Inputs (direct route): the papers in ./literature.md, the gaps in ./gap_registry.md, and — if it exists — a confirmed limitation list (./runs/*/weaknesses.md from novelty-filter, or ./limitation_ledger.md). The topic-gate verdict recorded in ./research_question.md stands in for Phase 0; do not re-run it.
+Mode A, assumption-breaking: Phase 1 — starting from the dogma named in ./research_question.md, extract the unstated assumptions prior work shares and where each breaks; stop for my choice. Phase 2 — pre-check the novelty of each breaking point. Phase 3A — propose 2–3 methods, each importing a mechanism from a distant field.
+Mode B, limitation-driven: Phase 3B — propose 2–3 mechanisms that remove the causes of the confirmed limitations of the strongest baseline. One mechanism may resolve several limitations; do not produce one patch per limitation. If there is no confirmed limitation list, build one from the strongest baseline paper first and show it to me.
+Phase 3.5, every candidate from both modes: write its candidate card (mechanism, its own claims, the security consequence, nearest prior work, cheapest decisive test with a pass criterion); re-check the novelty of the mechanism itself; run the security framing check; check feasibility against my resources. Shortlist at most three eligible candidates; if both modes have eligible ones, keep at least one from each; never keep a known or unsound candidate to represent its mode. Stop for my choice of shortlist.
+Phase 4: formalize each shortlisted candidate far enough to implement its decisive test (definitions, assumptions, algorithm + complexity). Keep all outputs in ./novelty_engine/; do not write any card yet.
 ```
-📄 `novelty_engine/01_dogma_scan/dogma_scan.md`、`02_novelty_check/novelty_verification.md`、`03_hybrid_methods/hybrid_methods.md`、`04_formal_spec/formal_specification.md`。Claude Code 里 8 个角色作为独立子代理运行;Codex / opencode 逐个角色顺序执行。
+📄 `novelty_engine/03_hybrid_methods/candidates.md`(候选卡 + shortlist + 被淘汰的及原因)、`hybrid_methods.md`、`limitation_driven_methods.md`、`02_novelty_check/novelty_verification.md`、`04_formal_spec/formal_specification.md`。Claude Code 里各角色作为独立子代理运行;Codex / opencode 逐个角色顺序执行。
 
-> 可选查新(仅 Claude Code):`novelty-filter <基线论文>`(原名 develop-novel-method)——只过滤、不生成。**5a 之前跑**:它的 `runs/<日期>-method-<slug>/weaknesses.md` 就是 5a 读的 limitation ledger。**5a 之后跑**:把 `novelty_engine/03_hybrid_methods/hybrid_methods.md` 里的候选交给它判 open / narrow / saturated,结论写进 5b 的卡片。
+> 可选(仅 Claude Code):`novelty-filter <基线论文>`(原名 develop-novel-method)——只过滤、不生成。**5a 之前跑**:它的 `runs/<日期>-method-<slug>/weaknesses.md` 就是方式 B 要的 limitation 列表。**5a 之后跑**:对 `candidates.md` 里的候选做一遍更强的查新(Elicit + Litmaps + 两个盲评模型),结论写回候选卡。
 
-**5b 🎓 建卡**
+**5b 🎓 候选卡 + 筛选计划**
 
 ```text
-Build the Contribution Card for the method I picked in ./novelty_engine/03_hybrid_methods/hybrid_methods.md, as formalized in ./novelty_engine/04_formal_spec/formal_specification.md, for the RQ in ./research_question.md          ← from scratch (after 5a)
-   (or) Evaluate the novelty and contribution of my method: <description>   ← bring your own
+From ./novelty_engine/03_hybrid_methods/candidates.md and ./novelty_engine/04_formal_spec/formal_specification.md, write ./candidate_cards.md: one card per shortlisted candidate (at most three). Each card carries its OWN 1–3 falsifiable claims; the novelty verdict per claim (NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature, nearest prior work cited); the security consequence; the formalization (algorithm + complexity) plus the threat model; honest weaknesses; and its cheapest decisive test with a numeric pass criterion.
+Then write ./screening_plan.md, marked DRAFT and shared by all candidates: the development data (it can never become the held-out), the strongest baseline to reproduce, the ONE comparison criterion used to choose between candidates, and the implementation and tuning budget per candidate (the same for all).
+```
+📄 `candidate_cards.md`、`screening_plan.md (DRAFT)`。规则:判 KNOWN 的候选当场丢弃,不为了"代表某种生成方式"而保留。
+
+自带方法时改用这一段(不写候选卡,不筛选):
+
+```text
+Evaluate the novelty and contribution of my method: <description>
 Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty verdict NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature with the nearest prior work cited; a positioning table vs the 3–5 closest methods; a one-paragraph delta statement in the community's own terms; formalization (math or algorithm + complexity) plus the threat model; honest weaknesses; and a security framing check (framing chain + SECURITY FRAMING RISK verdict + each claim's novelty type) per security_framing_protocol.md.
 ```
 📄 `contribution_card.md`。规则:判 KNOWN 的 claim 当场丢弃;INCREMENTAL 需给出定位论证。
@@ -150,19 +162,26 @@ Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty v
 > 产出该篇的 8 问骨架、论证链与最弱环、Introduction P1–P7 标注、以及它的 evaluation 会招来哪些审稿人问题。
 > (需要多篇检索/覆盖面用 `ars-lit-review` + 「确保覆盖全面」;`ars-3w` 是轻量筛选。)
 
-**Step 6 🧑‍🏫 导师审 novelty 与贡献** 🚦
+**Step 6 🧑‍🏫 导师审候选与筛选计划** 🚦
 
 ```text
-Mentor review of ./contribution_card.md. Independently re-verify each novelty verdict by real retrieval (do not trust the student's search). Which claim would a Big-4 reviewer kill first, and with which of the standard rejection anchors? Is the delta statement honest or inflated? Is the formalization actually a method (algorithm + threat model) or still a sketch? Annotate the card in place; do not rewrite it.
+Mentor review of ./candidate_cards.md and ./screening_plan.md (if I brought my own method, review ./contribution_card.md the same way instead). For each candidate: independently re-verify each novelty verdict by real retrieval (do not trust the student's search). Which claim would a Big-4 reviewer kill first, and with which of the standard rejection anchors? Is the security consequence real, or only a better number? Is the formalization actually a method (algorithm + threat model) or still a sketch? Is the decisive test really decisive, with a numeric pass criterion? For the screening plan: is it fair to every candidate (same data, same baseline, same budgets), and is the development data disjoint from anything that could later serve as the held-out? Annotate the files in place; do not rewrite them.
 ```
-🚦 **你决定**:批准卡片,或退回 Step 5。
+🚦 **你决定**:哪些候选进筛选(可以砍到 1–2 个),或退回 Step 5。批准后把 `screening_plan.md` 文件头改为 `FROZEN <date>`——之后不再改数据、判据和预算。
 
 **Step 7 🎓 按批注修卡**
 
 ```text
-Revise ./contribution_card.md per the mentor annotations. Keep an M-v1 version tag at the top. Write ./method_changelog.md with the M-v1 entry (the approved method, one paragraph); every later method change bumps the version and is logged there.
+Revise ./candidate_cards.md per the mentor annotations. (If I brought my own method: revise ./contribution_card.md instead, keep an M-v1 version tag at the top, write ./method_changelog.md with the M-v1 entry, and skip Step 7.5.)
 ```
-📄 `contribution_card.md`(M-v1)、`method_changelog.md`
+
+**Step 7.5 🎓 便宜实验筛选 → 选定 1 个方法** 🚦
+
+```text
+Run the candidate screening in ./screening_plan.md (FROZEN). First reproduce the strongest baseline on the development data and log it in ./ledger/. Then, for each candidate in ./candidate_cards.md, implement it only as far as its cheapest decisive test needs, within the frozen budget, and run that test on the development data — never on held-out data. Log one ledger entry per run: candidate id, planned vs executed, raw log path, and the verdict against the candidate's own pass criterion (GOOD / ENGINEER / BAD; a BAD candidate gets a root-cause note). Do not change the plan or any pass criterion after seeing results. Then recommend ONE candidate by the frozen comparison criterion (on a tie, the simpler one or the one with weaker assumptions) and stop for my confirmation.
+After I confirm: write ./contribution_card.md for the selected method with the eight Contribution Card items of research_loop_protocol.md §S3, tagged M-v1; complete its formalization (the theorem or bound its claims need); write ./method_changelog.md with the M-v1 entry; and mark the runners-up in ./candidate_cards.md as reserve, with their screening results.
+```
+📄 `ledger/`(筛选记录)、`contribution_card.md`(M-v1)、`method_changelog.md`。🚦 **你决定**:确认选哪一个。全部 BAD 时不降标准:带着失败原因回 5a,或找导师。落选的候选留作后备,论文里可如实报告筛了几个、为什么选这个。
 
 ---
 
@@ -171,7 +190,7 @@ Revise ./contribution_card.md per the mentor annotations. Keep an M-v1 version t
 **Step 8 🎓 起草验证计划(按论文类型的反驳表)**
 
 ```text
-Design validation experiments for the method in ./contribution_card.md. First classify the paper type (attack / defense / measurement / tool / CPS / IoT / ML-for-security / theory) and pick the matching row of the S4 refutation table in research_loop_protocol.md. Write ./validation_plan.md: per claim — the experiment or proof obligation, metrics, NUMERIC success criteria, strongest published baselines correctly tuned, ablations, statistical plan (seeds, repetitions, tests), and the artifact / open-science plan. Apply the evaluation-integrity rules (research_integrity_protocol.md §2): plan to report ALL testbeds/datasets/devices with regressions disclosed (no cherry-picking), fix a held-out split that method development never touches, and set a utility non-regression bound. Mark the file DRAFT.
+Design validation experiments for the method in ./contribution_card.md. First classify the paper type (attack / defense / measurement / tool / CPS / IoT / ML-for-security / theory) and pick the matching row of the S4 refutation table in research_loop_protocol.md. Write ./validation_plan.md: per claim — the experiment or proof obligation, metrics, NUMERIC success criteria, strongest published baselines correctly tuned, ablations, statistical plan (seeds, repetitions, tests), and the artifact / open-science plan. Apply the evaluation-integrity rules (research_integrity_protocol.md §2): plan to report ALL testbeds/datasets/devices with regressions disclosed (no cherry-picking), fix a held-out split that method development never touches (it must be disjoint from the development data in ./screening_plan.md), and set a utility non-regression bound. Mark the file DRAFT.
 ```
 📄 `validation_plan.md (DRAFT)`
 

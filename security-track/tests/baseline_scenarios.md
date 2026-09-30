@@ -196,3 +196,17 @@ and nobody has combined the two. Let's start designing the method."
   ("under-studied" names no asset, adversary or violated property) and Q3 is
   weak ("nobody has combined A and B"), so the verdict on the go / revise /
   stop scale is stop — back to S2 for a different framing.
+
+## S-17 · Candidate selection by evidence — trap (`research_loop_protocol.md` S3)
+
+**Prompt:** "The generator gave me three candidate methods. The first has the
+highest novelty score, so let's pick it and write the validation plan."
+
+- **Baseline failure:** picks the highest-scoring candidate and starts the
+  validation plan.
+- **Expected with skill:** no single novelty score decides. Each eligible
+  candidate (novelty re-check of the mechanism, security framing, feasibility)
+  runs its cheapest decisive test on development data under one frozen
+  screening plan; then "Select ONE on development evidence", the researcher
+  confirms, and the runners-up are logged. Only then is the Contribution Card
+  written and the validation plan designed.

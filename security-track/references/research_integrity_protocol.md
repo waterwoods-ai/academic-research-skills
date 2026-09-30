@@ -86,7 +86,12 @@ Fold them into the S4 Validation Plan for every paper type.
   tuning, and report on it once. This generalizes the ML-for-security
   temporal-split rule (`knowledge_index.md`) to every paper type: development
   data and the final evidence set are disjoint, and the split is fixed in the
-  pre-registration card.
+  pre-registration card. This covers **candidate screening** too: when several
+  candidate methods are screened before one is chosen, the screening plan
+  (development data, comparison criterion, per-candidate budget) is frozen
+  before the first candidate runs, the choice is made on development data
+  only, and the paper reports how many candidates were screened and why this
+  one was chosen. Data used for screening never becomes the held-out.
 - **A held-out reviewer, too.** (ScientistTwo, arXiv:2609.19644: 7.5/10 on the
   AI reviewer its drafts were revised against, 5.7/10 on a held-out one.) The
   same logic applies to review: a reviewer used to iterate the draft is
