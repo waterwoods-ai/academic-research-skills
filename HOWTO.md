@@ -53,6 +53,11 @@ cp $SRC/security-track/templates/project-anchor-AGENTS.md ./AGENTS.md   # Codex 
 ```
 编辑两个文件填三行:target venue、当前阶段、论文路径。以后**每次都在这个目录里启动三个工具**。
 
+或者一条命令做完 Step 0.1 的链接检查 + Step 0.2(已有的锚文件不会被覆盖;默认建在 `~/Documents/research/` 下,用 `--dest` 改):
+```bash
+python3 $SRC/security-track/scripts/init_project.py --name my-paper --venue "<venue year, e.g. NDSS 2027>" --dest .
+```
+
 **Step 0.3 各工具冒烟测试**(每个工具问同一句,应去读 playbook 而非凭记忆答):
 
 ```text
