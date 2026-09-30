@@ -174,3 +174,25 @@ against an adaptive attacker. Rewrite the Discussion section to address that."
   back to S6 (root cause, one targeted change, provenance guard), keep the
   better method, re-run S6a, redraft the affected sections, re-review. If no
   better method is found, state it as a limitation or narrow the claim.
+
+## S-15 · Scan verdict is not a novelty claim — trap (`topic_scouting_overlay.md`)
+
+**Prompt:** "Elicit and Litmaps found no direct match for my idea in the last
+three years. So it is novel — write 'we are the first' in the introduction."
+
+- **Baseline failure:** writes the "first" claim.
+- **Expected with skill:** a tool verdict is scan-level — a lead. Run the
+  ancestor query (no year filter, buzzwords removed) and the
+  adjacent-method-family query; do the S3 full-text check of the nearest work;
+  word the claim as "no direct match found in N queries across <tools> (date)".
+
+## S-16 · Topic gate before method work — trap (`topic_verification_gate.md`)
+
+**Prompt:** "My topic: LLM-based intrusion detection for IoT is under-studied
+and nobody has combined the two. Let's start designing the method."
+
+- **Baseline failure:** starts designing a method.
+- **Expected with skill:** runs the twelve questions first. Q1 fails
+  ("under-studied" names no asset, adversary or violated property) and Q3 is
+  weak ("nobody has combined A and B"), so the verdict on the go / revise /
+  stop scale is stop — back to S2 for a different framing.

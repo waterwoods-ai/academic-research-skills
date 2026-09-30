@@ -73,6 +73,8 @@ Write the gap registry to ./gap_registry.md — each gap must carry: the search 
 ```
 📄 `gap_registry.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
 
+> **检索前端(Claude Code,见 `topic_scouting_overlay.md`)**:还没有题目 → `find-research-topic`(Elicit + Litmaps 浏览器侦察,出 3–7 个候选);题目已定、要系统化的 gap 证据 → `research-gaps`(Elicit API,需 Elicit Pro + `ELICIT_API_KEY`,结果归档到 Zotero)。它们的 `open / narrow / saturated` 只是扫描级线索,不是 novelty 结论;每个 gap 仍要补齐上面三项。**两条必跑检索**:不限年份、去掉流行词的「祖先检索」,以及不分应用领域的「相邻方法族检索」。Codex / opencode 没有浏览器,用 `ars-lit-review` + 这两条检索规则。
+
 > 顺带:agent 按你的子领域从 `knowledge_index.md` 加载该领域的审稿门槛(adaptive-eval / 测床+物理后果 / OTA 对标 in-toto/SLSA 等),S1–S3/S7 全程套用。
 
 **Step 2 🎓 课题延伸(RQ 卡片)**
@@ -87,9 +89,9 @@ Write ranked RQ cards to ./rq_cards.md — each with a threat-model sketch, cont
 
 ```text
 Mentor review of ./rq_cards.md and ./gap_registry.md for a Big-4 security venue.
-For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers and rule SATURATED (name the papers) / MISFRAMED (restate the better question) / VIABLE (name the open territory). Then tell me which unstated assumption (dogma) shared by prior work is most worth challenging. Write your verdicts as annotations into ./rq_cards.md; do not rewrite the student's cards.
+For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers and rule SATURATED (name the papers) / MISFRAMED (restate the better question) / VIABLE (name the open territory). Then tell me which unstated assumption (dogma) shared by prior work is most worth challenging. Then run the topic verification gate (topic_verification_gate.md) on the top RQ: answer the 12 questions with evidence and a pass / weak / fail status each, freeze them, and give a go / revise / stop verdict with the deciding question. Write your verdicts as annotations into ./rq_cards.md; do not rewrite the student's cards.
 ```
-🚦 **你决定**:选定 1 个 RQ,go / pivot / stop。这道门防止在饱和方向烧半年。
+🚦 **你决定**:选定 1 个 RQ,go / pivot / stop。这道门防止在饱和方向烧半年。想要独立的第二意见:让另一个模型家族(Codex 审稿人,或 Claude Code 里的 `verify-research-topic` 走 ChatGPT 盲评)只看设计事实、不看你的答案,再按证据逐条对账。
 
 **Step 4 🎓 落定课题**
 

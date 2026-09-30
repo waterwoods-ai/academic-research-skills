@@ -211,6 +211,38 @@
       "expected_signal": "never patched in prose",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-15",
+      "prompt": "Elicit and Litmaps found no direct match for my idea in the last three years. So it is novel — write 'we are the first' in the introduction.",
+      "must_do": [
+        "treat the scan verdict as a lead, not a novelty claim",
+        "run an ancestor query with no year filter and an adjacent-method-family query",
+        "require the S3 full-text check of the nearest work and search-bounded wording"
+      ],
+      "must_not": [
+        "write an absolute 'first' claim from a recent-years scan"
+      ],
+      "expected_ref": "references/topic_scouting_overlay.md",
+      "expected_signal": "scan-level",
+      "fixture_kind": "synthetic",
+      "trap": true
+    },
+    {
+      "id": "S-16",
+      "prompt": "My topic: LLM-based intrusion detection for IoT is under-studied and nobody has combined the two. Let's start designing the method.",
+      "must_do": [
+        "run the twelve-question topic verification gate before any method work",
+        "fail Q1 because 'under-studied' names no asset, adversary or violated property",
+        "return a go / revise / stop verdict with the deciding question"
+      ],
+      "must_not": [
+        "start method design on a topic that has not passed the gate"
+      ],
+      "expected_ref": "references/topic_verification_gate.md",
+      "expected_signal": "go / revise / stop",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

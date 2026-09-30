@@ -69,6 +69,10 @@ the space — name the papers), MISFRAMED (the interesting question is
 adjacent — restate it), or VIABLE (name the open territory). HUMAN GATE:
 the researcher decides to proceed, pivot, or stop.
 
+Search front-ends for S0–S3 (Elicit, Litmaps, blind second opinions) and the
+rules that bind their output: `topic_scouting_overlay.md`. Their verdicts are
+scan-level leads; this stage's verdict still needs the named papers.
+
 ## S1 — Gap registry
 
 Run the literature review with the perspective-retrieval protocol (six
@@ -77,6 +81,12 @@ claim and must carry: (a) the search that failed to fill it (queries +
 indexes + date), (b) the nearest-miss papers and why each falls short,
 (c) a security relevance statement (what attack/defense/measurement
 question the gap blocks). Gaps without (a) are hunches, not gaps.
+
+Two queries are mandatory before a gap is recorded (both learned from real
+misses — `topic_scouting_overlay.md`): an **ancestor query** with no year
+filter and the current buzzwords removed, and an **adjacent-method-family
+query** regardless of application domain. A gap also needs at least two
+independent signals, not one tool's silence.
 
 ## S2 — Research question generation (课题延伸)
 
@@ -103,6 +113,13 @@ provenance guard rules RENAME or ADOPT+CITE, and reviewer objections already
 resolved. This is the "what was tried-and-killed" record; the S6 changelog
 records "what changed". Both feed the S8.5 retrospective.
 
+**Topic verification gate (before S3).** The selected RQ answers the twelve
+questions in `topic_verification_gate.md` — answers frozen first, then an
+independent second opinion from a different model family, disagreements
+resolved against evidence. Verdict go / revise / stop: `stop` returns to a
+different framing here in S2; `revise` fixes the design first; only `go`
+proceeds to S3. The researcher confirms.
+
 ## S3 — Method proposal OR deep evaluation (novelty & contribution focus)
 
 Two entry modes, same output artifact:
@@ -114,7 +131,10 @@ Two entry modes, same output artifact:
   limitations, check the list covers what a reviewer would name, and make
   every proposed idea state which limitation it resolves (ScientistTwo,
   arXiv:2609.19644 §3.1). Rank the ideas; the unevaluated ones stay on the
-  list as the exploration pool for S6.
+  list as the exploration pool for S6. When the starting point is one
+  baseline paper, `develop-novel-method` builds this ledger and
+  novelty-checks the candidates; if every candidate comes back `saturated`,
+  generate problem-first instead (`topic_scouting_overlay.md`).
 - **Evaluate mode**: the user brings their own method; the loop deepens
   it rather than replacing it.
 
@@ -485,6 +505,7 @@ S8 human gates remain the arbiter):
 |---|---|
 | Framing weak or ML-shaped; SECURITY FRAMING RISK | S3 (`security_framing_protocol.md`) |
 | A claim lacks nearest-prior support / novelty unverified | S1 lit-search + `knowledge_index.md` bar |
+| An RQ is chosen but nobody has tested whether it is worth committing to | Topic verification gate (`topic_verification_gate.md`) |
 | A pre-registered criterion is UNMET | S6 bounded improvement |
 | All criteria MET but no ablation results in the ledger | S6a ablation & simplification |
 | A reviewer says the method itself is weak (after a draft exists) | S8 IDEA-LEVEL route → S6 → S6a → redraft |
