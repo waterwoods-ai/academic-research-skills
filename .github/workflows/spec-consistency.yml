@@ -46,6 +46,9 @@ jobs:
       - name: Run spec consistency check
         run: python3 scripts/check_spec_consistency.py
 
+      - name: Check skill description length (#864)
+        run: python3 scripts/check_skill_description_length.py
+
       - name: Lint CI pytest manifest (#156)
         # Drift guard for scripts/_ci_pytest_manifest.toml — verifies entry
         # path existence, id/(path,args) uniqueness, args shape, and that
@@ -74,6 +77,9 @@ jobs:
           PYTHONPATH: .
         run: python3 scripts/run_ci_pytest_manifest.py
 
+      - name: Check claim-standing candidate-ledger integration (#655)
+        run: python3 scripts/check_claim_standing_candidate_ledger_integration.py
+
       - name: Check PREPRINT_VENUES list consistency (#105)
         run: python3 scripts/check_preprint_venues_consistency.py
 
@@ -86,6 +92,16 @@ jobs:
         env:
           PYTHONPATH: scripts
         run: python3 scripts/check_data_access_level.py
+
+      - name: Check skill-inventory parity (#809)
+        # Top-level <name>/SKILL.md dirs == skills/ symlinks == CLAUDE.md
+        # Skills Overview rows == marketplace.json plugins[].skills, plus the
+        # "N skills" count claims in plugin/marketplace descriptions. The pytest
+        # companion `test_check_skill_inventory_parity.py` runs via the unified
+        # manifest.
+        env:
+          PYTHONPATH: scripts
+        run: python3 scripts/check_skill_inventory_parity.py
 
       - name: Check instruction-vs-data boundary (#272 guidance layer)
         # Drift guard for the retrieved-content instruction/data principle:
@@ -101,6 +117,16 @@ jobs:
         # provider, web, tool, or structural enforcement claim; the mutation and
         # scoring tests run through the pytest manifest above.
         run: python3 scripts/run_indirect_prompt_injection_probe.py validate-assets
+
+      - name: Validate role-topology utility dry-run assets (#582)
+        # Design/seed validation only: no provider, model, tool, judge, or dispatch.
+        run: python3 scripts/run_role_topology_utility_dry_run.py validate-assets
+
+      - name: Check indirect prompt-injection no-call envelope (#675 Phase 2)
+        # AST-only exact module/symbol/attribute/call allowlist. It rejects
+        # aliases, module escapes, provider/network/process capabilities, and any
+        # CLI beyond the five offline envelope commands.
+        run: python3 scripts/check_indirect_prompt_injection_no_call.py
 
       - name: Check task_type declarations
         env:
@@ -122,7 +148,10 @@ jobs:
           PYTHONPATH: .
         run: python3 -m unittest scripts.test_check_collaboration_depth_rubric -v
 
-      - name: Check rubric weight consistency (quality_rubrics / framework / SKILL rule 14)
+      - name: Check criterion-bound reviewer scoring honesty
+        run: python3 scripts/check_reviewer_scoring_honesty.py
+
+      - name: Check retired rubric-weight entrypoint compatibility
         run: python3 scripts/check_rubric_weight_consistency.py
 
       - name: Check citation-verification intake wiring (#392)
@@ -149,6 +178,11 @@ jobs:
         env:
           PYTHONPATH: scripts
         run: python3 scripts/check_version_consistency.py
+
+      - name: Check distribution-surface claim discipline (#753)
+        # The pytest companion `test_check_distribution_surface_claims.py`
+        # runs via the unified manifest.
+        run: python3 scripts/check_distribution_surface_claims.py
 
       - name: Check SETUP cross-model example parity (#491)
         # The pytest companion `test_check_setup_cross_model_parity.py`
@@ -184,14 +218,18 @@ jobs:
             echo "ERROR: could not extract ARS version from CHANGELOG.md (need '## [X.Y.Z]' heading)" >&2
             exit 1
           fi
+          # Contract families may co-locate JSON Schemas; validate only instances.
           for f in shared/contracts/reviewer/*.json; do
+            [[ "$f" == *.schema.json ]] && continue
             python3 scripts/check_sprint_contract.py "$f" --ars-version "v${ARS_VERSION}"
           done
           # v3.6.6: writer + evaluator template validation loops mirror reviewer loop above.
           for f in shared/contracts/writer/*.json; do
+            [[ "$f" == *.schema.json ]] && continue
             python3 scripts/check_sprint_contract.py "$f" --ars-version "v${ARS_VERSION}"
           done
           for f in shared/contracts/evaluator/*.json; do
+            [[ "$f" == *.schema.json ]] && continue
             python3 scripts/check_sprint_contract.py "$f" --ars-version "v${ARS_VERSION}"
           done
 
@@ -208,6 +246,51 @@ jobs:
         # resolved for .py). The registry indexes, it never re-authors —
         # semantics stay in each row's authority file.
         run: python3 scripts/check_degradation_registry.py
+
+      - name: Validate workflow classification table (#755)
+        # Pins docs/ARCHITECTURE.md §7.1's completeness claim: every
+        # .github/workflows/*.yml has exactly one row (both directions,
+        # WC-1) and class cells use the closed four-term vocabulary (WC-2).
+        # Class semantics stay owned by code review.
+        run: python3 scripts/check_workflow_classification.py
+
+      - name: Validate data-flow map coverage (#758)
+        # Pins docs/DATA_FLOWS.md's exhaustiveness claim: every non-test
+        # scripts/*.py with a network-module import (AST scan) and every
+        # curl-invoking shell script must be named on the map (DF-1/DF-2),
+        # and README + SECURITY + THIRD_PARTY keep a rendered inbound link
+        # (DF-3). Row semantics stay owned by code review.
+        run: python3 scripts/check_data_flows.py
+
+      - name: Validate stage capability matrix (#745)
+        # Pins shared/contracts/capability/stage_capability_matrix.json:
+        # frozen task-family vocabulary, non-collapsible evidence statuses
+        # (an unrun eval can never carry numbers), in-repo eval_ref and
+        # verbatim claim anchors, stale-evidence notes, and byte-identity of
+        # the generated docs/STAGE_CAPABILITY_MATRIX.md view.
+        run: python3 scripts/check_stage_capability_matrix.py
+
+      - name: Validate shipped research-workflow fallback (#742)
+        # Offline/default-off contract check only: validates the canonical
+        # content hash and exact field-general safety boundary. Human usability
+        # evidence remains NOT_RUN and no workflow profile is inferred here.
+        run: python3 scripts/research_workflow_profile.py validate-profile shared/research_workflow_profiles/field_general.json --shipped-field-general
+
+      - name: Validate risk register mirroring (#759)
+        # Pins docs/RISK_REGISTER.md's index-not-author posture: cited repo
+        # paths and relative links exist (RR-1), every evidence-status bullet
+        # carries a recognized citation and matrix-tied statuses mirror
+        # shared/contracts/capability/stage_capability_matrix.json verbatim
+        # (RR-2), README keeps a rendered inbound link (RR-3). Risk wording
+        # and control selection stay owned by code review.
+        run: python3 scripts/check_risk_register.py
+
+      - name: Validate control-availability map links (#757)
+        # Pins docs/CONTROL_AVAILABILITY.md's pointer integrity: relative
+        # links + anchors resolve (CA-1), every SETUP `### Method` heading is
+        # reachable from the channel table (CA-2), README + SETUP keep an
+        # inbound link (CA-3). Cell semantics stay owned by code review.
+        run: python3 scripts/check_control_availability.py
 
       - name: Validate corpus consumer protocol (v3.6.5+)
         run: python3 scripts/check_corpus_consumer_protocol.py
@@ -309,6 +392,27 @@ jobs:
         env:
           PYTHONPATH: .
         run: python scripts/check_firm_rules_sync.py
+
+      - name: Routing-core sync lint (#892)
+        # Every copy of shared/references/routing_core.md (that file lists its
+        # carriers) must match it byte for byte.
+        env:
+          PYTHONPATH: .
+        run: python scripts/check_routing_core_sync.py
+
+      - name: Method-weaknesses sync lint (#916)
+        # Every surface listed in shared/references/per_source_method_weaknesses.md
+        # must carry its block byte for byte.
+        env:
+          PYTHONPATH: .
+        run: python scripts/check_method_weaknesses_sync.py
+
+      - name: Review-form note sync lint (#921)
+        # Every surface listed in shared/references/review_form_note.md must
+        # carry its block byte for byte, and the note's options stay unranked.
+        env:
+          PYTHONPATH: .
+        run: python scripts/check_review_form_note_sync.py
 
       - name: Judge-prompt-version drift guard (#361)
         # Recomputes the SHA-256 of the canonical judge-prompt section (between
@@ -706,6 +810,12 @@ jobs:
         # untouched .jq files. Behavior of the filters themselves is pinned by the manifest test
         # 346-349-cross-model-grounding-guards.
         run: python3 scripts/check_cross_model_verification_sync.py
+
+      - name: Check sealed Promotion Bakeoff preregistrations (#789)
+        # Requires checkout fetch-depth: 0 above. Verifies local byte binding,
+        # immutable Git ordering, fixed composition, and detectable historical
+        # non-reuse; remote publication/fleet timing stays a run-report witness.
+        run: python3 scripts/check_promotion_bakeoff_preregistration.py verify-tree --repo-root .
 
       - name: Check Codex subscription citation transport (#630)
         # Pins the closed citation-only selector, auth-only containment,

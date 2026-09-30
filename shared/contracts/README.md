@@ -3,6 +3,204 @@
 Schema files for cross-skill contracts: reviewer sprint contracts, Material Passport
 ports, and (v3.6.7+) cross-model audit artifact pipelines.
 
+## Stage capability / evidence matrix (#745)
+
+- `capability/stage_capability_matrix.json` (`stage-capability-matrix/1.0`) is the
+  single machine-readable source for per-stage mechanism status, deterministic
+  conformance, behavioral-evidence provenance, transport limits, and the maximum
+  claim that evidence licenses. Behavioral statuses (`DESIGNED` / `NOT_RUN` /
+  `MEASURED` / `MIXED` / `OUT_OF_SCOPE`) cannot collapse: an unrun eval can never
+  carry a result, a measured row must carry full provenance (in-repo `eval_ref`,
+  model, population, ISO date, result summary), and stale measurements require a
+  visible staleness note. A measured row whose suite publishes
+  `measurement-*.json` reports must bind the current one (date-equal, sibling
+  supersession detected), `CI_GATED`/`TESTED` conformance must name existing
+  lints/tests (`conformance_pinned_by`, D4-style), and `claim_anchors` bind
+  top-level capability sentences verbatim so rewording a claim without
+  touching the matrix fails CI.
+- `docs/STAGE_CAPABILITY_MATRIX.md` is GENERATED from the matrix
+  (`scripts/check_stage_capability_matrix.py --render`) and byte-pinned by the
+  same lint. The matrix indexes evidence, it does not create it: a row licenses
+  at most its recorded `max_licensed_claim`, never more.
+
+## Sealed Promotion Bakeoff preregistration (#789)
+
+- `cross_model/promotion_bakeoff_sealed_commitment.schema.json` is the closed
+  public pre-fleet carrier: campaign id, LF-normalized probe-set SHA-256, and
+  the fixed 30-row aggregate composition only. It has no row, label, path, or
+  free-text field in which the answer key can be exposed.
+- `cross_model/promotion_bakeoff_sealed_reveal.schema.json` binds that immutable
+  commitment to the post-fleet `probe_set.json` reveal. The standard-library
+  checker `scripts/check_promotion_bakeoff_preregistration.py` validates the
+  closed probe shape, strict Git introduction order, immutable history,
+  canonical paths, worktree/index state, and detectable reuse across all local
+  refs and every historical probe version. It rejects shallow history and
+  unreadable historical objects; the sole 2026-08-19 unsealed grandfather is
+  pinned to its canonical path, normalized digest, blob history, and file mode.
+  Verification receipts enumerate every bound squash/cherry-pick reveal copy
+  whose remote publication time must be witnessed after the fleet.
+
+The checker proves repository evidence only. Remote publication time and fleet
+start/end time cannot be derived from local Git, so its receipt explicitly
+requires the public permalink, passing CI witness, and fleet-time bounds in the
+run report before a result is gate-eligible. The full operator lifecycle and
+claims boundary live in `../cross_model_verification.md` § Promotion Bakeoff.
+
+## Research-family workflow profiles (#742)
+
+- `research_workflow/research_workflow_profile.schema.json`
+  (`research-workflow-profile/1.0`) is the closed, manuscript-blind declaration
+  of stage applicability and vocabulary. Omitted task families resolve to
+  `unresolved_fit`, never to applicable. The profile embeds a SHA-256 over its
+  JSON Canonical Form with `content_sha256` replaced by 64 zeroes; persisted
+  profile files must themselves be exact canonical bytes.
+- `research_workflow/research_workflow_profile_selection_receipt.schema.json`
+  (`research-workflow-profile-selection-receipt/1.0`) records an append-only
+  user selection/confirmation/fallback chain. A correction appends a new
+  binding and one visible `profile_context_changed` stale mark per supplied
+  prior-profile stage output. It never rewrites or removes an artifact. Newly
+  introduced authority requirements remain attached to each mark with an
+  explicit `authority_sensitive_reuse_gate: unmet`, so a later consumer can
+  block that reuse until the applicable check passes.
+- `../research_workflow_profiles/field_general.json` is the mandatory shipped
+  fallback: every task family is unresolved except the field-general integrity
+  gates, alternatives are unresolved, the live-branch budget is 3, and an empty
+  authority list means “unknown; ask the user,” never “not required.” It ships
+  with explicit English and zh-TW display names.
+
+The standard-library runtime is `scripts/research_workflow_profile.py`. Its
+`select` command treats an omitted `--profile` as a visibly recorded automatic
+fallback; an explicit profile requires `--selected-by`. `correct` consumes an
+explicit prior-profile binding and stage-output inventory, then emits the new
+receipt to stdout only. No command reads manuscript content, infers a family,
+changes the default workflow, or writes scholar-owned artifacts. The human
+usability protocol and every outcome claim remain `NOT_RUN`.
+
+## Opt-in inquiry branch ledger (#743)
+
+- `research_workflow/inquiry_branch_ledger.schema.json`
+  (`inquiry-branch-ledger/1.0`) is the closed event-source contract for
+  author-originated branches, parked AI-surfaced facets, explicit adoption,
+  disposition, reopen signals, profile rebound, and first-degree artifact
+  staleness. Dense event ids plus a canonical previous-event hash chain detect
+  interior rewrite/reorder; the separate passport digest is the required
+  trusted head for truncation detection.
+- `passport/inquiry_ledger_ref.schema.json` closes the optional Material
+  Passport pointer to `{ledger_path, ledger_version, content_sha256}`. It never
+  embeds a branch or profile and never widens a filesystem path outside the
+  caller-supplied workspace root.
+
+The deterministic offline runtime is `scripts/inquiry_branch_ledger.py`. Replay
+requires every exact profile bound by the ledger so the live-branch budget is
+never inferred from a current default. Reopen appends contiguous deterministic
+stale-cause events; clearing one cause cannot clear another. Ledger/passport
+publication uses a stable sidecar lock and durable recovery journal. The
+feature is OFF unless `ARS_INQUIRY_LEDGER=1`, does not materialize before a
+second branch, and shows compact summaries only at the frozen Stage 1, 2.5,
+4.5, or still-actionable recorded-signal moments. Behavioral and usability evidence is
+`NOT_RUN`.
+
+## PDF read-integrity and optional content advisory (#512 follow-up)
+
+- `pdf/pdf_read_preflight.schema.json` accepts the unchanged legacy structural sidecar
+  or the all-or-nothing opt-in content extension. In that extension, `verdict` is
+  explicitly `verdict_scope: STRUCTURE_ONLY`; `OCR_RECOMMENDED` never rewrites that
+  structural value into a content claim. The schema binds the legacy shape to tool
+  version 1.0.0 and the extension shape to 1.1.0.
+- `pdf/pdf_content_classifier_worker.schema.json` closes the stdout of the fixed
+  isolated worker to two classifications, three unavailable reasons, finite bounded
+  confidence, and bounded non-negative page indexes. Runtime additionally binds every
+  page to the structural page count.
+- `pdf/pdf_content_classifier_diagnostic.schema.json` is the separate POSIX-only,
+  local mode-`0600` operator artifact. Platforms without `fchmod` reject its CLI
+  option before path creation. Its explicitly untrusted detail is capped and never
+  copied into or referenced by the sidecar. File-writing CLI invocations use
+  conservative NFC/casefold keys, path resolution, and existing-inode checks to reject
+  aliases before worker launch; the stdout-only legacy path adds no such precondition.
+  POSIX sidecar output pre-binds the parent dirfd/inode, then uses a private `0700`
+  fixed-name staging directory and anchored dirfd-relative publication. Open-inode
+  checks reject staging entry swaps; atomic final-entry replacement does not follow
+  post-check links. Non-POSIX output fails closed; stdout classification remains
+  available. The diagnostic parent is likewise dirfd-bound before the worker. These are
+  instantaneous inode postconditions, not a general same-UID sandbox; callers control
+  the output parent. A failed diagnostic unlinks only the no-follow leaf still matching
+  its created fd inode, preserving the primary error and any attacker replacement while
+  keeping its exclusive path retryable.
+
+Runtime: `scripts/pdf_read_preflight.py` and
+`scripts/pdf_content_classifier_worker.py`. Frozen opt-in scope and residual risk:
+`docs/design/2026-08-13-512-pdf-content-classification-sandbox-spec.md`.
+
+## Claim-standing candidate ledger (#655 Track A)
+
+- `claim_standing/query_plan.schema.json` (`claim-standing-query-plan/1.0`)
+  binds one exact high-impact checkpoint claim, at most three accepted queries,
+  at most four discovery-index identities, filters, authorized content class,
+  frozen caps, and retrieval-only consent through a closed consentable-plan
+  projection (version 1.1 below adds the stance-authorizable consent).
+- `claim_standing/retrieval_input.schema.json`
+  (`claim-standing-retrieval-input/1.0`) carries already-retained,
+  adapter-neutral attempts, closed retry-authorization receipts, raw hits,
+  explicit version relations, and caller-supplied relevance success/failure
+  evidence bound to exact claim/candidate inputs and canonical prompt bytes.
+- `claim_standing/candidate_ledger.schema.json`
+  (`claim-standing-candidate-ledger/1.0`) preserves every attempt and raw-hit
+terminal state while recording deterministic work-family selection.
+- `claim_standing/query_plan_v1_1.schema.json`
+  (`claim-standing-query-plan/1.1`) is identical to 1.0 except that the consent
+  decision may be `retrieval_plus_stance`, in which case a top-level
+  `stance_plan` names the exact stance provider/model surface, the consent
+  binds its hash, and the authorized content classes extend by exactly
+  `claim_and_selected_evidence_to_stance_provider`. A 1.0 plan stays valid
+  under its own schema; the runtime validator accepts both versions and
+  enforces the stance bindings only on 1.1.
+- `claim_standing/transmission_ledger.schema.json`
+  (`claim-standing-transmission-ledger/1.0`) accounts every event that left the
+  session during one probe: retrieval-query events derived one-to-one from the
+  retained attempts and stance-classification events copied verbatim from the
+  stance runner's transmission records, each carrying recipient, purpose, exact
+  content classes, byte count, local hash, time, consent receipt, retention
+  disclosure, and result state. `scripts/check_claim_standing_transmissions.py`
+  is the normative builder/validator: an event outside the plan's authorized
+  content classes or consented recipient roster fails closed (design §9
+  gate 14), and validation is exact replay.
+- `claim_standing/stance_record.schema.json`
+  (`claim-standing-stance-record/1.0`) is the stance-classification output for
+  one probe run: full §7 probe-identity hashes, one row per selected work
+  family under the closed §5.1 vocabulary and cross-field rules (a performed
+  row requires at least one `EVR-CS-` evidence-row reference; metadata-only
+  coverage can never be performed), the all-selected distribution whose seven
+  buckets must sum to `selected_total`, a mandatory
+  `STANCE CLASSIFICATION UNMEASURED` banner, and no scalar
+  credibility/confidence/trust field anywhere (test-pinned).
+
+Provider retention disclosure is also closed: `known` requires a non-empty
+reference and `unknown` requires null.
+
+The schema-level `\\S` checks are portable first screens. The runtime applies a
+single NFKC visible-semantic-text predicate to the claim/query, disclosure,
+identity, available-abstract, successful-assessment, and failure-detail
+surfaces; it rejects surrogates and text made only of Unicode control/format,
+separator, combining, whitespace, or punctuation characters. Failed malformed
+assessment raw output remains exact evidence and may itself be whitespace- or
+format-only. DOI text is stable identity only when strict NFKC/prefix-trimmed
+`10.<4-9 digits>/<suffix>` validation succeeds.
+
+The pure local finalizer is
+`scripts/build_claim_standing_candidate_ledger.py`; the authoritative boundary
+is `shared/references/claim_standing_candidate_ledger_protocol.md`. This slice
+has no discovery adapter, network/model call, stance classification, rendering,
+evidence-row extension, pipeline hook, or held-out dispatch. It is an offline
+substrate only, remains unmeasured, and does not close #655.
+Its CLI never creates an output for a `session_only` plan. `build --output`
+requires the existing, hash-bound `explicit_local_export` consent state; there
+is no command-line override. Authorized output must exactly match the
+hash-bound absolute `authorized_output_path`, is exclusive/no-follow where the host
+supports it, mode `0600` from creation, file- and directory-fsynced, and
+truthfully carries the consented persistence/export/path state at the ledger root
+and in each work family's sharing scope. Its separate rights basis remains
+`not_assessed`; local persistence consent is not a rights claim.
+
 ## Codex subscription citation transport (#630)
 
 - `cross_model/codex_citation_request.schema.json` — closed, bounded data-only
@@ -74,6 +272,9 @@ Schemas for Material Passport input ports.
   entries that could not be included in the corpus.
 - `passport/reset_ledger_entry.schema.json` (v3.6.3) — `reset_boundary[]` ledger entries
   for the opt-in passport reset boundary protocol.
+- `passport/inquiry_ledger_ref.schema.json` (#743) — optional digest-bound
+  pointer to the separate canonical inquiry branch ledger; missing or
+  mismatched targets fail visibly and unpointed candidates are ignored.
 - `passport/audit_artifact_entry.schema.json` (v3.6.7 Step 6) — `audit_artifact[]` entries
   recording one cross-model audit run per downstream-agent deliverable. Two lifecycle
   states (proposal / persisted) share the schema via `oneOf`. Cross-artifact invariants
@@ -83,14 +284,66 @@ Schemas for Material Passport input ports.
   `phase2_investigation/version_records.yaml` sidecar for academic citation version
   families (preprint -> proceedings -> journal extension). This is deliberately a
   sidecar: `literature_corpus_entry.schema.json` stays adapter-owned and unmodified.
-- `passport/human_read_log.schema.json` (#513) — the user-owned human-read ledger
+- `passport/human_read_log.schema.json` (#513/#738) — the user-owned
+  `USER_ATTESTED_READ` ledger
   (`<passport-stem>_human_read_log.yaml`, written by `scripts/ars_mark_read.py`),
-  including the optional #513 `read_scope` honest-coverage attestation
-  (`level`/`locators`/`note`, declaration-only). Deliberately a sidecar for the same
-  reason as above: corpus entries MUST NOT carry human-read state (v3.6.8 firm rule 3).
-  Audit/test-time validation only — the CLI stays dependency-light at runtime.
+  including required scope on new marks and legacy-compatible scope absence.
+  Declaration-only: it is not verified reading or comprehension. Missing/unknown
+  scope remains `coverage_unknown` and never promotes to `ok`.
+- `passport/user_attested_read_resolution.schema.json` (#738) — the closed output
+  of `scripts/human_read_attestation_resolver.py`; only `state: covered` is
+  `ok_eligible`, while absence, rescind, partial/unknown coverage, unresolved
+  anchors, and invalid ledgers remain explicitly non-promoting. This output is a
+  `transient_routing_decision`, not a persisted audit receipt: it carries no
+  input digest and must be recomputed from the current ledger and exact anchor
+  on each finalizer pass. Its closed `finalizer_disposition` keeps absent or
+  rescinded marks as unacknowledged LOW-WARN, partial/unknown active marks as
+  acknowledged-partial, anchor failures on the locator-precedence route, and
+  invalid ledgers on a blocking route.
 
 ## Shared evidence rows (#656)
+
+`shared/contracts/evidence/claim_registry.schema.json` (#737) is the closed E1
+population contract: exact raw-draft hash plus exact UTF-8 byte span and equal
+text for every registered claim. `claim_registry_coverage_report.schema.json`
+is the deterministic, replay-bound gap report emitted by
+`scripts/claim_registry_coverage.py`; it binds exact raw draft and serialized
+registry hashes and joins only those exact spans. It covers citation-bearing
+and quantitative candidate sentences only. Its finite grammar includes common
+Markdown/numeric/author-year/Pandoc/inline-reference citations plus
+unit-bearing numbers, p-values, `N=...`, and common effect-size/ratio notation;
+unrecognized scholarly syntax remains possible. The report always records
+`semantic_extraction_coverage: not_machine_detectable`; it cannot certify that
+every substantive claim was extracted into E1. Consumers replay the report
+against both inputs; absence, stale bindings, or validation failure are
+unresolved execution states, never a zero-gap result.
+
+## Review-panel provenance (#740)
+
+`reviewer/review_panel_provenance_input.schema.json` records actual seat-level
+observations; `reviewer/review_panel_provenance.schema.json` is the closed,
+replay-derived artifact built by `scripts/review_panel_provenance.py`. Both are
+closed to `reviewer_full`, bind the exact raw-byte digest of
+`reviewer/full.json`, and require the ordered `EIC`, `R1`, `R2`, `R3`, `DA`
+roster. Actual execution observations remain nullable and are never filled from
+those seat labels. The artifact keeps role separation, within-panel invocation
+context separation, peer-output blinding, model-family diversity, provider
+diversity, and accountable-human diversity as six separate `true` / `false` /
+`unknown` axes. `fresh_context_scope: within_panel_attempt_only` makes explicit
+that no cross-attempt history is checked. Missing facts remain unknown,
+same-family or family-unknown execution carries a fixed correlated-error
+disclosure, and no persona-derived binary independence field is admitted.
+
+`reviewer/review_panel_provenance_carrier.schema.json` is the exact closed
+Schema 6 valid/invalid union. The valid branch is accepted only after the
+runtime hashes the referenced artifact's exact raw bytes, validates and replays
+it, and compares the normalized-manifest digest, execution-topology digest,
+fresh-context scope, and six axes. The invalid branch admits only
+`absent|unreachable|digest_mismatch|schema_invalid|replay_invalid`, forces all
+axes to `unknown`, and carries no path or digest. `reviewer_full` must emit one
+branch; the other closed modes must omit the field. Use
+`scripts/review_panel_provenance.py validate-schema6` for mode-scoped presence
+and replay validation.
 
 `shared/contracts/evidence/evidence_row.schema.json` defines the closed
 `evidence-row/1.0` carrier for evidence shown at human-adjudication checkpoints.
@@ -231,6 +484,8 @@ manuscript and optional completed-preregistration bytes. It is finalized only by
 `scripts/build_cross_document_consistency_advisory.py`; the existing 1.0/1.1
 schemas and `scripts/evidence_rows.py` identities and behavior remain unchanged.
 
+`shared/contracts/evidence/evidence_row_v1_3.schema.json` is the separate closed `evidence-row/1.3` carrier for the `claim_standing_advisory` surface (#655 design §5.2): one row per (probe claim, selected work-family candidate) binding the bounded inspected-evidence excerpt to its exact source hash/span, reusing the family's excerpt/cache/content-handling blocks verbatim (test-pinned). The row is provenance-only — it never carries a stance or verdict, an exact excerpt match never determines stance, and abstract-level coverage is declared as such and never rendered as verified full text.
+
 ## Non-ranking revision authority (#670)
 
 The current reviewer-to-author revision family lives under `revision/`:
@@ -249,7 +504,16 @@ The current reviewer-to-author revision family lives under `revision/`:
   the complete exact patch SHA-256; and
 - `revision_evidence_bundle.schema.json` plus the integrity receipt schema
   — a continuous local chain from exact integrity PASS through current
-  review-write/no-op/integrity rounds to the final draft.
+  review-write/no-op/integrity rounds to the final draft; and
+- `claim_strength_drift_findings.schema.json`,
+  `claim_strength_drift_disposition_input.schema.json`, and
+  `claim_strength_drift_disposition.schema.json` — the E6 semantic finding set,
+  transient exact raw-event artifact paths plus choices, and deterministic
+  hash-bound disposition sidecar. Build and replay validation safely reopen
+  every explicitly named regular non-symlink event file and recompute its raw
+  SHA-256; a digest assertion alone is insufficient. The sidecar retains no
+  event path or raw message. This byte binding does not authenticate source,
+  content meaning, or actor identity.
 
 `scripts/revision_roadmap.py` builds, validates, renders, and bundle-replays this
 family without a model, network, API, directory scan, or ambient clock. It opens
@@ -264,7 +528,12 @@ replacements and declined-overlap collateral authority are exact and
 single-use. An integrity issue list grants no write by itself: apply requires a
 separate author sidecar whose explicit input already carries the exact proposed
 patch digest. Apply report 1.3 records the replayed witness and explicitly leaves
-unregistered semantic drift to E6 review. Patch 1.0 lives only under
+unregistered semantic drift to E6 review. Once E6 reports a drift row, it has no
+ordinary advisory default: `scripts/claim_strength_drift_disposition.py` requires
+one explicit `restore`, `authorize_with_reason`, or `pause` choice per finding;
+only an all-authorized sidecar derives `authorized_to_continue`. The sidecar
+proves finding coverage and artifact binding, not semantic-detection completeness
+or scientific warrant. Patch 1.0 lives only under
 `patch/legacy/v1_0/` with its archived loader.
 
 The current #576 `re_review/` family is version 1.1, uses
@@ -611,14 +880,27 @@ from deterministic criterion resolution:
   selection, precedence, and as-of input;
 - `criteria_registry.schema.json` — the versioned four-part authority registry with
   criterion provenance, applicability/exclusions, freshness, and blocking policy;
+- `review_criteria_source_receipt.schema.json` — the closed discriminated
+  receipts for mutable-web semantic snapshots and immutable Git repository-head
+  verification;
 - `review_target_context.schema.json` — the pointer-only resolved profile, three
   independent outcome dimensions, parallel conflicts, fallback state, and stable
   digests.
 
-`shared/review_criteria_registry.json` intentionally ships only a field-general
-baseline. It does not present remembered or synthetic journal rules as official
-venue guidance. Exact venue × track × contribution-type behavior is covered by
-synthetic fixtures.
+`shared/review_criteria_registry.json` ships a bounded source-backed proving set
+for MSR 2027 Technical Papers Full Papers and ACM SIGSOFT's General and
+Repository Mining standards, alongside the field-general fallbacks. This is not
+a coverage claim: targets without an exact official profile remain unresolved,
+and the SIGSOFT rows remain advisory unless venue adoption is separately
+sourced. The executable exact-target declaration and hermetic source/digest
+checks live under `scripts/fixtures/review_target_context/` and
+`scripts/test_resolve_review_target_context.py`; the dated source audit is
+`audits/575-source-backed-proving-set-2026-08-24.md`. Mutable-page and
+immutable-repository verification receipts live under
+`shared/review_criteria_sources/`. The fixture models a hypothetical
+author-confirmed declaration; it is not a real-manuscript attestation. The
+registry release preserves its id, increments its version, and visibly rotates
+V1 resolved digests so consumers must explicitly rebind.
 
 Resolve a declaration and optionally emit the Phase 0/1 Target Criteria Brief:
 

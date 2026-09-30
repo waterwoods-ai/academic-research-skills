@@ -141,6 +141,10 @@ or author triage. Consumer receipts are written only by the deterministic
 recorder after their ordinary artifacts exist; no missing consumer is
 fabricated for a skipped or mid-entry stage.
 
+### Run ledger (#887)
+
+The tracker's state lives in the conversation, so compaction can rewrite it. The orchestrator appends what must survive to the run ledger beside the passport (`scripts/run_ledger.py`; what it records: `pipeline_orchestrator_agent.md` § Run ledger and handoff check), and the tracker never writes it. When the tracker's state and the ledger's report disagree after compaction or resume, a decision follows `references/pipeline_state_machine.md` § Checkpoint decision provenance, a step outcome follows the report's `step_outcomes`, which gives a receipt's recorded outcome only while its input files are unchanged (#898), and a counter takes the higher of the two values for its stage, so a lost count cannot reopen a retry or loop limit.
+
 ### State Update Protocol
 
 1. Requesting agent calls `request_update(field, new_value, reason)`
@@ -485,12 +489,12 @@ Check whether prerequisite materials for entering the specified stage are availa
 | Stage 1 | None (can start from scratch) | User-provided topic/direction |
 | Stage 2 | None (but Stage 1 output recommended) | RQ Brief, Methodology Blueprint, Bibliography, Synthesis |
 | Stage 2.5 | Paper Draft | -- |
-| Stage 3 | **Verified Paper Draft + Integrity Report (Pre)** | -- |
+| Stage 3 | **Verified Paper Draft + Integrity Report (Pre)** — or, on a recorded Integrity Check FAIL Loop continuation, the Stage 2.5 draft + Integrity Report (Pre) carrying the partially-unverified warning | -- |
 | Stage 4 | Review Reports + Revision Roadmap | Paper Draft |
 | Stage 3' | Revised Draft + hard-required Original pre-revision Draft + Round-1 Revision Roadmap + exact author-adjudication sidecar + fully replayed Revision-Evidence Bundle (current contract re-review; not required for an explicitly requested fresh full review) | Response to Reviewers; Editorial Decision Letter; Round-1 findings; exact ordered apply report/patch pairs matching the bundle projection; Round-1 Reviewer Configuration Cards. Missing any current hard-required artifact or a mismatched pair is `manifest_incomplete`, not a warning-only degradation. |
 | Stage 4' | Re-Review Report (Decision: Major) | Revised Draft |
 | Stage 4.5 | Revised Draft or Re-Revised Draft | -- |
-| Stage 5 | **Integrity Report (Final) — verdict: PASS** | -- |
+| Stage 5 | **Integrity Report (Final) — verdict: PASS, or FAIL with a recorded Integrity Check FAIL Loop resolution** | -- |
 | Stage 6 | None (Final Paper already delivered at Stage 5) | Pipeline state history + dialogue_log_ref ranges |
 
 **Return format:**

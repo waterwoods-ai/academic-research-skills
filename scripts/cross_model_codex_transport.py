@@ -35,6 +35,20 @@ RECEIPT_SCHEMA_VERSION = "ars-codex-citation-receipt/1.0"
 TRANSPORT = "codex_subscription"
 AUTH_MODE = "chatgpt_subscription"
 MIN_CODEX_VERSION = (0, 147, 0)
+# Closed vocabulary of reasoning efforts ARS forwards on turn/start. The
+# app-server schema types ReasoningEffort as any non-empty string the served
+# model advertises (generate-json-schema, codex-cli 0.153.4), and the provider
+# rejects a value the served model does not advertise one RPC later — so this
+# set buys an earlier, better-named error (INVALID_REASONING_EFFORT), not a
+# safety property. `ultra` is deliberately absent (#824): the same schema
+# describes effort="ultra" as the replacement for the deprecated
+# multiAgentMode ("proactive multi-agent behavior"), which is outside this
+# single-reference, no-delegation transport's contract. A general Codex
+# research session may use ultra; this contained adapter must not request it
+# (validate_reasoning_effort raises REASONING_EFFORT_REQUIRES_DELEGATION).
+ACCEPTED_REASONING_EFFORTS = frozenset(
+    {"minimal", "low", "medium", "high", "xhigh", "max"}
+)
 
 MAX_REQUEST_BYTES = 32 * 1024
 MAX_FIELD_CHARS = 8192
@@ -45,7 +59,9 @@ MAX_SEARCH_ITEMS = 32
 MAX_RESULTS_PER_SEARCH = 128
 MAX_SOURCES = 16
 MAX_AUTH_BYTES = 1024 * 1024
+MAX_STDERR_BYTES = 1024 * 1024
 APP_SERVER_TIMEOUT_SECONDS = 300.0
+APP_SERVER_DRAIN_GRACE_SECONDS = 3.0
 
 IDENTIFIER_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,127}$")
 MODEL_RE = re.compile(r"^gpt-[a-z0-9][a-z0-9._-]{0,123}$")
@@ -68,6 +84,15 @@ FORBIDDEN_ITEM_TYPES = {
     "plan",
 }
 ALLOWED_ITEM_TYPES = {"userMessage", "reasoning", "agentMessage", "webSearch"}
+# Non-search members of the app-server protocol's CLOSED WebSearchAction oneOf
+# (both spellings), per `codex app-server generate-json-schema` on 0.147.0.
+# The discriminator is the ONLY required field of every non-search variant in
+# that schema (`required: ["type"]`; `url`/`pattern` are nullable optionals),
+# so the exemption checks exactly the discriminator: demanding the optional
+# fields would re-introduce the false-fatality class that invalidated bakeoff
+# runs 1 and 3 (#787). A skipped item contributes nothing to the receipt —
+# sources can only bind to strictly-validated search-item results.
+NON_SEARCH_WEB_ACTIONS = {"other", "openPage", "open_page", "findInPage", "find_in_page"}
 DISABLED_FEATURES = (
     "shell_tool",
     "unified_exec",
@@ -86,7 +111,13 @@ DISABLED_FEATURES = (
     "image_generation",
     "artifact",
     "code_mode",
-    "code_mode_host",
+    # "code_mode_host" is deliberately NOT disabled: on codex-cli 0.147.0 the
+    # standalone web-search tool executes through the code-mode host, so
+    # disabling the host silently removes the search tool and every call
+    # fails closed as MODEL_RETURNED_NOT_SEARCHED (#785, isolated by live
+    # bisection 2026-08-19). "code_mode" itself stays disabled, and the
+    # forbidden-event scan still fails the receipt on any item type outside
+    # the {userMessage, reasoning, agentMessage, webSearch} allowlist.
     "hooks",
     "goals",
     "workspace_dependencies",
@@ -137,10 +168,13 @@ MODEL_OUTPUT_SCHEMA: dict[str, Any] = {
     "properties": {
         "verdict": {"type": "string", "enum": sorted(VERDICTS)},
         "detail": {"type": "string", "maxLength": MAX_DETAIL_CHARS},
+        # No "uniqueItems": the provider's structured-output schema subset
+        # rejects it (invalid_json_schema, observed live 2026-08-19, #785);
+        # duplicate-source refusal is enforced locally in
+        # _validate_model_output, which fails closed on any duplicated URL.
         "sources": {
             "type": "array",
             "maxItems": MAX_SOURCES,
-            "uniqueItems": True,
             "items": {"type": "string", "maxLength": 2048, "pattern": "^https://"},
         },
     },
@@ -160,7 +194,9 @@ NOT_FOUND means a reference-bound search completed but no matching work was foun
 NOT_SEARCHED means you could not complete a reference-bound live search.
 For VERIFIED or MISMATCH, sources must contain at least one exact HTTPS URL from the
 structured search results you actually received. Do not copy a URL merely because it
-appears in REFERENCE_DATA. Keep detail factual and under 2,048 characters."""
+appears in REFERENCE_DATA. For NOT_FOUND or NOT_SEARCHED, sources must be an empty
+array — describe any absence evidence in detail instead of listing URLs. Keep detail
+factual and under 2,048 characters."""
 
 
 class TransportError(RuntimeError):
@@ -169,6 +205,24 @@ class TransportError(RuntimeError):
     def __init__(self, code: str, message: str = "") -> None:
         super().__init__(message or code)
         self.code = code
+
+
+def validate_reasoning_effort(environ: dict[str, str]) -> str:
+    """Transport-contract check on the configured effort, before any side effect.
+
+    Runs before transport detection, auth access, temporary state, or app-server
+    launch. `ultra` is a delegation request (see ACCEPTED_REASONING_EFFORTS),
+    so it gets its own reason code; any other value outside the closed set is
+    the earlier, better-named error. Per-model API vocabularies are not
+    enforced here — this transport speaks the app-server effort enum and the
+    provider rejects what the served model does not advertise.
+    """
+    effort = environ.get("ARS_CROSS_MODEL_REASONING_EFFORT", "")
+    if effort == "ultra":
+        raise TransportError("REASONING_EFFORT_REQUIRES_DELEGATION")
+    if effort and effort not in ACCEPTED_REASONING_EFFORTS:
+        raise TransportError("INVALID_REASONING_EFFORT")
+    return effort
 
 
 def _no_duplicate_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -441,7 +495,16 @@ def detect_transport(environ: dict[str, str] | None = None) -> tuple[int, dict[s
     if auth_run.returncode != 0:
         base["reason_code"] = "AUTH_STATUS_UNAVAILABLE"
         return 3, base
-    if auth_run.stdout.strip() != "Logged in using ChatGPT":
+    # codex-cli emits the attestation line on stdout on some versions and on
+    # stderr on others (0.147.0 non-TTY uses stderr, #785). Accept an exact
+    # line on either stream — same idiom as the #684 harness; anything else
+    # stays fail-closed.
+    status_lines = {
+        line.strip()
+        for line in (auth_run.stdout + "\n" + auth_run.stderr).splitlines()
+        if line.strip()
+    }
+    if "Logged in using ChatGPT" not in status_lines:
         base["reason_code"] = "AUTH_NOT_CHATGPT_SUBSCRIPTION"
         return 3, base
     base.update(
@@ -572,11 +635,11 @@ class _LineReader:
         except BaseException as exc:  # pragma: no cover - OS pipe failures
             self.queue.put(exc)
 
-    def get(self, timeout: float) -> bytes:
+    def get(self, timeout: float, *, timeout_code: str = "APP_SERVER_TIMEOUT") -> bytes:
         try:
             item = self.queue.get(timeout=timeout)
         except queue.Empty as exc:
-            raise TransportError("APP_SERVER_TIMEOUT") from exc
+            raise TransportError(timeout_code) from exc
         if item is None:
             raise TransportError("APP_SERVER_EOF")
         if isinstance(item, BaseException):
@@ -584,24 +647,6 @@ class _LineReader:
                 raise item
             raise TransportError("APP_SERVER_READ_FAILED") from item
         return item
-
-    def drain_closed(self) -> list[bytes]:
-        """Return every line queued before a closed pipe; fail if it is still live."""
-        if self.thread.is_alive():
-            raise TransportError("APP_SERVER_DRAIN_TIMEOUT")
-        lines: list[bytes] = []
-        while True:
-            try:
-                item = self.queue.get_nowait()
-            except queue.Empty:
-                return lines
-            if item is None:
-                return lines
-            if isinstance(item, BaseException):
-                if isinstance(item, TransportError):
-                    raise item
-                raise TransportError("APP_SERVER_READ_FAILED") from item
-            lines.append(item)
 
 
 class _DrainReader:
@@ -682,24 +727,93 @@ def _response_result(message: dict[str, Any], request_id: int) -> dict[str, Any]
 
 
 def _stop_process(proc: subprocess.Popen[bytes]) -> None:
-    if proc.poll() is not None:
+    if proc.poll() is None:
         try:
-            os.killpg(proc.pid, signal.SIGKILL)
-        except OSError:
+            os.killpg(proc.pid, signal.SIGTERM)
+        except (OSError, ProcessLookupError):
             pass
-        return
-    try:
-        os.killpg(proc.pid, signal.SIGTERM)
-        proc.wait(timeout=3)
-    except (OSError, ProcessLookupError, subprocess.TimeoutExpired):
         try:
-            os.killpg(proc.pid, signal.SIGKILL)
             proc.wait(timeout=3)
-        except (OSError, ProcessLookupError, subprocess.TimeoutExpired):
+        except subprocess.TimeoutExpired:
+            pass
+    # The parent can exit on SIGTERM while a descendant ignores it. Always seal
+    # the process-group boundary before returning, even when the parent is gone.
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except (OSError, ProcessLookupError):
+        pass
+    if proc.poll() is None:
+        try:
+            proc.wait(timeout=3)
+        except subprocess.TimeoutExpired:
             try:
                 proc.kill()
-            except OSError:
+                proc.wait(timeout=3)
+            except (OSError, subprocess.TimeoutExpired):
                 pass
+
+
+def _close_app_server_stdin(proc: subprocess.Popen[bytes]) -> None:
+    """Announce that the host will send no RPCs after the target turn terminates."""
+    if proc.stdin is None:
+        raise TransportError("APP_SERVER_STDIN_UNAVAILABLE")
+    try:
+        proc.stdin.close()
+    except (BrokenPipeError, OSError) as exc:
+        raise TransportError("APP_SERVER_STDIN_CLOSE_FAILED") from exc
+
+
+def _remaining_drain_seconds(deadline: float) -> float:
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise TransportError("APP_SERVER_DRAIN_TIMEOUT")
+    return remaining
+
+
+def _drain_app_server_after_turn(
+    proc: subprocess.Popen[bytes],
+    reader: _LineReader,
+    stderr_reader: _DrainReader,
+    messages: list[dict[str, Any]],
+    raw_lines: list[bytes],
+    deadline: float,
+) -> None:
+    """Require clean parent exit and both pipe EOFs, retaining every stdout event."""
+    while True:
+        try:
+            raw = reader.get(
+                _remaining_drain_seconds(deadline),
+                timeout_code="APP_SERVER_DRAIN_TIMEOUT",
+            )
+        except TransportError as exc:
+            if exc.code == "APP_SERVER_EOF":
+                break
+            raise
+        raw_lines.append(raw)
+        message = _parse_rpc_line(raw)
+        messages.append(message)
+        if len(messages) > MAX_EVENT_MESSAGES:
+            raise TransportError("EVENT_MESSAGE_LIMIT_EXCEEDED")
+        if "id" in message and "method" in message:
+            raise TransportError("APP_SERVER_UNEXPECTED_REQUEST")
+
+    try:
+        returncode = proc.wait(timeout=_remaining_drain_seconds(deadline))
+    except subprocess.TimeoutExpired as exc:
+        raise TransportError("APP_SERVER_DRAIN_TIMEOUT") from exc
+    if returncode != 0:
+        raise TransportError("APP_SERVER_EXIT_NONZERO")
+
+    reader.thread.join(timeout=_remaining_drain_seconds(deadline))
+    if reader.thread.is_alive():
+        raise TransportError("APP_SERVER_DRAIN_TIMEOUT")
+    stderr_reader.thread.join(timeout=_remaining_drain_seconds(deadline))
+    if stderr_reader.thread.is_alive():
+        raise TransportError("APP_SERVER_DRAIN_TIMEOUT")
+    if stderr_reader.failed.is_set():
+        raise TransportError("APP_SERVER_READ_FAILED")
+    if stderr_reader.exceeded.is_set():
+        raise TransportError("APP_SERVER_STDERR_TOO_LARGE")
 
 
 def run_app_server(
@@ -710,6 +824,7 @@ def run_app_server(
     source_auth: Path,
     environ: dict[str, str],
 ) -> tuple[list[dict[str, Any]], bytes]:
+    effort = validate_reasoning_effort(environ)
     auth_raw = _read_auth_bytes(source_auth)
     with tempfile.TemporaryDirectory(prefix="ars-codex-citation-") as tmp:
         temp_root = Path(tmp)
@@ -733,15 +848,16 @@ def run_app_server(
             )
         except OSError as exc:
             raise TransportError("APP_SERVER_START_FAILED") from exc
-        if proc.stdout is None or proc.stderr is None:
-            _stop_process(proc)
-            raise TransportError("APP_SERVER_PIPE_UNAVAILABLE")
-        reader = _LineReader(proc.stdout, limit=MAX_EVENT_BYTES)
-        stderr_reader = _DrainReader(proc.stderr, limit=1024 * 1024)
-        messages: list[dict[str, Any]] = []
-        raw_lines: list[bytes] = []
-        deadline = time.monotonic() + APP_SERVER_TIMEOUT_SECONDS
+        reader: _LineReader | None = None
+        stderr_reader: _DrainReader | None = None
         try:
+            if proc.stdout is None or proc.stderr is None:
+                raise TransportError("APP_SERVER_PIPE_UNAVAILABLE")
+            reader = _LineReader(proc.stdout, limit=MAX_EVENT_BYTES)
+            stderr_reader = _DrainReader(proc.stderr, limit=MAX_STDERR_BYTES)
+            messages: list[dict[str, Any]] = []
+            raw_lines: list[bytes] = []
+            deadline = time.monotonic() + APP_SERVER_TIMEOUT_SECONDS
             _send_rpc(
                 proc,
                 {
@@ -801,10 +917,7 @@ def run_app_server(
                 "environments": [],
                 "runtimeWorkspaceRoots": [],
             }
-            effort = environ.get("ARS_CROSS_MODEL_REASONING_EFFORT", "")
             if effort:
-                if effort not in {"minimal", "low", "medium", "high", "xhigh", "max"}:
-                    raise TransportError("INVALID_REASONING_EFFORT")
                 turn_params["effort"] = effort
             _send_rpc(proc, {"id": 3, "method": "turn/start", "params": turn_params})
             turn_response = _wait_rpc(
@@ -827,23 +940,26 @@ def run_app_server(
                 ),
                 deadline,
             )
-            _stop_process(proc)
-            reader.thread.join(timeout=3)
-            stderr_reader.thread.join(timeout=3)
-            for raw in reader.drain_closed():
-                raw_lines.append(raw)
-                messages.append(_parse_rpc_line(raw))
-                if len(messages) > MAX_EVENT_MESSAGES:
-                    raise TransportError("EVENT_MESSAGE_LIMIT_EXCEEDED")
-            if stderr_reader.thread.is_alive():
-                raise TransportError("APP_SERVER_DRAIN_TIMEOUT")
-            if stderr_reader.failed.is_set():
-                raise TransportError("APP_SERVER_READ_FAILED")
-            if stderr_reader.exceeded.is_set():
-                raise TransportError("APP_SERVER_STDERR_TOO_LARGE")
+            terminal_observed_at = time.monotonic()
+            _close_app_server_stdin(proc)
+            drain_deadline = min(
+                deadline, terminal_observed_at + APP_SERVER_DRAIN_GRACE_SECONDS
+            )
+            _drain_app_server_after_turn(
+                proc,
+                reader,
+                stderr_reader,
+                messages,
+                raw_lines,
+                drain_deadline,
+            )
             return messages, b"".join(raw_lines)
         finally:
             _stop_process(proc)
+            if reader is not None:
+                reader.thread.join(timeout=3)
+            if stderr_reader is not None:
+                stderr_reader.thread.join(timeout=3)
 
 
 def _empty_receipt(
@@ -969,17 +1085,116 @@ def parse_app_server_messages(
         model_output = _validate_model_output(strict_json_loads(text))
     except (UnicodeError, ValueError, json.JSONDecodeError):
         return _empty_receipt(request, model, event_digest, "FINAL_OUTPUT_INVALID")
-    if model_output["verdict"] == "NOT_SEARCHED":
-        receipt = _empty_receipt(
-            request, model, event_digest, "MODEL_RETURNED_NOT_SEARCHED"
-        )
-        receipt["detail"] = model_output["detail"]
-        return receipt
+    # codex-cli 0.147.0 also emits webSearch items for follow-up page
+    # activity. The app-server protocol's WebSearchAction is a CLOSED oneOf —
+    # {"search", "openPage", "findInPage", "other"} (Responses-API spelling
+    # {"search", "open_page", "find_in_page", "other"}), verified against
+    # `codex app-server generate-json-schema` output on 0.147.0 (#787/#788).
+    # Exactly the non-search members of that first-party closed set are
+    # exempt: excluded before the item cap and skipped for binding purposes —
+    # a URL seen only in an opened page can never become a bound source — but
+    # not stream-fatal (previously every fabricated-reference run died as
+    # EVENT_STREAM_INVALID because absence checks legitimately open result
+    # pages). Any action shape OUTSIDE the closed set — missing type, unknown
+    # type, non-dict — stays fail-closed, and search-typed items keep the
+    # exact strict validation below. This shape validation deliberately runs
+    # BEFORE the MODEL_RETURNED_NOT_SEARCHED early return: a model
+    # NOT_SEARCHED verdict must never mask response-shape drift (#788
+    # round-3 P2).
+    def _is_page_open(item: dict[str, Any]) -> bool:
+        action = item.get("action")
+        if not isinstance(action, dict):
+            return False
+        # The discriminator must be type-checked before set membership: an
+        # array/object type would raise TypeError (unhashable) and crash the
+        # verifier instead of failing closed (#788 round-19 P2).
+        action_type = action.get("type")
+        return isinstance(action_type, str) and action_type in NON_SEARCH_WEB_ACTIONS
 
+    # The COMPLETE search-item strict validation runs here, BEFORE the
+    # MODEL_RETURNED_NOT_SEARCHED early return, over every completed
+    # webSearch item that is not a protocol page-open — including legacy
+    # items with no `action` field — so no model verdict can mask
+    # response-shape drift (#788 rounds 3/7/8: each narrower placement left
+    # a masking path).
+    for _, item in completed_items:
+        if item["type"] != "webSearch":
+            continue
+        # Uniform field validation for EVERY webSearch item, page-opens
+        # included (#788 round-15 P2): a recognized discriminator with a
+        # wrong-typed payload field (e.g. openPage url: 7) is protocol
+        # drift, not a benign skip — the closed WebSearchAction variants
+        # type url/pattern/query as string-or-null and queries as a string
+        # array. Item id and results shape are validated for all items;
+        # query strictness below applies to search-typed/legacy items.
+        # An EXPLICIT "action": null is protocol-legal — ThreadItem types the
+        # field as anyOf[WebSearchAction, null] (generate-json-schema,
+        # 0.147.0) — so null follows the same path as an absent field: the
+        # item still faces the complete strict search validation below.
+        # Fatal-izing a schema-legal shape is the run-1/run-3 false-fatality
+        # class (#788 round-20, declined with schema evidence).
+        action = item.get("action")
+        if action is not None:
+            if not isinstance(action, dict):
+                return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+            action_type = action.get("type")
+            if not isinstance(action_type, str) or (
+                action_type not in NON_SEARCH_WEB_ACTIONS and action_type != "search"
+            ):
+                return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+            # No closed-key check here BY DESIGN: none of the protocol's
+            # WebSearchAction variants sets additionalProperties, so extra
+            # fields are schema-LEGAL (generate-json-schema, 0.147.0) — a
+            # future codex minor adding an informational field must not
+            # become fleet-wide fatality (#788 round-21, declined with
+            # schema evidence). Known fields, when present, are still
+            # type-checked below.
+            for opt_field in ("url", "pattern", "query"):
+                if opt_field in action and action[opt_field] is not None and not isinstance(action[opt_field], str):
+                    return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+            if "queries" in action and action["queries"] is not None:
+                if not isinstance(action["queries"], list) or any(
+                    not isinstance(q, str) for q in action["queries"]
+                ):
+                    return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        item_id_any = item.get("id")
+        if not isinstance(item_id_any, str) or not item_id_any:
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        results_any = item.get("results")
+        if results_any is not None:
+            if not isinstance(results_any, list):
+                return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+            for entry in results_any:
+                if not isinstance(entry, dict):
+                    return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        if _is_page_open(item):
+            continue
+        query = item.get("query")
+        if not isinstance(query, str) or not query or len(query) > 2048:
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        if any(
+            ord(ch) < 32 or ord(ch) == 127 or 0xD800 <= ord(ch) <= 0xDFFF for ch in query
+        ):
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        results_shape = item.get("results")
+        if results_shape is not None and not isinstance(results_shape, list):
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+
+    # The complete search-processing pipeline — cap, per-item strict
+    # validation, reference-bound filtering, and URL binding (including the
+    # result-entry object-shape check inside _extract_result_urls for bound
+    # searches) — runs BEFORE any verdict branch, so every SHAPE-fatal path
+    # fires identically no matter what the model answered (#788 round-10:
+    # single-path by construction ends the verdict-masking bug class).
+    # Emptiness outcomes are computed here but returned only on the
+    # non-NOT_SEARCHED branch: "no bound search + model honestly said
+    # NOT_SEARCHED" is model behavior, not a stream defect.
     all_searches = [
         (index, item)
         for index, item in completed_items
-        if index < final_index and item["type"] == "webSearch"
+        if index < final_index
+        and item["type"] == "webSearch"
+        and not _is_page_open(item)
     ]
     if len(all_searches) > MAX_SEARCH_ITEMS:
         return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
@@ -991,19 +1206,34 @@ def parse_app_server_messages(
             return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
         if any(ord(ch) < 32 or ord(ch) == 127 or 0xD800 <= ord(ch) <= 0xDFFF for ch in query):
             return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
-        if not isinstance(results, list) or not results or len(results) > MAX_RESULTS_PER_SEARCH:
+        # A search item's `results` is array-or-null in the protocol schema.
+        # A non-null, non-list value is a SHAPE violation and must surface as
+        # EVENT_STREAM_INVALID — never silently skip into the ambiguous
+        # NO_BOUND_SEARCH_RESULTS, which would hide response-shape drift from
+        # bakeoff measure 4 (#788 round-6 P2). Absent/empty results (a
+        # legitimate zero-hit search) and the oversize cap remain skips.
+        if results is not None and not isinstance(results, list):
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        # Every consumed field of a search item is validated here, for EVERY
+        # search item (bound or not) — id, query, results, and each result
+        # entry's object shape — so no downstream reader can encounter an
+        # unvalidated shape and no verdict can mask one (#788 round-11 P1:
+        # entry validation was previously reached only for bound searches).
+        item_id = item.get("id")
+        if not isinstance(item_id, str) or not item_id:
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        for entry in results or []:
+            if not isinstance(entry, dict):
+                return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+        if not results or len(results) > MAX_RESULTS_PER_SEARCH:
             continue
         searches.append((index, item))
-    if not searches:
-        return _empty_receipt(request, model, event_digest, "NO_BOUND_SEARCH_RESULTS")
 
     bound_searches = [
         item
         for _, item in searches
         if _query_is_reference_bound(item["query"], request["reference_text"])
     ]
-    if not bound_searches:
-        return _empty_receipt(request, model, event_digest, "NO_REFERENCE_BOUND_QUERY")
 
     url_bindings: dict[str, dict[str, Any]] = {}
     try:
@@ -1023,7 +1253,59 @@ def parse_app_server_messages(
                     )
     except (TypeError, ValueError):
         return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+
+    # URL-key SHAPE drift is determined pre-verdict (#788 round-28 P2): if
+    # bound searches returned non-empty entries, none of which carries any
+    # recognized URL key, the provider renamed the key — stream-fatal no
+    # matter what the model answered.
+    def _has_url_key(value: Any, depth: int = 0) -> bool:
+        if depth > 16:
+            return False
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if isinstance(key, str):
+                    folded = unicodedata.normalize("NFKC", key).casefold().replace("-", "_")
+                    if folded in URL_KEYS:
+                        return True
+                if isinstance(child, (dict, list)) and _has_url_key(child, depth + 1):
+                    return True
+        elif isinstance(value, list):
+            return any(_has_url_key(child, depth + 1) for child in value)
+        return False
+
     if not url_bindings:
+        bound_entries = [r for item in bound_searches for r in item["results"]]
+        if bound_entries and not any(_has_url_key(r) for r in bound_entries):
+            return _empty_receipt(request, model, event_digest, "EVENT_STREAM_INVALID")
+
+    if model_output["verdict"] == "NOT_SEARCHED":
+        # The output contract requires an empty sources array for
+        # NOT_SEARCHED (as for NOT_FOUND); a populated array is a
+        # structured-output violation and must fail closed HERE — the early
+        # return must not silently drop the sources and mask the violation
+        # (#788 round-9 P2).
+        if model_output["sources"]:
+            return _empty_receipt(request, model, event_digest, "FINAL_OUTPUT_INVALID")
+        receipt = _empty_receipt(
+            request, model, event_digest, "MODEL_RETURNED_NOT_SEARCHED"
+        )
+        receipt["detail"] = model_output["detail"]
+        return receipt
+
+    # Model-output CONTRACT violations outrank stream-emptiness outcomes:
+    # NOT_FOUND carrying sources is FINAL_OUTPUT_INVALID even when the stream
+    # also lacks a bound search — otherwise the shape violation is misfiled
+    # under a behavior code (#788 round-24 P2).
+    if model_output["verdict"] == "NOT_FOUND" and model_output["sources"]:
+        return _empty_receipt(request, model, event_digest, "FINAL_OUTPUT_INVALID")
+
+    if not searches:
+        return _empty_receipt(request, model, event_digest, "NO_BOUND_SEARCH_RESULTS")
+    if not bound_searches:
+        return _empty_receipt(request, model, event_digest, "NO_REFERENCE_BOUND_QUERY")
+    if not url_bindings:
+        # Key drift was already ruled out pre-verdict above; an empty binding
+        # set here is value-level rejection or a zero-hit — behavioral.
         return _empty_receipt(request, model, event_digest, "NO_BOUND_SEARCH_RESULTS")
 
     verdict = model_output["verdict"]
@@ -1060,6 +1342,7 @@ def parse_app_server_messages(
 
 def verify_once(request: dict[str, str], environ: dict[str, str] | None = None) -> dict[str, Any]:
     env = dict(os.environ if environ is None else environ)
+    validate_reasoning_effort(env)
     code, detection = detect_transport(env)
     if code != 0 or not detection.get("available"):
         reason = detection.get("reason_code") or "TRANSPORT_UNAVAILABLE"

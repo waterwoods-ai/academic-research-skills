@@ -159,7 +159,7 @@ This document defines all legal states, transition conditions, transition action
 | checkpoint | Stage 2 | User confirms | handoff RQ Brief + Methodology Blueprint + Bibliography + Synthesis |
 | Stage 2 | **checkpoint** | Stage 2 completed, Paper Draft produced | Wait for user confirmation |
 | checkpoint | Stage 2.5 | User confirms | Pass Paper Draft to integrity agent |
-| Stage 2.5 | **checkpoint** | PASS | Wait for user confirmation |
+| Stage 2.5 | **checkpoint** | PASS, or recorded Integrity Check FAIL Loop resolution (§ below) | Wait for user confirmation |
 | Stage 2.5 | Stage 2.5 (retry) | FAIL | Fix issues, re-verify (max 3 rounds) |
 | checkpoint | Stage 3 | User confirms | Pass verified paper to reviewer |
 | Stage 3 | **checkpoint** | Decision produced | Wait for user confirmation |
@@ -172,7 +172,7 @@ This document defines all legal states, transition conditions, transition action
 | checkpoint | Stage 4' | Decision = Major, user confirms | Pass new Revision Roadmap |
 | Stage 4' | **checkpoint** | Stage 4' completed | Wait for user confirmation |
 | checkpoint | Stage 4.5 | User confirms | Pass revised draft to final verification |
-| Stage 4.5 | **checkpoint** | PASS (zero issues) | Wait for user confirmation |
+| Stage 4.5 | **checkpoint** | PASS (zero issues), or recorded Integrity Check FAIL Loop resolution (§ below) | Wait for user confirmation |
 | Stage 4.5 | Stage 4.5 (retry) | FAIL | Fix issues, re-verify (max 3 rounds) |
 | checkpoint | Stage 5 | User confirms (MANDATORY — the Stage 5 entry gate; see § Stage 5 boundary semantics) | Pass final accepted draft; record the finalization-format decision (citation style) |
 | Stage 5 | **checkpoint** | Stage 5 completed, Final Paper delivered | Wait for user confirmation (FULL — never SLIM; see § Stage 5 boundary semantics) |
@@ -246,6 +246,12 @@ When Stage 6 runs, its completion is the pipeline's **terminal checkpoint**:
 2. Terminal acknowledgement vocabulary: `finish` / `end` / `done` / `confirm`, or an unambiguous natural-language equivalent that accepts the deliverables. Change requests (the other language version, content corrections) keep Stage 6 `in_progress` — they are not acknowledgements.
 3. On acknowledgement: state_tracker marks Stage 6 `completed` and sets the pipeline global state to `completed`. This is the terminal transition — there is no next stage.
 4. After `completed`, no stage transition is legal (see Prohibited Transitions). New requests start a new pipeline run or a targeted single-skill invocation (mid-entry).
+
+### Checkpoint decision provenance
+
+Every checkpoint decision, terminal acknowledgement, override, consent grant, and authorization input in this state machine exists only when it appears in a user turn. A subagent report, a hook or tool result, a template's default branch, an orchestrator-written checkpoint summary, or a paraphrase of an earlier turn is never the user's decision; a checkpoint whose decision has not appeared in a user turn is still open. Re-transmission to a subagent quotes the user's words (or the exact deterministic authorization artifact) and never widens them. Where a deterministic authorization artifact exists (the #670 integrity-correction authorization, the `/ars-mark-read` scope) it is the enforced form of this rule; elsewhere the rule is prompt-level. Mirrored operationally in `pipeline_orchestrator_agent.md` § Checkpoint authority fidelity; the risk is indexed as R11 in `docs/RISK_REGISTER.md`.
+
+**Run ledger (#887).** When the run has a passport file, the orchestrator appends each checkpoint's opening and the user's answer in their exact words, as they happen, to the run ledger beside the passport (`<passport-stem>_run_ledger.yaml`, written by `scripts/run_ledger.py`), with the other records its mirror lists. After compaction, on resume, and after a subagent return, a decision that neither the ledger records in the user's words nor a user turn in the session shows is still open. The ledger records decisions; it never creates one, so an entry written without a user turn is not a decision (R11). Mirrored in `pipeline_orchestrator_agent.md` § Run ledger and handoff check; the loss risk is indexed as R12.
 
 ### Post-terminal adjudication-activity side channel (#673)
 
@@ -401,5 +407,6 @@ Iron rules:
 - SLIM checkpoints never enter `awaiting_resume`.
 - MANDATORY checkpoints enter `awaiting_resume` when they are also FULL and flag is ON. Integrity gates remain MANDATORY; the reset does not downgrade them. The `### Resume Instruction` subsection emitted alongside `[PASSPORT-RESET: ...]` carries the passport file path and resume command — it does NOT carry the user decision prompt. The decision prompt happens on resume, after the fresh session loads the passport (see next rule).
 - If a `boundary` entry carries `pending_decision`, `next` is advisory only. The user's branch choice happens AFTER `resume_from_passport=<hash>` in the fresh session, never in the reset checkpoint itself. The orchestrator re-prompts the user in the new session before transitioning to any `Stage N+1`. The `resume` entry records the chosen branch via `chosen_branch`. Actual routing comes from the matched option's `next_stage`/`next_mode`; `next` is a fallback default only.
+- `pending_decision` stays authoritative for the reset path when the run ledger (#887) also records the checkpoint. The ledger's opened entry names the boundary hash (`reset_boundary_hash`), and the answer closes both: the `resume` entry that consumes that hash records it, and so does the ledger's closing entry for the same checkpoint.
 
 See [`passport_as_reset_boundary.md`](passport_as_reset_boundary.md) for the full protocol.

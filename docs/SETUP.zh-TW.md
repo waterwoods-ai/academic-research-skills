@@ -12,6 +12,14 @@ Academic Research Skills 的前置需求與選用設定。只需要 Markdown 輸
 
 這樣就夠了。可得到 Markdown 輸出與 DOCX 轉換說明。以下其他內容都是選用。
 
+## Python（選用）
+
+核心 skill（研究、寫作、審查）不需要 Python，它們由 prompt 驅動。只有下列情況需要一個**真正的 Python 直譯器**：`PreToolUse` 寫入範圍 guard（選用的 subagent 強化；找不到真正的 Python 時它會安靜地不作用，核心 skill 不受影響），以及少數會呼叫 Python 的選用功能：revision-patch 模式、submission-package 驗證器、`/ars-cache-invalidate`、`/ars-mark-read`、`/ars-unmark-read` 三個指令。
+
+Windows 使用者請注意：`python3` 常常是 Microsoft Store 的無功能占位程式，不是真正的 Python。請從 python.org 或用 `winget` 安裝，啟動器才找得到可用的直譯器。guard 啟動器是 POSIX shell script，`hooks.json` 透過 `bash` 呼叫它，所以 Windows 需要 **Git Bash**（Git for Windows 內含）。有 Git Bash 而沒有真正的 Python 時，guard 會安靜地不作用。沒有 Git Bash 時，Claude Code 會退回 PowerShell，而 PowerShell 跑不了 `.sh` 啟動器：guard 不作用，且 `PreToolUse` hook 每次呼叫都會記一筆錯誤，不會安靜略過（這是接受的降級：guard 是選用的，永遠不會擋你的寫入，代價是裝好 Git Bash 之前 hook 會有雜訊）。
+
+---
+
 ---
 
 ## 安裝 Claude Code
@@ -25,6 +33,8 @@ curl -fsSL https://claude.ai/install.sh | bash
 # Windows (PowerShell)
 irm https://claude.ai/install.ps1 | iex
 ```
+
+**平台支援。** macOS 與 Linux 是經過測試的平台，CI 只在 Ubuntu 上執行。Windows 屬盡力支援：會鎖檔的 script 共用一個 helper（`scripts/file_lock.py`），內含 `msvcrt` 後端；沒有 Windows CI job，Windows 行為仰賴貢獻者驗證（#843、#845）。在 Windows 上，共享讀取鎖會降級為獨占鎖並短暫等待，無限期的鎖等待上限為 30 秒，探究分支帳本（alpha）會拒絕執行。
 
 <details>
 <summary>替代方案：npm 安裝（已棄用）</summary>
@@ -97,7 +107,7 @@ curl --proto '=https' --tlsv1.2 -fsSL https://drop-sh.fullyjustified.net | sh
 v3.6.4 附三個 reference Python adapter，位於 `scripts/adapters/`：
 
 ```bash
-# 1. Install adapter dependencies (PyYAML + jsonschema, already in requirements-dev.txt)
+# 1. Install the dev dependencies (the adapter requirements are declared in requirements-dev.txt)
 pip install -r requirements-dev.txt
 
 # 2. Run a reference adapter (pick one that matches your corpus source).
@@ -180,15 +190,17 @@ ARS 使用繼承的 Claude session 模型即可完整運作。想要更高信心
 
 ```bash
 # Step 1: Set your API key (choose one or both)
-export OPENAI_API_KEY="sk-your-key-here"        # For GPT-5.5 / GPT-5.5 Pro
+export OPENAI_API_KEY="sk-your-key-here"        # For GPT-6 Astra / GPT-5.6 Sol / GPT-5.5
 export GOOGLE_AI_API_KEY="AIza-your-key-here"    # For Gemini 3.1 Pro
 
 # Step 2: Choose your cross-verification model
-export ARS_CROSS_MODEL="gpt-5.5"                # Recommended pair (gpt-5.5-pro = strongest reasoning, ~6x cost)
-# or: export ARS_CROSS_MODEL="gemini-3.1-pro-preview"  # Strong at factual verification
-# or: export ARS_CROSS_MODEL="gpt-5.6-sol"      # Frontier, provisional pending ARS validation (same rates as gpt-5.5)
+export ARS_CROSS_MODEL="gpt-6-astra"            # Current OpenAI flagship — provisional pending ARS validation (run scripts/cross_model_smoke_test.sh)
+# or: export ARS_CROSS_MODEL="gemini-3.1-pro-preview"  # Current Google flagship — validated, strong at factual verification
+# or: export ARS_CROSS_MODEL="gpt-5.6-sol"      # Previous generation — validated on the ChatGPT-subscription citation transport, provisional on this API route
+# or: export ARS_CROSS_MODEL="gpt-5.5"          # Previous generation — validated (designated API-route bakeoff baseline)
 
 # Optional: reasoning effort for OpenAI verifier calls (unset = provider default)
+# GPT-6 Astra API: low|medium|high|xhigh|max (the Codex citation transport rejects ultra)
 # export ARS_CROSS_MODEL_REASONING_EFFORT="medium"
 
 # Step 3: Run Claude Code as normal — cross-verification activates automatically
@@ -221,7 +233,12 @@ OpenAI API key 而改走該訂閱。這不涵蓋魔鬼代言人、Reviewer 2、�
 ```bash
 # Citation-integrity calls only. General DA/reviewer/judgment calls remain on API transport.
 export ARS_CROSS_MODEL_TRANSPORT="codex"
-export ARS_CROSS_MODEL="gpt-5.5"
+# gpt-6-astra: current OpenAI flagship — provisional on this transport (entry-gate
+# smoke PASS 2026-09-05 on codex-cli 0.153.4; no bakeoff run yet).
+export ARS_CROSS_MODEL="gpt-6-astra"
+# gpt-5.6-sol is validated for THIS transport (2026-08-19 codex-transport bakeoff,
+# superiority on recall + latency — audits/bakeoff-gpt-5-6-sol-codex-2026-08-19.md):
+# export ARS_CROSS_MODEL="gpt-5.6-sol"
 
 python3 scripts/cross_model_codex_transport.py detect
 # The producer sends one closed codex_citation_request/1.0 object on stdin:
@@ -246,6 +263,10 @@ Claude 會在 `<install-root>/<skill-name>/SKILL.md` 尋找 skills。這個 repo
 - `academic-pipeline`
 
 不要把整個 repository 當成單一巢狀 skill 資料夾安裝到 `.claude/skills/academic-research-skills/`。那會讓四個 `SKILL.md` 比 Claude 可發現的位置多埋一層。請參考 Anthropic 的 [Claude Code Skills documentation](https://code.claude.com/docs/en/skills)。
+
+以下各安裝方式的差異不只是方便程度：hooks、slash commands、tools allowlist、subagent
+編排、以及需要 Python 的檢查功能，在某些管道可用、在其他管道會降級或不存在。倚賴任何
+一項機制之前，請先查對照表：[CONTROL_AVAILABILITY.md](CONTROL_AVAILABILITY.md)（英文）。
 
 ### 方法零：Claude Code Plugin（v3.7.0+，Claude Code CLI / IDE 用戶推薦）
 

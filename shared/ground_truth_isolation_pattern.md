@@ -142,10 +142,23 @@ text (submission policies, reviewer comments, methods instructions), and none of
 that is blocked. The principle distinguishes *whose* instruction is authoritative,
 not *whether imperative text may appear*.
 
-The retrieval-class agents with the largest external-content surface
-(`source_verification_agent`, `bibliography_agent`) inline this principle into
-their own context, because an agent does not read a file merely named in its
-prompt — the principle has to be present where the fetch happens to matter.
+The principle has to be present where third-party text arrives, because an agent
+does not read a file merely named in its prompt. So selected receivers of each
+kind inline it into their own context: agents that retrieve such text through
+their own tool calls (lookups, fetched pages, a source PDF), agents that receive
+it inside a dispatch task prompt or through the Material Passport, the revision
+coach (`revision_coach_agent`, #883), whose reviewer and committee text usually
+arrives pasted into the user's own message, a channel the Claude Opus 5.5 system
+card reports as more susceptible to planted instructions than tool results
+(§6.5.1), and each skill's `SKILL.md`, which the main session of a skill run
+loads on every install path. Prompts that a model receives without the agent
+file around them, such as the claim-audit judge prompt and the cross-model
+prompts, carry the sentences without the markers. `HOTSPOT_AGENTS` and
+`PROMPT_TEMPLATES` in `scripts/check_instruction_data_boundary.py` are the
+authoritative lists; the design docs
+`docs/design/2026-09-23-890-instruction-data-boundary-extension.md` (#890) and
+`docs/design/2026-09-24-894-instruction-data-boundary-tool-calls.md` (#894)
+record the inventories, the selection rules, and the surfaces left uncovered.
 
 ---
 
@@ -165,8 +178,13 @@ can reason about data-flow safety without reading every agent definition file.
 repo-tracked rubric files that describe output format or structural
 requirements — not answer keys, not expected content. For calibration gold
 sets, require the human researcher to supply a session file at runtime. Never
-bundle gold labels into the repository or reference them from `SKILL.md` in a
-way that loads them unconditionally.
+wire gold labels into operational agent context: no reference from `SKILL.md`
+or any always-loaded file may load them unconditionally. Repo-tracked gold
+sets under `evals/` are consistent with this boundary only when their content
+is synthetic or public-safe — evaluation harnesses (`scripts/run_evals.py`)
+read them on explicit invocation only. Calibration gold sets for live
+reviewer scoring remain runtime-supplied and are never committed (they may
+contain human or private data).
 
 **DO: Pass scores back through a reviewer agent that holds the rubric
 privately.** The review workflow is: reviewer reads paper + rubric → reviewer

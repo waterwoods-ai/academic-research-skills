@@ -15,7 +15,8 @@ Detailed per-phase agent behavior and output descriptions for the 8-phase orches
 - Citation format (APA 7 / Chicago / MLA / IEEE / Vancouver)
 - Output format (LaTeX / DOCX / PDF / Markdown / Combined)
 - Language (EN / zh-TW / bilingual sections)
-- Bilingual abstract (Yes / EN-only / zh-TW-only)
+- Bilingual abstract (Yes / EN-only / zh-TW-only) — cardinality only; it does not select which languages
+- Output language pair (`output_language_pair`) — the two abstract languages, from the registry in `shared/output_language_pair.md`; default `zh-tw-en`, per-run override; the PCR row is omitted when the run declares none
 - Word count target
 - Existing materials (RQ, data, drafts, lit)
 
@@ -74,6 +75,7 @@ Detailed per-phase agent behavior and output descriptions for the 8-phase orches
 - In-text citations integrated
 - Word count tracking per section
 - Transition paragraphs between sections
+- Acronym check on the saved draft (#849; [`writing_quality_check.md`](writing_quality_check.md) § F)
 
 ---
 
@@ -93,13 +95,16 @@ Detailed per-phase agent behavior and output descriptions for the 8-phase orches
 ### Phase 5b: Abstract
 
 **Agent**: `abstract_bilingual_agent`
-**Output**: Bilingual Abstract + Keywords
+**Output**: Bilingual Abstract + Keywords (both languages of the run's declared output language pair)
 
-- English abstract (150-300 words, structured)
-- Traditional Chinese abstract (300-500 characters, structured)
-- EN keywords (5-7)
-- zh-TW keywords (5-7)
+- L2 abstract (default: English), structured — length from the regime table ([`abstract_writing_guide.md`](abstract_writing_guide.md), run's paper type)
+- L1 abstract (default: Traditional Chinese), structured — length from the same regime table
+- L2 keywords, count from the same regime table
+- L1 keywords, same declared count
+- Headings and report columns are pair-derived; for the default pair `zh-tw-en` they render exactly as `### English Abstract` / `### Chinese Abstract`
 - Independent writing (not mechanical translation)
+- Field absent → default pair; the heading literals are unchanged from the pre-#862 surface (no rendered-output equivalence is claimed)
+- Acronym check on the saved abstracts (#849; [`writing_quality_check.md`](writing_quality_check.md) § F)
 
 ---
 
@@ -108,9 +113,15 @@ Detailed per-phase agent behavior and output descriptions for the 8-phase orches
 **Agent**: `peer_reviewer_agent`
 **Output**: Review Report + Revision Instructions
 
-- 5-dimension scoring:
-  Originality (20%) | Methodological Rigor (25%) | Evidence Sufficiency (25%)
-  Argument Coherence (15%) | Writing Quality (15%)
+- 5-dimension criterion-bound judgement:
+  Originality | Methodological Rigor | Evidence Sufficiency |
+  Argument Coherence | Writing Quality
+- Every live Phase 6 report and downstream review package emits
+  `calibration_status: NOT_CALIBRATED` unconditionally in the current release.
+  Candidate empirical target profiles declare
+  `application_status: NOT_WIRED_TO_LIVE_REVIEW`; attaching one or observing an
+  apparent metadata match cannot upgrade the live status. No weighted total or
+  fixed verdict mapping is available.
 - Verdict: Accept / Minor Revision / Major Revision / Reject
 - Line-level feedback with suggested fixes
 - Max 2 revision loops -> back to Phase 4 [draft_writer_agent] (limited to 1 round in academic-pipeline)

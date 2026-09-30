@@ -1,6 +1,6 @@
 # HOWTO — 三方协作分步指南:opencode(学生)× Claude Code(导师)× Codex(审稿人)
 
-> 只想 5 分钟跑起来?看 [`QuickStart.md`](QuickStart.md)。本文件是完整参考。
+> 只想 5 分钟跑起来?看 [`QuickStart-security.md`](QuickStart-security.md)。本文件是完整参考。
 >
 > 想要**一步一步被带着走**(而不是照这 19 步自己推进)?说 `Be my security research mentor` 或 `一步一步指导我` —— 触发 `security_mentor_protocol`:有状态、一次一步、苏格拉底式,从选题带到投稿,进度存 `paper_progress.md` 可随时停/续。它和 `ars-plan`(一次性出整篇计划)相反。
 >
