@@ -58,7 +58,7 @@ say the calendar is stale — do not fill in dates from model memory.
 - `main` mirrors upstream (ff-only); ALL personal work goes on `dev`.
 - Customizations are additive only: the five user-owned skills
   (`security-track/`, `find-research-topic/`, `verify-research-topic/`,
-  `develop-novel-method/`, `novelty-engine/`), their `skills/<name>` symlinks,
+  `novelty-filter/`, `novelty-engine/`), their `skills/<name>` symlinks,
   and this file. Sole permitted upstream-file edit: their `"./<name>"` entries
   (plus the skill count in the description) in
   `.claude-plugin/marketplace.json` (keep that edit minimal when resolving

@@ -117,7 +117,7 @@ Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty v
 > ```text
 > Run novelty-engine Phases 1–4 for the RQ in ./research_question.md (direct route: the papers are the ones cited in ./gap_registry.md). Phase 1: extract the unstated assumptions prior work shares and where each breaks. Phase 2: pre-check novelty of each breaking point. Phase 3: propose 2–3 methods, each importing a mechanism from a distant field and stating which baseline limitation it resolves. Phase 4: formalize the one I pick (definitions, assumptions, algorithm + complexity, at least one theorem or bound). Stop for my choice after Phase 1 and Phase 3. Write the result into ./contribution_card.md.
 > ```
-> Claude Code 里 8 个 agent 作为独立子代理运行;Codex / opencode 逐个角色顺序执行。只有一篇基线论文时改用 `develop-novel-method` 建 limitation ledger 并查新——它擅长过滤、不擅长生成,候选全 `saturated` 就回到这里。
+> Claude Code 里 8 个 agent 作为独立子代理运行;Codex / opencode 逐个角色顺序执行。只有一篇基线论文时先用 `novelty-filter`(原名 develop-novel-method)建 limitation ledger;生成器出的候选也交给它查新——它只过滤、不生成。
 
 > **精读单篇论文(单篇,非综述)** — 用关键词 `peruse` 触发:
 > ```text

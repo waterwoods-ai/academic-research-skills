@@ -1,6 +1,6 @@
 ---
-name: develop-novel-method
-description: This skill should be used when the user gives a paper (PDF path, DOI, arXiv id or URL) and asks to "find the gap in this paper", "extend this paper", "what could I build on this paper", "find problems with the authors' method", "improve on this method", "propose a novel method based on this paper", or "check nobody else is working on this method". Critiques the paper (own read + ChatGPT/Claude.ai Projects in Chrome), maps references, citing work and related work (Elicit, Litmaps) and proposes novelty-checked methods. Not for plain summaries.
+name: novelty-filter
+description: This skill should be used when the user gives a paper (PDF path, DOI, arXiv id or URL) and asks to "find the gap in this paper", "extend this paper", "what could I build on this paper", "find problems with the authors' method", "improve on this method", "is this idea already published", "novelty-check these ideas", or "check nobody else is working on this method". Builds a confirmed limitation list for one paper (own read + ChatGPT/Claude.ai Projects in Chrome), maps references, citing work and related work (Elicit, Litmaps), and filters candidate improvements against prior work with an open / narrow / saturated verdict. A filter, not a generator - it does not develop a method; to generate and formalize one use novelty-engine. Not for plain summaries.
 argument-hint: "<paper: PDF path | DOI | arXiv id | URL> [field / constraints]"
 metadata:
   status: active
@@ -13,13 +13,13 @@ metadata:
     - novelty-engine
 ---
 
-# Develop a Novel Method from a Paper
+# Novelty Filter: one paper's limitations, and whether an improvement is already published
 
-Take one paper. Find what is wrong with it or missing from it, confirm those weaknesses against the text, propose methods that remove them, and check that nobody has already published those methods.
+Take one paper. Find what is wrong with it or missing from it, confirm those weaknesses against the text, collect candidate improvements that remove them, and check whether each is already published. This skill does not develop a method: it produces no formal specification, no code and no experiment.
 
 **Stance.** The weaknesses are inputs to an improvement, never the contribution. The output is a better method built on the paper, which is cited as the baseline to beat; it is not a paper about the authors' faults.
 
-**What this skill is good at.** It is a reliable novelty *filter* and a weak idea *generator*: on a recent, heavily-followed paper the obvious improvements are usually already published (in two real runs on such papers, no candidate came back `open`). If all candidates are `saturated`, stop iterating on "improve this paper" and generate problem-first instead with the sibling [novelty-engine](../novelty-engine/SKILL.md) skill (Phase 1 breaks a shared assumption, Phase 3 imports a mechanism from a distant field, Phase 4 formalizes it), then return here to filter the survivors.
+**What this skill is, and is not.** It is a reliable novelty *filter*, not an idea *generator*. The candidates it drafts itself in step 6 are the obvious improvements, and on a recent, heavily-followed paper those are usually already published (in two real runs on such papers, no candidate came back `open`). For real generation use the sibling [novelty-engine](../novelty-engine/SKILL.md) skill (Phase 1 breaks a shared assumption, Phase 3 imports a mechanism from a distant field, Phase 4 formalizes it), then bring its candidates here to be filtered.
 
 **Reuse the sibling skills' operating notes.** Read the notes for a tool before touching it:
 - Chrome gate, Elicit, Litmaps: [find-research-topic](../find-research-topic/SKILL.md) step 0, plus [elicit.md](../find-research-topic/references/elicit.md) and [litmaps.md](../find-research-topic/references/litmaps.md).
@@ -39,7 +39,7 @@ Load `superpowers-chrome:browsing` if it is not in context.
 2. **Never paste** credentials, file paths, hostnames, private data or Zotero contents. The user logs in to every site themselves.
 3. **Never click model or effort menus.** The user sets the model and effort in each project. Read the button text only, and record it.
 4. **Create; never modify.**
-   - New Projects, Elicit sessions and Litmaps are named `novel-method <YYYY-MM-DD> <slug>`.
+   - New Projects, Elicit sessions and Litmaps are named `novelty-filter <YYYY-MM-DD> <slug>`.
    - Never edit or delete the user's existing ones.
    - Ask before paid usage (Elicit Reports or Research Agent on Smartest) and before anything outward-facing (share links, Monitor).
 5. **LLMs never adjudicate.**
@@ -124,8 +124,8 @@ Merge `analysis.md`, the P2 answers from both tools, the Elicit Limitations colu
 - Verify every paper either tool named (rule 5).
 - Mark the items raised by both you and ChatGPT as high confidence.
 
-### 6. Propose candidate methods
-1. **Draft 2–4 candidates in `candidates.md`** with the spec in [references/critique.md](references/critique.md) §3. Each must remove at least one `confirmed` weakness.
+### 6. Collect candidate improvements
+1. **Write the candidates into `candidates.md`** with the spec in [references/critique.md](references/critique.md) §3. Take first the ones the user or `novelty-engine` already produced; if there are none, draft 2–4 quick ones. Each must remove at least one `confirmed` weakness.
 2. **Draw on every idea source:** P3 answers, Litmaps bridges (Similar Text neighbours the paper never cites), stale foundations, and methods from the adjacent community. Record each candidate's source.
 3. **Prefer mechanism changes over "same method, new domain".** A domain transfer alone is at most `narrow`.
 
@@ -142,7 +142,7 @@ Score the survivors with §5 of the critique reference. Write `method-proposal.m
 2. **Confirmed weaknesses:** the table from `weaknesses.md`, sorted by severity.
 3. **Ranked candidates:** a table with columns candidate | score | weakness removed | verdict.
 4. **Per candidate:** the full spec, the closest existing work and how the candidate differs, the novelty evidence (queries, tools, date), the P4 attacks and the answer to each.
-5. **Recommended next step:** the minimal experiment for the top candidate, with its compute target.
+5. **Recommended next step:** hand the top surviving candidate to `novelty-engine` Phase 4 for formalization (definitions, assumptions, algorithm, a theorem or bound), then the minimal experiment, with its compute target.
 6. **Record:**
    - the model and effort used in each tool, and the project URLs (private);
    - the Elicit session URLs and the Litmap URL;

@@ -16,7 +16,7 @@ metadata:
     - academic-humanizer
     - find-research-topic
     - verify-research-topic
-    - develop-novel-method
+    - novelty-filter
     - novelty-engine
 ---
 

@@ -9,7 +9,7 @@ metadata:
   related_skills:
     - security-track
     - verify-research-topic
-    - develop-novel-method
+    - novelty-filter
     - novelty-engine
 ---
 

@@ -16,7 +16,7 @@ A Project keeps the paper PDF, the instructions and every pass in one place. Lat
 - **Save long replies** from the auto-captured `NNN-eval.html` snapshot, not through `eval` return values. Then compare the reply's head and tail with a short `eval`.
 
 ## ChatGPT Projects [verify]
-- **Create:** sidebar → **Projects** → **New project**. Name it `novel-method <YYYY-MM-DD> <slug>`.
+- **Create:** sidebar → **Projects** → **New project**. Name it `novelty-filter <YYYY-MM-DD> <slug>`.
   - If a memory option is offered, choose **Project-only memory**. It keeps the user's general ChatGPT memory out of the analysis and this analysis out of their general memory.
 - **Project page:** URL like `chatgpt.com/g/g-p-<id>/project`.
   - **Add files:** upload the PDF with `file_upload` on the page's `input[type=file]`. Only if that fails, ask the user to drag the PDF in.
@@ -26,7 +26,7 @@ A Project keeps the paper PDF, the instructions and every pass in one place. Lat
 
 ## Claude.ai Projects [verify]
 - **Logged-in signal:** the left sidebar shows Chats / Projects with the account name. Logged out, it redirects to `/login`. The user logs in; never type credentials.
-- **Create:** `https://claude.ai/projects` → **Create project**. Enter the name `novel-method <YYYY-MM-DD> <slug>` and a one-line description, then click **Create project**.
+- **Create:** `https://claude.ai/projects` → **Create project**. Enter the name `novelty-filter <YYYY-MM-DD> <slug>` and a one-line description, then click **Create project**.
 - **Project page:** URL like `claude.ai/project/<uuid>`.
   - **Project knowledge** → **+** / **Upload from device**: use `file_upload` on its `input[type=file]`.
   - **Set project instructions:** paste the instructions block.

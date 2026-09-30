@@ -135,7 +135,7 @@ Two entry modes, same output artifact:
   `novelty-engine` skill**: Phase 1 names the shared assumption to break,
   Phase 2 pre-checks novelty, Phase 3 imports a mechanism from a distant
   field, Phase 4 formalizes the result (iron rule 5). When the starting
-  point is one baseline paper, `develop-novel-method` builds the ledger and
+  point is one baseline paper, `novelty-filter` builds the ledger and
   novelty-checks the candidates; it filters well and generates weakly, so if
   every candidate comes back `saturated`, return to the `novelty-engine`
   phases above (`topic_scouting_overlay.md`).

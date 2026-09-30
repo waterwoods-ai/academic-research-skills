@@ -16,7 +16,7 @@ metadata:
     - academic-pipeline
     - find-research-topic
     - verify-research-topic
-    - develop-novel-method
+    - novelty-filter
 ---
 
 # Novelty Engine Pipeline
