@@ -27,6 +27,13 @@
   (Explore, Similar Text, momentum × connectivity).
 - Do not run both front-ends on the same topic for the same purpose; pick by
   the table.
+- **Zotero and Elicit are reached through their APIs, not their web pages**
+  (Tom's standing instruction, 2026-10-01; the keys are in the shell as
+  `ELICIT_API_KEY`, `ZOTERO_API_KEY`, `ZOTERO_LIBRARY_ID`). Zotero reads go
+  through the local API (`zotero_api.py`, Zotero desktop running) and writes
+  through the Web API (`zotero_write.py`); Elicit searches and reviews go
+  through `elicit_api.py`. Open the Elicit or Zotero site in a browser only
+  for what the API cannot do (Litmaps steps, the Elicit UI's column views).
 - **Codex / opencode** cannot drive the browser. There: run S1 with
   `perspective_retrieval_protocol.md` and the scholarly-index resolvers, apply
   the rules below by hand, and run the gate from `topic_verification_gate.md`.
