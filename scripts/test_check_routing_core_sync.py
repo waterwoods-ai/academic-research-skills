@@ -64,7 +64,7 @@ def _errors(root: Path) -> str:
 def test_repository_passes() -> None:
     result = run_script(LINT, "--root", str(REPO_ROOT))
     assert result.returncode == 0, result.stderr
-    assert "10 copies match" in result.stdout
+    assert "11 copies match" in result.stdout
 
 
 def test_copies_are_claude_md_and_every_skill() -> None:
@@ -78,6 +78,7 @@ def test_copies_are_claude_md_and_every_skill() -> None:
         Path("novelty-engine/SKILL.md"),
         Path("novelty-filter/SKILL.md"),
         Path("security-track/SKILL.md"),
+        Path("sr-screener/SKILL.md"),
         Path("verify-research-topic/SKILL.md"),
     ]
 

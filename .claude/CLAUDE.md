@@ -10,6 +10,7 @@ A suite of Claude Code skills for rigorous academic research, paper writing, pee
 | `academic-paper` v3.3.1 | 12-agent paper writing | full, plan, outline-only, revision, revision-coach, abstract-only, lit-review, format-convert, citation-check, disclosure, rebuttal-audit |
 | `academic-paper-reviewer` v1.11.1 | Multi-perspective paper review (5 reviewers + optional cross-model DA critique) | full, re-review, quick, methodology-focus, guided, calibration |
 | `academic-pipeline` v3.22.2 | Full pipeline orchestrator | (coordinates all above) |
+| `sr-screener` v1.0.0 | Protocol-driven study screening (2 blinded AI reviewers + adjudicator) | protocol, quick, pilot, ta-screen, ft-screen, adjudicate, audit, report |
 | `security-track` v0.3.0 | Security-first defaults for the suite: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
 | `novelty-engine` v1.3.0 | Idea generator: three evidence-led routes, candidate checks, formalization | verify, discover, gaps, assess, dogma, limitations, observations, candidates, formalize, falsify, experiment, stress-test, paper |
 | `find-research-topic` v1.0.0 | Topic scouting with Elicit and Litmaps (literature stage 1a) | — |
@@ -332,7 +333,7 @@ Spec: `docs/design/2026-05-17-ars-v3.9.0-cross-index-triangulation-measurement-s
 
 **Routing precedence:** This section runs BEFORE Routing Rules 1-5. Once this section settles on a destination, Rules 1-5 apply within that destination's skill family.
 
-The routing core below is the same block as `shared/references/routing_core.md`, which carries it to plugin installs (SessionStart announce) and to every install path (the four `SKILL.md` files), because Claude Code loads this file only for sessions started inside the checkout (#892). `scripts/check_routing_core_sync.py` keeps the copies identical.
+The routing core below is the same block as `shared/references/routing_core.md`, which carries it to plugin installs (SessionStart announce) and to every install path (the five `SKILL.md` files), because Claude Code loads this file only for sessions started inside the checkout (#892). `scripts/check_routing_core_sync.py` keeps the copies identical.
 
 <!-- routing-core:begin -->
 **Step 0 — Escape hatch check (before any classification):** If the user's first message begins with `[direct-mode]` (case-insensitive byte-0 token, optionally preceded by whitespace/newlines that are stripped on parse), record this fact, strip the prefix and surrounding whitespace from the message, and skip directly to **Step 1 explicit-intent handling** on the stripped content. The literal `[direct-mode]` is NOT passed through to the dispatched agent. If the stripped message itself has no clear skill named, Step 1 falls through to Step 3 clarification (the escape hatch bypasses cross-phase clarification (Step 2), not all routing). When the token is honored and the named agent or skill needs inputs the message does not supply, read that agent's or skill's file and ask for what it requires, in its terms. Without the byte-0 token, naming an agent is not explicit intent: such a message goes through Steps 1-3 like any other, so cross-phase materials still get Step 2 clarification.
@@ -349,6 +350,8 @@ Otherwise, classify the user's input:
 
 3. **Ambiguous intent, no materials** — user provides no artifacts and no clear request:
    → Clarify per `shared/references/intent_clarification_protocol.md`.
+
+**Screening boundary (sr-screener):** a request to screen records the user already has (database exports, pasted abstracts, full-text PDFs) against a review's eligibility criteria, or to build a screening protocol, pilot the screening, adjudicate screening conflicts, audit exclusions, or report the selection counts, routes to `sr-screener`. A request to write a literature review, or to run a systematic review, meta-analysis, or PRISMA report, does not route to `sr-screener`. Screening starts only when the user asks for it: `deep-research` `systematic-review` mode may mention `sr-screener`, but never hands over to it automatically.
 
 **Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
 
@@ -371,6 +374,7 @@ Otherwise, classify the user's input:
 
 6. **rebuttal-audit vs revision-coach (input-shape gate)**: both touch reviewer comments, so route by INPUT SHAPE, not verbs. Route to `academic-paper rebuttal-audit` ONLY when the user supplies BOTH the reviewer comments AND an existing rebuttal/response draft to evaluate (it does advisory QA, generates nothing). If only reviewer comments are present (no draft yet), route to `revision-coach` (it generates a Response Letter Skeleton). If unclear which, clarify rather than guess. `rebuttal-audit` is standalone/advisory and never emits Schema 11 or marks anything verified.
 7. **real-committee correspondence vs peer review (#668)**: route to the `revision-coach` committee-correspondence variant only when the user explicitly identifies a real committee or institutional review office. Formal tone and words such as “required” do not establish authority. That branch loads `academic-paper/references/committee_correspondence_protocol.md`, preserves the source, and emits its separate concern tracker; it never emits reviewer priority/severity, Schema 11, a determination, or a resolution claim.
+8. **sr-screener vs deep-research systematic-review**: route to `sr-screener` when the user wants eligibility decisions on records they already have (database exports, pasted abstracts, full-text PDFs), or a screening protocol, pilot, conflict adjudication, exclusion audit, or selection-process report. Route to `deep-research` `systematic-review` when the user wants the review itself (question, search, synthesis, PRISMA report). A bare "systematic review" or "PRISMA" request stays with `deep-research`; PRISMA flow numbers for a finished screening go to `sr-screener` `report`. `sr-screener` owns screening decisions; the other skills read its `literature_corpus[]` output and do not re-screen it. Screening starts only when the user asks for it; `systematic-review` mode never hands over to `sr-screener` automatically (routing core, Screening boundary).
 
 ## Key Rules
 
@@ -404,6 +408,9 @@ Materials: Complete paper text. field_analyst_agent auto-detects domain and conf
 
 ### academic-paper-reviewer → academic-paper (revision)
 Materials: Editorial Decision Letter, Revision Roadmap, Per-reviewer detailed comments
+
+### deep-research → sr-screener → academic-paper (systematic reviews)
+Materials in: screening protocol source (proposal, PROSPERO record, or `systematic-review` mode protocol), database exports (RIS, PubMed .nbib, Web of Science, CSV), full-text PDFs. Materials out: `*_literature_corpus.yaml` (`literature_corpus[]` entries for the Material Passport), PRISMA 2020 counts, methods draft, exclusion reasons, screening log.
 
 ## Version Info
 - **Suite version**: 3.22.2 (per CHANGELOG.md)
