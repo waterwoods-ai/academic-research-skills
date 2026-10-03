@@ -70,7 +70,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # reviewed against the #528 resolutions.
 # ---------------------------------------------------------------------------
 CONTENT_LOCKS = {
-    "academic-pipeline/SKILL.md": "6054df502115ee269d710dc9b19203e3098709a9edc626e8480b7d7d295be31d",
+    "academic-pipeline/SKILL.md": "f491b191c26c623139d429e2855347cb5d91e205b25479e8b3b393f6bc970cd7",
     "academic-pipeline/agents/pipeline_orchestrator_agent.md": "2258dbceb17054bf447eeb938df700e4d303b840099a364d622195659815f51f",
     "academic-pipeline/agents/state_tracker_agent.md": "787b994b727235451ca885f5be51ce3590dca9fd7134c66f38ba6ac4287eca26",
     "academic-pipeline/references/pipeline_state_machine.md": "e8a8e9641403af59b74aa8b27e4709bb87ea4ae6af9978c08628cd6fdc2c58b7",
