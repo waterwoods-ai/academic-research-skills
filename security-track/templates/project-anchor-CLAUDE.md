@@ -15,3 +15,15 @@ Project state (keep current):
 Hard rules: conference deadlines ONLY from the skill's
 deadlines_current.md; paper numbers ONLY from the experiment provenance
 ledger; success criteria frozen at design freeze.
+
+Lab roles (if this project runs the five-agent lab; see the skill's
+lab_orchestration_protocol.md). Write only your own files:
+- Claude Code, Director: research_question.md, contribution_card.md,
+  claims.md, decisions.md, method_changelog.md, paper/
+- Kimi, literature and novelty: gap_registry.md, literature.md, literature/
+- GLM (opencode), security scientist: rq_cards.md, security/,
+  novelty_engine/, candidate_cards.md, plans until frozen
+- Codex, research engineer: code, tests/, ledger/, results/, artifact
+- Antigravity, Reviewer #2: reviews/, ars-review/
+Direction files change only on a decision recorded in decisions.md. A refused
+request is never resent verbatim to another agent.

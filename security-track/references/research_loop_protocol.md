@@ -338,6 +338,22 @@ named), raw output location, result vs pre-registered criterion
 (MET / UNMET / INCONCLUSIVE), negative results and surprises. The ledger
 is the ONLY source S8 may cite numbers from.
 
+**Reproducibility manifest (every run).** Git commit, configuration file,
+dataset name and version, seed, model checkpoint, GPU, Python and package
+versions, timestamp, runtime and a hash of the output. A run without a
+manifest cannot support a claim.
+
+**Pre-run checks (before the first counted run, and after any change to
+the pipeline).** Automated tests for: data integrity, train/test and
+development/held-out separation, no leakage of labels or future data, the
+attack budget actually enforced, metric computation against hand-checked
+cases, seed reproducibility, the correct model checkpoint loaded, and
+baselines tuned with the same budget as the method. An attack also runs on
+the undefended target first, as a positive control.
+
+In a multi-agent lab the research engineer owns the ledger, the manifests
+and these tests; `lab_orchestration_protocol.md` says who checks them.
+
 **S5a — Reproduce the strongest baseline first, then screen cheaply**
 (adapted from ScientistTwo §3.2, arXiv:2609.19644). S3 screening uses these
 same rules on the development data to choose among the shortlisted
