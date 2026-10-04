@@ -1,6 +1,6 @@
 # Cross-Domain Isomorphism Catalog
 
-A structured reference of proven cross-domain mappings organized by **problem structure**, not by field. Use this to identify promising donor disciplines for any breaking point.
+A discovery aid organized by **problem structure**, not by field. Entries and precedent labels are search leads, not verified novelty claims or proofs of transfer; retrieve the original work and check its assumptions before use. Use this to identify promising donor disciplines for any breaking point.
 
 ## Catalog Structure
 
@@ -165,14 +165,14 @@ Each entry describes:
 ## How to Use This Catalog
 
 1. **Identify the abstract structure** of your breaking point (match to one of the 10 categories above)
-2. **Select 2-3 donor frameworks** that are maximally distant from your target domain
+2. **Select structurally suitable frameworks** from adjacent or distant fields; compare assumptions, adaptation costs and known uses rather than maximizing disciplinary distance
 3. **Check the formalization column** — this tells you what mathematical tools to bring
 4. **Check precedents** — if your exact mapping already exists, you need a new angle
 5. **Compose structures** — many real problems combine 2-3 abstract structures (e.g., "adversarial robustness" + "multi-scale structure" = adversarial attacks that exploit cross-layer gaps)
 
 ## Composing Structures
 
-The most novel methods often combine two abstract structures:
+The following combinations illustrate structures to search. They are established concepts, not newly generated contributions or evidence that more components improve novelty:
 
 | Structure A | + Structure B | = Novel Composition |
 |------------|---------------|---------------------|

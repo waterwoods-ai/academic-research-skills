@@ -36,7 +36,7 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 | **还没有题目** 🧑‍🏫 | `find-research-topic <大方向>`(仅 Claude Code;出 3–7 个候选题目) |
 | **找课题** 🎓 | `ars-lit-review <你的方向>, ensure broad coverage`(ARS 自己检索,不用先给文献) |
 | **定课题** 🧑‍🏫🚦 | `Verify the research topic viability (go/no-go): <RQ>` |
-| **从零提方法** 🎓 | `Run novelty-engine candidate generation for the RQ in ./research_question.md`(两种生成方式,最多留 3 个候选;完整 prompt 见 HOWTO Step 5a → 5b 候选卡 → 7.5 筛选选定 1 个) |
+| **从零提方法** 🎓 | `Run novelty-engine candidate generation for the RQ in ./research_question.md`(三条生成路线:假设、基线局限、观察;最多留 3 个候选;完整 prompt 见 HOWTO Step 5a → 5b 候选卡 → 7.5 筛选选定 1 个) |
 | **评自己的方法** 🎓 | `Evaluate the novelty and contribution of my method: <描述>` |
 | **查某个想法是否已发表** 🧑‍🏫 | `novelty-filter <基线论文>`(仅 Claude Code;只过滤、不生成) |
 | **精读一篇论文** | `Peruse this paper: <path> — full single-paper dissection` |

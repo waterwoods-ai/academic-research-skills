@@ -17,11 +17,11 @@ You generate candidate methods from the **confirmed limitations of the strongest
 - The research question, with its threat model if there is one.
 - The literature the project already holds.
 
-Do not generate from a limitation that has not been checked against the paper text.
+Do not generate from a limitation that has not been checked against the paper text. Read `../references/evidence_driven_ideation.md` for shared evidence fields and mechanism choices. Carry the causal hypothesis, a plausible rival explanation, borrowed components and any new assumptions into the candidate card.
 
 ## Core Task
 
-Propose **2–3 mechanisms**. A mechanism is a change to how the method works — a different signal, model, invariant, protocol step or decision rule — that removes the *cause* of one or more limitations.
+Propose **up to three supported, distinct mechanisms**; zero is valid when evidence is insufficient, with a concrete missing-evidence or probe note. A mechanism is a change to how the method works — a different signal, model, invariant, protocol step or decision rule — that removes the *cause* of one or more limitations.
 
 1. **Find the cause first.** For each limitation, ask why the baseline has it: which design decision, assumption or missing information produces it. Limitations that share a cause are one target.
 2. **One mechanism may resolve several limitations.** Prefer that. Do not produce one fix per limitation: a list of independent patches is an engineering checklist, not a method.

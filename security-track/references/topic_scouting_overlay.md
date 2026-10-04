@@ -19,7 +19,7 @@
 | S1 | Topic chosen: systematic, repeatable gap evidence, filed in Zotero | `research-gaps` (Elicit API — needs **Elicit Pro**; Litmaps Pro for Zotero Sync) | Claude Code |
 | S2 → S3 | Is this RQ worth committing to? | `topic_verification_gate.md` (12 questions); optional blind second opinion through `verify-research-topic` | Gate: every runtime. ChatGPT pass: Claude Code |
 | S3 | Start from ONE baseline paper: limitation ledger, then filter candidate improvements for novelty (it does not generate) | `novelty-filter` | Claude Code |
-| S3 | Generate candidate methods in two modes (break a shared assumption and import a distant mechanism; or remove the causes of a baseline's confirmed limitations), check them, shortlist at most three, formalize | `novelty-engine` Phases 1–4 (`dogma_extractor`, `cross_domain_synthesizer`, `limitation_resolver`, `novelty_verifier`, `math_formalizer`) | Every runtime (subagents on Claude Code; role by role elsewhere) |
+| S3 | Generate from supported assumptions, confirmed baseline limitations or located observations; check and deduplicate candidates, shortlist at most three, formalize | `novelty-engine` Phases 1–4 (`dogma_extractor`, `cross_domain_synthesizer`, `limitation_resolver`, `observation_analyst`, `novelty_verifier`, `math_formalizer`); `references/evidence_driven_ideation.md` inside that skill | Every runtime (subagents on Claude Code; role by role elsewhere) |
 
 - **With Elicit Pro, prefer the API for Elicit work** (`research-gaps`): it is
   repeatable, needs no browser, and allows up to 20 extraction columns. Keep

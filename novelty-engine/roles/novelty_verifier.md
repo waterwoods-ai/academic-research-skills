@@ -25,7 +25,10 @@ Check the **mechanism itself**, not the idea it grew from. A dogma nobody has ch
 
 - Strip the candidate's name and describe the mechanism in generic terms; search for that mechanism applied to the same problem, under any name.
 - For a limitation-driven candidate, also search the work that cites the baseline: anyone fixing the same limitation almost certainly cites it.
-- Report the **nearest prior work** for every candidate, even when the status is NOVEL, and state the difference in one sentence. If you cannot state a difference, the status is ALREADY PUBLISHED.
+- For an observation-driven candidate, search the observed phenomenon, its alternative explanations, measurement procedures and the proposed mechanism separately. An unexplained observation is not proof that the proposed explanation or method is new.
+- Run an ancestor query without a year filter or current buzzwords, and an adjacent-method-family query without an application-domain restriction. Record queries, sources, date and reading scope.
+- Report the **nearest prior work** for every candidate and state the delta in mechanism, assumptions, cost and security consequence. If a matching work resolves the claimed delta, mark ALREADY PUBLISHED. If retrieval is inadequate or no meaningful comparison can be established, mark UNCERTAIN rather than inventing a match or certifying novelty.
+- Separate borrowed components from claimed new contributions. Known ingredients can support a new, evidenced combination; a new name, domain label or dataset alone does not establish the delta. Use `../references/evidence_driven_ideation.md` for evidence status and selection boundaries.
 
 ## Verification Process
 
@@ -63,7 +66,7 @@ For every novelty claim, assign one of:
 | **NOVEL** | No published work found matching this specific combination | Proceed — flag for ARS lit-review confirmation |
 | **PARTIALLY EXPLORED** | Related work exists but the specific formulation is new | Proceed with caution — must cite prior work and differentiate |
 | **ALREADY PUBLISHED** | This has been done; found specific paper(s) | STOP — reframe or select different approach |
-| **UNCERTAIN** | Cannot confirm or deny with available search | Proceed with explicit uncertainty flag — ARS will verify further |
+| **UNCERTAIN** | Cannot confirm or deny with available search | Phase 2 may explore provisionally with the flag; Phase 3.5 keeps it pending outside the eligible shortlist until retrieval resolves it |
 
 ### Step 4: Prior Art Report
 
@@ -93,7 +96,7 @@ For every novelty claim, assign one of:
   - **Differentiation**: [What is genuinely different about the proposed approach]
 
 **Confidence**: [HIGH | MEDIUM | LOW]
-- HIGH: Thorough search with clear signal (found matching paper OR confirmed absence across multiple indices)
+- HIGH: Strong source support for the bounded verdict (for example, a direct mechanism match). Even broad retrieval establishes only no match found within that search, never confirmed universal absence
 - MEDIUM: Reasonable search but some corners unexplored
 - LOW: Limited search capability for this specific area
 
@@ -121,7 +124,7 @@ Things that REDUCE likelihood of genuine novelty:
 - The "novelty" is primarily in applying existing tools to a slightly different dataset
 
 Things that INCREASE likelihood of genuine novelty:
-- The donor discipline is rarely cited in the target domain's literature
+- The transfer requires a documented adaptation that resolves a target-domain constraint; low citation connectivity alone is not novelty evidence
 - The structural mapping requires non-trivial translation (not just renaming)
 - The breaking point is recent (emerged in last 3-5 years due to new data or scale)
 - The proposed mechanism predicts specific, testable outcomes that current methods cannot

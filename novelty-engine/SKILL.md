@@ -1,10 +1,10 @@
 ---
 name: novelty-engine
-description: "Academic Novelty & Method Engineering Engine — the suite's idea generator. 4-stage, 11-phase pipeline: (I) Research Preparation — topic verification, paper discovery, gap analysis, go/no-go; (II) Idea Generation — two modes (assumption-breaking with cross-domain synthesis, and limitation-driven), then common candidate checks and a shortlist; (III) Formalization & Proof — math/algorithms, falsification experiments, runnable code; (IV) Validation & Publication — ARS peer review, hardening, full paper. 9 roles. Math or algorithm required for every method. Use when the user asks to generate research ideas, propose a novel method, break a field's assumptions, import a method from another discipline, improve on a baseline's limitations, formalize a method, or design falsification experiments. Triggers: novelty engine, idea generation, generate ideas, novel method, propose a method, dogma, unstated assumption, cross-domain, formalize this method, falsification experiment, 生成想法, 提出新方法, 形式化."
-argument-hint: "[verify | discover | gaps | assess | dogma | limitations | candidates | formalize | falsify | experiment | stress-test | paper]"
+description: "Academic Novelty & Method Engineering Engine — the suite's idea generator. 4-stage pipeline: (I) Research Preparation — topic verification, paper discovery, gap analysis, go/no-go; (II) Idea Generation — three evidence-led routes (assumption-breaking, limitation-driven, observation-driven), then common candidate checks and a shortlist; (III) Formalization & Proof — math/algorithms, falsification experiments, runnable code; (IV) Validation & Publication — ARS peer review, hardening, full paper. 10 roles. Math or algorithm required for every method. Use when the user asks to generate research ideas, propose a novel method, break a field's assumptions, import a method from another discipline, improve on a baseline's limitations, investigate an observed anomaly or deployment obstacle, formalize a method, or design falsification experiments. Triggers: novelty engine, idea generation, generate ideas, novel method, propose a method, dogma, unstated assumption, cross-domain, observation-driven, replication anomaly, formalize this method, falsification experiment, 生成想法, 提出新方法, 形式化."
+argument-hint: "[verify | discover | gaps | assess | dogma | limitations | observations | candidates | formalize | falsify | experiment | stress-test | paper]"
 metadata:
-  version: "1.2.0"
-  last_updated: "2026-09-30"
+  version: "1.3.0"
+  last_updated: "2026-10-04"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -21,7 +21,7 @@ metadata:
 
 # Novelty Engine Pipeline
 
-You are orchestrating the **Academic Novelty & Method Engineering Engine** — a 10-phase pipeline that generates publication-grade novel methodologies with mandatory mathematical/algorithmic formalization, then hands off to ARS for verified paper production.
+You are orchestrating the **Academic Novelty & Method Engineering Engine** — a staged pipeline that generates candidate methods, checks their evidence and novelty, formalizes them and hands off to ARS. A completed prompt workflow does not establish publication quality.
 
 ## Prerequisites
 
@@ -33,9 +33,9 @@ You are orchestrating the **Academic Novelty & Method Engineering Engine** — a
 
 ## Agents
 
-The nine agents are prompt files in this skill's `roles/` folder
+The ten agents are prompt files in this skill's `roles/` folder
 (`topic_verifier`, `gap_analyzer`, `dogma_extractor`, `novelty_verifier`,
-`cross_domain_synthesizer`, `limitation_resolver`, `math_formalizer`,
+`cross_domain_synthesizer`, `limitation_resolver`, `observation_analyst`, `math_formalizer`,
 `experiment_falsifier`, `experiment_coder`). "Dispatch the X agent" below means:
 
 - **Claude Code** — read `roles/X.md` and launch a general-purpose subagent
@@ -60,19 +60,23 @@ rules and gates govern; this skill supplies the machinery.
 | 2 novelty verification | S3 | Verdicts are search-bounded: NOVEL → NOVEL-WITHIN-SEARCH, PARTIALLY EXPLORED → INCREMENTAL, ALREADY PUBLISHED → KNOWN |
 | 3A cross-domain synthesis | S3 propose mode, assumption-breaking | The transplant is justified against the threat model |
 | 3B limitation-driven generation | S3 propose mode, limitation-driven | Starts from the limitation ledger; the task and the adversary stay fixed |
+| 3C observation-driven generation | S3 propose mode, observation-driven | Located observations, rival explanations and discriminating probes; empirical-only leads return to S2 |
 | 3.5 candidate checks and shortlist | S3 | Novelty re-check of the mechanism itself, security framing check, feasibility; at most three eligible candidates; each carries its own claims and cheapest decisive test |
 | 4 formalization | S3 (iron rule 5) | Every shortlisted candidate is formalized far enough to run its decisive test; claims checked against the underlying theory; the ONE method selected by screening gets the full specification and the Contribution Card |
 | 4.5a falsification design | S4 | The per-paper-type evaluation table and the pre-registration card; criteria freeze before any run |
 | 4.5b experiment code | S5, S5a | Reproduce the strongest baseline first; every number comes from the ledger |
 | 5 stress test | S7 | The five security reviewer personas; output under `ars-review/` |
 
-**Entering at Phase 1 from the loop.** When the research question has already
+**Entering generation from the loop.** When the research question has already
 passed the topic verification gate (a recorded `go` on the RQ card or in
 `research_question.md`), that verdict stands in for the Phase 0d GO: start at
-Phase 1 and do not re-run Phases 0a–0d. The papers are in `literature.md`
+the applicable generation route and do not re-run Phases 0a–0d. The papers are in `literature.md`
 (saved at S1) and the gap registry. A confirmed limitation list — a ledger
 from `novelty-filter` (`runs/*/weaknesses.md`) or one written by any tool —
-is the input of the limitation-driven mode (Phase 3B). Outputs stay in
+is the input of the limitation-driven mode (Phase 3B). Located observations
+or an existing observation ledger enter Phase 3C. Read
+`references/evidence_driven_ideation.md` before choosing routes; no supported
+assumptions means no Phase 3A, not a request to manufacture dogmas. Outputs stay in
 `novelty_engine/`. The shortlisted candidates are screened in the loop (S3
 screening: each runs its cheapest decisive test on development data under one
 frozen screening plan), and the Contribution Card is written for the ONE
@@ -323,24 +327,30 @@ Save to `novelty_engine/00_topic_verification/go_no_go_assessment.md`
 
 Only reached after a GO verdict. The research direction is now defined.
 
-Two generation modes feed one set of checks:
+Read `references/evidence_driven_ideation.md` for the evidence matrix,
+observation ledger, mechanism prompts and execution-based selection record.
+Three generation routes feed one set of checks:
 
 | Mode | Starts from | Phases | Role |
 |---|---|---|---|
-| A — assumption-breaking | an assumption the field shares without stating it | 1 → 2 → 3A | `dogma_extractor`, `novelty_verifier`, `cross_domain_synthesizer` |
+| A — assumption-breaking | a source-backed assumption and its breaking point | 1 → 2 → 3A | `dogma_extractor`, `novelty_verifier`, `cross_domain_synthesizer` |
 | B — limitation-driven | the confirmed limitations of the strongest baseline | 3B | `limitation_resolver` |
+| C — observation-driven | located replication anomalies, deployment obstacles, new trust boundaries or measurements | 3C | `observation_analyst` |
 
-Run both when their inputs exist. Mode A tends to find reframings; mode B
-tends to find concrete improvements with a clear test. Neither is evidence
-that an idea is original or sound — that is what Phase 3.5 and the later
-experiments are for. Both modes end in Phase 3.5.
+Use each route whose evidence exists; record skipped routes and why. No
+minimum number of assumptions or candidates is required. Route A explores
+assumptions, B diagnoses baseline limitations and C starts from observations.
+An origin is not evidence of novelty or correctness. All method candidates
+enter Phase 3.5; unsupported leads stay in a probe queue. Empirical-only
+contributions return to the matching research-question route, not a forced
+new algorithm.
 
 ---
 
 ---
 
 ### PHASE 1: Dogma Extraction
-**Goal**: Identify unstated foundational assumptions and their breaking points.
+**Goal**: Identify source-backed assumptions and meaningful breaking points without inferring field-wide consensus.
 
 **Agent**: `dogma_extractor`
 
@@ -349,14 +359,15 @@ experiments are for. Both modes end in Phase 3.5.
    - All literature from `00_literature/` (including papers discovered in Phase 0b)
    - The gap-dogma alignment hints from Phase 0c
    - The selected research question(s) from Phase 0d
-2. The agent extracts 4-6 dominant unstated dogmas, each with:
-   - The assumption itself
-   - Where it hides in the literature
+2. Extract only supported assumptions (zero is valid), each with:
+   - The assumption itself and scope
+   - Evidence type: EXPLICIT / SHARED-DEPENDENCY / HYPOTHESIS
+   - Source locations, actual reading scope and counterevidence
    - Why it persists
    - Its breaking point (exact failure scenario)
    - Severity rating (CRITICAL / HIGH / MODERATE)
    - Evidence of cracks
-3. Save output to `novelty_engine/01_dogma_scan/dogma_scan.md`
+3. Save output to `novelty_engine/01_dogma_scan/dogma_scan.md`. Keep HYPOTHESIS items as probes; do not use them as established premises. If there are no supported breaking points, skip Phases 2–3A and continue with B or C if their inputs exist.
 
 **Checkpoint**: Present dogmas to user. Ask:
 - "Do these ring true based on your domain knowledge?"
@@ -392,7 +403,7 @@ Let the user adjust, add, or remove dogmas before proceeding.
 ---
 
 ### PHASE 3A: Cross-Domain Synthesis (mode A)
-**Goal**: Generate hybrid methodologies by mapping external frameworks onto the target domain.
+**Goal**: Generate methods through structurally justified transfer from adjacent or distant fields.
 
 **Agent**: `cross_domain_synthesizer`
 
@@ -402,7 +413,7 @@ Let the user adjust, add, or remove dogmas before proceeding.
    - Verified breaking points from Phase 2
    - The cross-domain catalog as reference
    - User's target topic and constraints
-3. The agent generates 2-3 hybrid methodologies, each with:
+3. Generate up to three supported, distinct hybrid methodologies (zero is valid), each with:
    - Donor discipline and framework identification
    - Formal isomorphism mapping (table format)
    - Core mechanism explanation
@@ -414,12 +425,12 @@ Let the user adjust, add, or remove dogmas before proceeding.
 
 **Quality gate**: Every method must pass the synthesizer's quality checklist:
 - [ ] Structural, not superficial mapping
-- [ ] Donor discipline is genuinely distant
+- [ ] Donor assumptions fit the target, with non-trivial adaptation and costs stated; distance is not a gate
 - [ ] Core mechanism is formalizable
 - [ ] Method is testable
 - [ ] Targets a CRITICAL or HIGH breaking point
 
-No checkpoint here: the candidates go to Phase 3.5 together with those of mode B.
+No checkpoint here: candidates join the other applicable routes at Phase 3.5.
 
 ---
 
@@ -432,7 +443,7 @@ No checkpoint here: the candidates go to Phase 3.5 together with those of mode B
 
 **Process**:
 1. Dispatch the limitation_resolver agent with the limitation list, the research question (and threat model), and the literature
-2. The agent groups limitations by cause and proposes 2-3 mechanisms. One mechanism may resolve several limitations; it does not produce one fix per limitation
+2. Group limitations by cause and propose up to three supported, distinct mechanisms; zero is valid. One mechanism may resolve several limitations; it does not produce one fix per limitation
 3. Each candidate names the limitations it resolves and the ones it leaves open, its root cause, mechanism, costs, claims, cheapest decisive test and risks
 4. Save output to `novelty_engine/03_hybrid_methods/limitation_driven_methods.md`
 
@@ -440,24 +451,40 @@ No checkpoint here: the candidates go to Phase 3.5 together with those of mode B
 
 ---
 
+### PHASE 3C: Observation-Driven Generation (mode C)
+**Goal**: Turn located observations into causal hypotheses and testable method candidates.
+
+**Agent**: `observation_analyst`
+
+**Input**: the selected RQ/threat model, literature and located logs, measurements, deployment evidence or specifications. Accept an existing observation ledger; do not require a dogma or baseline limitation list.
+
+**Process**:
+1. Read `roles/observation_analyst.md` and `references/evidence_driven_ideation.md`; write `03_hybrid_methods/observation_ledger.md` with provenance, evidence status, proposed cause, rival explanations and a discriminating probe.
+2. Generate only supported, distinct method candidates; save to `03_hybrid_methods/observation_driven_methods.md`. Label untested explanations as hypotheses and include assumptions, costs, claims and a decisive test.
+3. Missing evidence yields a probe plan, not invented findings. Route changed RQs/threat models and empirical-only leads back to S2 before commitment. Proposed probes do not bypass experiment authorization, the frozen screening plan or the compute rules.
+4. Send method candidates with their observation IDs to Phase 3.5.
+
+---
+
 ### PHASE 3.5: Common Candidate Checks and Shortlist
-**Goal**: Put every candidate from both modes through the same checks, and keep at most three that are worth a cheap test.
+**Goal**: Put every candidate from all applicable routes through the same checks, and keep at most three that are worth a cheap test.
 
 **Agent**: `novelty_verifier` (for step 2)
 
 **Process**:
 1. **Candidate card** for every candidate, in `novelty_engine/03_hybrid_methods/candidates.md`:
-   - mode, and origin (the dogma it breaks, or the limitation ids it resolves)
-   - mechanism (one paragraph)
+   - route(s), origin IDs, source/artifact locations and evidence status
+   - root-cause hypothesis and strongest alternative explanation
+   - mechanism (one paragraph), borrowed components, new assumptions and costs
    - its own claims: 1-3 falsifiable claims specific to this candidate
    - consequence: what the community would learn if the claims hold. "A better number on an existing task" is not an answer. For a security project this is the security consequence (`../security-track/references/security_framing_protocol.md`)
-   - nearest prior work and how the candidate differs (filled in step 2)
+   - nearest prior work and delta in mechanism, assumptions, costs and consequence (filled in step 2)
    - cheapest decisive test: the smallest experiment or proof whose outcome would make you drop the candidate, with its pass criterion stated in advance and the resources it needs
-2. **Novelty re-check of the mechanism itself.** Dispatch the novelty_verifier agent with the candidate mechanisms (not the dogmas). An unexplored assumption does not make the method built on it new, and an improvement to a well-known baseline is often already published. ALREADY PUBLISHED → dropped. PARTIALLY EXPLORED → stays only with a stated difference. Append to `novelty_engine/02_novelty_check/novelty_verification.md`
+2. **Novelty re-check of the mechanism itself.** Dispatch the novelty_verifier agent with the candidate mechanisms (not the dogmas). An unexplored assumption does not make the method built on it new, and an improvement to a well-known baseline is often already published. Drop a claimed delta shown to be ALREADY PUBLISHED; known ingredients alone do not disqualify a new combination. PARTIALLY EXPLORED stays only with a stated difference. UNCERTAIN stays pending, outside the eligible shortlist. Append to `novelty_engine/02_novelty_check/novelty_verification.md`
 3. **Framing check.** Does the consequence survive scrutiny? For a security project run the security framing check; an unresolved framing risk makes the candidate ineligible
 4. **Feasibility check.** Can the cheapest decisive test be run with the data, devices and compute the researcher actually has?
-5. **Eligibility and shortlist.** A candidate is *eligible* only if it passes steps 2-4. Shortlist **at most three** eligible candidates. When both modes have eligible candidates, reserve one slot for each mode. Never carry a known or unsound candidate merely to represent its mode. No single novelty score orders the list: weigh the consequence against how cheap and decisive the test is
-6. Record every dropped candidate with its reason in `candidates.md`
+5. **Eligibility and shortlist.** A candidate is *eligible* only if it passes steps 2-4. Merge equivalent mechanisms, preserving all origin IDs. Shortlist **at most three** distinct eligible candidates. Prefer complementary mechanisms or explanations when comparably supported; no route has a reserved seat. Never carry a known or unsound candidate merely to represent its route. No single novelty score orders the list: weigh the consequence against how cheap and decisive the test is
+6. Record every merged or dropped candidate and its reason in `candidates.md`. Append the evidence summary from `references/evidence_driven_ideation.md`: proposed, eligible and tested IDs, search status, ledger links, results and selected/pending decision. Mark unrun tests NOT RUN; update after screening. Counts and model scores do not establish publication readiness.
 
 **Checkpoint**: Present the candidate cards, the eligible set and the proposed shortlist. Ask:
 - "Which candidates go forward (at most three)?"
@@ -534,8 +561,9 @@ This phase has two sub-phases:
 **Process**:
 1. Dispatch the experiment_falsifier agent with:
    - The formal specification from Phase 4
-   - The dogma being inverted from Phase 1
-   - The novelty claim from Phase 2
+   - The selected candidate card and origin evidence: supported assumption, confirmed limitation or observation ledger; Phase 1 is optional
+   - The proposed causal explanation, strongest rival explanation and discriminating probe
+   - The candidate claims and mechanism novelty check from Phase 3.5 (plus Phase 2 where applicable)
 2. The agent produces a complete Falsification Experiment Design:
    - **Null Hypothesis ($H_0$)**: Exact quantitative condition where the method offers zero advantage
    - **Experimental Variables**: IV (what we manipulate), DV (what we measure), CV (what stays locked)
@@ -543,7 +571,7 @@ This phase has two sub-phases:
    - **3 Escalating Torture Tests**:
      - Test 1: Target a specific weakness
      - Test 2: More hostile than Test 1, different weakness
-     - Test 3: Target the FUNDAMENTAL assumption (push the inverted dogma back toward original)
+     - Test 3: Test the core mechanism against its strongest alternative explanation; challenge an inverted assumption only when applicable
    - **Degradation Curve Protocol**: Sweep stress from benign → extreme, find the knee point
    - **Success Criteria**: Statistical tests, effect size thresholds, mandatory reporting
    - **Threats to Validity**: Internal, external, construct, statistical conclusion
@@ -740,14 +768,15 @@ This is the highest-value `/goal` in the pipeline — experiment code almost nev
 | 0c | gap_analyzer | Complete corpus | Ranked gap registry + candidate RQs | User selects RQ(s) | `/workflows` |
 | 0d | topic_verifier | All Phase 0a-0c evidence | GO / PIVOT / STOP verdict | **HARD GATE** |
 | | **STAGE II: IDEA GENERATION** | | | |
-| 1 | dogma_extractor | Corpus + gap hints + selected RQ | 4-6 dogmas with breaking points | User validates dogmas |
+| 1 | dogma_extractor | Corpus + gap hints + selected RQ | Supported assumptions (possibly zero) + separate probe queue | User validates supported premises |
 | 2 | novelty_verifier | Dogma scan | Novelty verification report | Drop ALREADY PUBLISHED |
-| 3A | cross_domain_synthesizer | Verified breaking points | 2-3 hybrid methodologies | Synthesizer quality checklist |
-| 3B | limitation_resolver | Confirmed limitation list of the strongest baseline | 2-3 limitation-driven mechanisms | Mechanism, not a patch list |
-| 3.5 | novelty_verifier + orchestrator | All candidates from 3A and 3B | Candidate cards, eligible set, shortlist (≤3) | Novelty re-check + framing + feasibility; user confirms shortlist |
+| 3A | cross_domain_synthesizer | Verified breaking points | Up to three supported methods, or an evidence gap | Synthesizer quality checklist |
+| 3B | limitation_resolver | Confirmed limitation list of the strongest baseline | Up to three supported mechanisms, or a probe plan | Mechanism, not a patch list |
+| 3C | observation_analyst | Located observations + selected RQ | Observation ledger + methods or probe plan | Provenance, rival explanations, discriminating test |
+| 3.5 | novelty_verifier + orchestrator | All candidates from applicable routes | Candidate cards, eligible set, shortlist (≤3) | Novelty re-check + framing + feasibility; user confirms shortlist |
 | | **STAGE III: FORMALIZATION & PROOF** | | | |
 | 4 | math_formalizer | Shortlisted candidates | Formal specs (theorems + algorithms) | IRON RULE: math or algo required | `/goal` |
-| 4.5a | experiment_falsifier | Formal spec + dogma | Falsification design (H₀, torture tests, kill conditions) | User validates fairness | |
+| 4.5a | experiment_falsifier | Formal spec + candidate claims and evidence | Falsification design (H₀, torture tests, kill conditions) | User validates fairness | |
 | 4.5b | experiment_coder | Formal spec + falsification design | Runnable Python experiment code | Code runs, sanity checks pass | `/goal` |
 | | **STAGE IV: VALIDATION & PUBLICATION** | | | |
 | 5 | ARS /ars-reviewer | Compiled proposal + experiment results | 5-reviewer report | Critical flaws → loop back |
@@ -757,7 +786,7 @@ This is the highest-value `/goal` in the pipeline — experiment code almost nev
 ## Partial Execution
 
 Users can run individual phases, in words or with a one-word argument
-(`verify`, `discover`, `gaps`, `assess`, `dogma`, `limitations`, `candidates`,
+(`verify`, `discover`, `gaps`, `assess`, `dogma`, `limitations`, `observations`, `candidates`,
 `formalize`, `falsify`, `experiment`, `stress-test`, `paper`; no argument = full
 pipeline from Phase 0a):
 - "Verify this topic" → Phase 0a only (topic viability check)
@@ -766,6 +795,7 @@ pipeline from Phase 0a):
 - "Should I pursue this topic?" → Phase 0a-0d (full research preparation)
 - "Just extract dogmas from these papers" → Phase 1 only
 - "Propose methods from these limitations" / "improve on this baseline" → Phase 3B, then 3.5
+- "Investigate this observation" / "generate from this replication anomaly" → Phase 3C; methods continue to 3.5, unresolved leads stay as probes
 - "Check and shortlist these candidates" → Phase 3.5 only (candidates may come from the user)
 - "I already have an idea, formalize it" → Phase 4 only (skip ideation)
 - "Design experiments to prove/disprove this method" → Phase 4.5 only

@@ -17,9 +17,10 @@ If the method survives your torture tests, it has earned credibility. If it brea
 ## Input
 
 You receive:
-- The novel methodology (from cross_domain_synthesizer)
-- Its formal specification (from math_formalizer): theorems, algorithms, bounds, guarantees
-- The dogma it inverts (from dogma_extractor)
+- The selected candidate from any generation mode or from the researcher
+- Its formal specification (from math_formalizer): definitions, algorithms and the proof obligations its claims require
+- Its evidence of origin: supported assumption, confirmed limitation, or observation ledger; a dogma is optional
+- Its causal hypothesis and strongest alternative explanation. Include the cheapest test that distinguishes them before scaling up
 
 ## Process
 
@@ -129,8 +130,8 @@ Design exactly **3 escalating stress scenarios** that target the method's weakes
 **Kill condition**: [specific failure threshold]
 
 ### Torture Test 3: [Name] — Targeting [the fundamental assumption]
-**Scenario**: [The scenario where the core dogma inversion ITSELF breaks down]
-**What we manipulate**: [Push the inverted assumption back toward the original dogma]
+**Scenario**: [Where the core mechanism or explanatory hypothesis itself breaks down]
+**What we manipulate**: [Change the proposed causal factor while controlling plausible alternatives; invert an assumption only when relevant]
 **Expected degradation**: [If the method degrades gracefully → strong evidence it's robust;
                            if it catastrophically fails → the inversion may be too brittle]
 **Measurement protocol**: [...]

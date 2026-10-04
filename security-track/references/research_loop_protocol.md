@@ -52,7 +52,7 @@
 | S0 Topic viability | go / no-go verdict | novelty-engine Phase 0a (topic_verifier) | deep-research quick + this protocol §S0 |
 | S1 Gap registry | evidenced gap list | `/ars-lit-review` + perspective protocol + gap_analyzer | `ars-lit-review` + perspective protocol, gaps per §S1 |
 | S2 RQ generation | ranked candidate RQs | gap_analyzer + dogma_extractor | this protocol §S2 |
-| S3 Method / evaluation | candidate cards → screening → Contribution Card | cross_domain_synthesizer + limitation_resolver + novelty_verifier + math_formalizer | the same `novelty-engine` roles, run one at a time + this protocol §S3 |
+| S3 Method / evaluation | candidate cards → screening → Contribution Card | cross_domain_synthesizer + limitation_resolver + observation_analyst + novelty_verifier + math_formalizer | the same `novelty-engine` roles, run one at a time + this protocol §S3 |
 | S4 Validation design | frozen validation plan (type-aware) | experiment_falsifier (defense/AI); proof obligation for crypto | experiment-agent WORKFLOW planning + §S4 table |
 | S5 Execution | provenance ledger | experiment_coder + session runs code | Codex writes & runs code + §S5 ledger |
 | S6 Improvement loop | method changelog M-v1→M-vN | this protocol §S6 (both runtimes) | same |
@@ -75,6 +75,14 @@ scan-level leads; this stage's verdict still needs the named papers.
 
 ## S1 — Gap registry
 
+Build a literature matrix of question, threat model, assumptions, mechanism,
+reported evidence, untested boundary and cost, with source locations and
+reading scope. Also preserve located observations (replication discrepancies,
+conflicting results, deployment obstacles and new trust boundaries). Follow
+`../../novelty-engine/references/evidence_driven_ideation.md` for the observation
+ledger. An observation is a lead, not an absence claim or a confirmed cause;
+it still needs related-work search and competing explanations.
+
 Run the literature review with the perspective-retrieval protocol (six
 security lenses + moderator round). Each candidate gap is an ABSENCE
 claim and must carry: (a) the search that failed to fill it (queries +
@@ -95,10 +103,12 @@ threat-model sketch (adversary, assets, trust boundary), contribution
 type (attack / defense / measurement / analysis-SoK — note CCS bans SoK),
 target venue fit (which Big-4/tier-2 and why, per venue profiles),
 feasibility (data/testbed/device access YOU actually have), and the
-dogma it challenges, if any (shared assumption in prior work — e.g.,
-"defenders assume the attacker cannot influence training data"; breaking
-a named dogma is the strongest novelty source). Rank by
-impact × feasibility × freshness. HUMAN selects.
+assumption it challenges, if any (for example, a source-backed restriction
+on attacker control of training data), or the limitation/observation IDs it
+builds on. No dogma is required. Separate explicit assumptions, inferred
+shared dependencies and unverified hypotheses; do not invent a field-wide
+belief. Compare security impact, feasibility and the prior-work delta
+separately, without treating an aggregate score as evidence. HUMAN selects.
 
 **Distinctness rule (before ranking):** discard any candidate RQ that
 collapses to the SAME threat-model delta as a higher-ranked one — present
@@ -122,16 +132,30 @@ proceeds to S3. The researcher confirms.
 
 ## S3 — Method proposal OR deep evaluation (novelty & contribution focus)
 
+**Contribution-type routing.** The method-generation and comparative-screening
+path below applies when the RQ needs a new method. For a measurement or
+analysis/SoK contribution without a new method, use the Contribution Card
+with a reproducible measurement/analysis protocol, competing explanations
+and evidence obligations in item 5; proceed to the matching S4 evaluation
+route. Do not invent an algorithm, theorem or baseline-improvement target.
+For this branch, S5 executes the frozen evidence protocol; S5a baseline
+reproduction applies only to actual method comparisons. S6a uses the planned
+measurement sensitivity/robustness checks rather than removing nonexistent
+algorithm components. Claims about algorithms still require their mathematical
+checks. A changed
+RQ or threat model returns to S2 topic verification before this branch.
+
 Two entry modes, same output artifact:
 
 - **Propose mode**: design a new method for the chosen RQ. Generate
-  candidates with the `novelty-engine` skill in two modes, and run both when
-  their inputs exist:
-  - *Assumption-breaking* (Phases 1 → 2 → 3A): name an assumption prior work
-    shares, pre-check it, import a mechanism from a distant field.
-    Cross-domain transplantation is encouraged (control theory → CPS anomaly
-    detection, etc.) but the transplant must be justified against the threat
-    model.
+  candidates with the `novelty-engine` skill in three routes, using every
+  route whose evidence exists. Read its `references/evidence_driven_ideation.md`
+  for evidence fields and mechanism choices; record skipped routes:
+  - *Assumption-breaking* (Phases 1 → 2 → 3A): locate a supported assumption
+    and its breaking point, pre-check it, and compare structurally suitable
+    mechanisms from adjacent or distant fields. Distance is optional; donor
+    assumptions, adaptation costs and the threat model determine suitability.
+    Zero supported assumptions is valid; skip this route rather than fill a quota.
   - *Limitation-driven* (Phase 3B): start from a **limitation ledger** of the
     strongest baseline — extract its limitations and check the list covers
     what a reviewer would name (ScientistTwo, arXiv:2609.19644 §3.1) — and
@@ -140,18 +164,30 @@ Two entry modes, same output artifact:
     method. `novelty-filter` can build the ledger (Claude Code); any tool can
     supply one directly.
 
-  **Common candidate checks (Phase 3.5), both modes.** Every candidate gets a
-  candidate card: the mechanism, its own falsifiable claims, the security
+  - *Observation-driven* (Phase 3C): use located replication anomalies,
+    conflicting findings, deployment obstacles, measurements or architecture
+    evidence. Separate the observation from its causal explanation; record
+    evidence status, a plausible rival explanation and a discriminating probe.
+    Missing evidence yields a probe plan, never an invented finding. Empirical-only
+    leads use the contribution-type branch above after S2 confirms the RQ.
+
+  **Common candidate checks (Phase 3.5), all applicable routes.** Every candidate gets a
+  candidate card: origin IDs and evidence status, root-cause hypothesis,
+  strongest alternative explanation, mechanism, new assumptions and costs,
+  borrowed components, its own falsifiable claims, the security
   consequence (what the community would learn), the nearest prior work, and
   its cheapest decisive test with a pass criterion stated in advance. The
   mechanism itself is novelty-checked again after generation — an unexplored
   assumption does not make the method built on it new. A candidate is
   *eligible* only if it passes that novelty re-check, the security framing
   check and a feasibility check. **Shortlist at most three eligible
-  candidates.** When both modes have eligible candidates, one slot is
-  reserved for each; an ineligible candidate is never carried to represent
-  its mode, and no single novelty score decides the list. The rest stay as
-  the exploration pool for S6.
+  candidates.** Merge equivalent mechanisms across routes, keeping their
+  provenance. Prefer complementary candidates when comparably supported;
+  there are no route quotas. An ineligible candidate is never carried to
+  represent its route, and no single novelty score decides the list.
+  UNCERTAIN retrieval stays pending, not novelty-verified. Known ingredients
+  are allowed when the claimed coordination/adaptation delta survives search.
+  The rest stay as the exploration pool for S6.
 
   **Screening before commitment.** The shortlisted candidates share one
   **screening plan**, frozen before the first candidate runs: the development
@@ -164,7 +200,11 @@ Two entry modes, same output artifact:
   are logged and reportable. If none is GOOD, do not lower the bar: return to
   generation with the failure causes. The Contribution Card is written for
   the selected method, and the development data used here can never become
-  the held-out (`research_integrity_protocol.md` §2).
+  the held-out (`research_integrity_protocol.md` §2). Update `candidates.md`
+  with proposed/merged/dropped, eligible and tested IDs, ledger links,
+  MET/UNMET/INCONCLUSIVE outcomes and the selected or pending decision.
+  Untested ideas are NOT RUN; counts and simulated review scores do not prove
+  effectiveness or publication readiness.
 - **Evaluate mode**: the user brings their own method; the loop deepens
   it rather than replacing it.
 
@@ -183,7 +223,9 @@ CONTRIBUTION CARD — <method name> (M-v1)
    dimension by dimension (threat model, assumptions, overhead, eval)
 4. Delta statement: one paragraph — what a Big-4 reviewer would call
    the contribution, in the community's own terms
-5. Formalization: math or algorithm (iron rule 5) + threat model
+5. Formalization: math or algorithm (iron rule 5) + threat model; for an
+   empirical-only contribution, the reproducible measurement/analysis
+   protocol and evidence obligations from the contribution-type branch
 6. Honest weaknesses: what the skeptic persona (R4) would attack first
 7. Security framing check: the framing chain filled + SECURITY FRAMING
    RISK verdict, and each claim's novelty type(s) tagged
@@ -225,6 +267,7 @@ fuzzing/tool + usability the remainder. Pick the row that fits the claim:
 | **Attack / offensive** | The paper IS a refutation of someone's security claim. Validation = the attack works END-TO-END on a REAL target (not a lab toy), with impact quantified and responsible disclosure. | "This only works in your idealized setup / preconditions already imply game-over." → demonstrate on real deployed systems, real CVEs, realistic attacker position. |
 | **Defense / AI-security** | The method resists attack. | ADAPTIVE adversary aware of the defense; strongest published attacks as correctly-tuned baselines; no gradient masking / security-by-obscurity (Carlini checklist). |
 | **Measurement / empirical** | The finding reflects reality, not method. | "Your result is a measurement artifact." → rule out alternative explanations, multiple vantage points, ground-truth validation, robustness to methodology choices. |
+| **Analysis / SoK** | A source-backed new viewpoint or synthesis changes what the community understands. | Audit search scope, evidence traceability, counterexamples and competing classifications; justify the conceptual delta and venue fit. A literature list is insufficient; no invented performance target is required. |
 | **Fuzzing / bug-finding / tool** | The tool finds real, deeper defects. | "You only beat baselines on toys." → real-world targets, comparison vs strongest existing tools, real bugs triaged (ideally reported/fixed). |
 | **CPS** | The attack/defense holds on real cyber-physical dynamics. | Real testbed or hardware-in-the-loop, or an explicit simulation-fidelity argument; PHYSICAL consequence measured, not packet-level success. |
 | **IoT** | The result generalizes past one device. | Device/vendor diversity matched to the breadth of the claim; root cause is a vulnerability CLASS, not one vendor's bug. |

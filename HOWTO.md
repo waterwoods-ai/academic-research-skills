@@ -98,7 +98,7 @@ Save every included paper to ./literature.md (citation, one-line finding, which 
 
 ```text
 Extend research topics from ./gap_registry.md. My resources: <honestly list: testbeds / devices / dataset access you have>.
-Write ranked RQ cards to ./rq_cards.md — each with a threat-model sketch, contribution type (attack / defense / measurement / tool; note CCS rejects SoK), target-venue fit, feasibility against my resources, and the dogma it challenges if any. Rank by impact × feasibility × freshness.
+Write ranked RQ cards to ./rq_cards.md — each with a threat-model sketch, contribution type (attack / defense / measurement / tool; note CCS rejects SoK), target-venue fit, feasibility against my resources, and the supported assumption, confirmed limitation or located observation it builds on (no dogma is required). Compare security impact, feasibility and the prior-work delta separately; do not use an aggregate score as evidence.
 ```
 📄 `rq_cards.md`
 
@@ -106,14 +106,14 @@ Write ranked RQ cards to ./rq_cards.md — each with a threat-model sketch, cont
 
 ```text
 Mentor review of ./rq_cards.md and ./gap_registry.md for a Big-4 security venue.
-For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers and rule SATURATED (name the papers) / MISFRAMED (restate the better question) / VIABLE (name the open territory). Then tell me which unstated assumption (dogma) shared by prior work is most worth challenging. Then run the topic verification gate (topic_verification_gate.md) on the top RQ: answer the 12 questions with evidence and a pass / weak / fail status each, freeze them, and give a go / revise / stop verdict with the deciding question. Write your verdicts as annotations into ./rq_cards.md; do not rewrite the student's cards.
+For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers and rule SATURATED (name the papers) / MISFRAMED (restate the better question) / VIABLE (name the open territory). Then identify any source-backed assumption worth challenging, or the confirmed limitation/located observation motivating the RQ. Zero supported assumptions is valid; distinguish explicit assumptions, shared dependencies and unverified hypotheses. Then run the topic verification gate (topic_verification_gate.md) on the top RQ: answer the 12 questions with evidence and a pass / weak / fail status each, freeze them, and give a go / revise / stop verdict with the deciding question. Write your verdicts as annotations into ./rq_cards.md; do not rewrite the student's cards.
 ```
 🚦 **你决定**:选定 1 个 RQ,go / pivot / stop。这道门防止在饱和方向烧半年。想要独立的第二意见:让另一个模型家族(Codex 审稿人,或 Claude Code 里的 `verify-research-topic` 走 ChatGPT 盲评)只看设计事实、不看你的答案,再按证据逐条对账。
 
 **Step 4 🎓 落定课题**
 
 ```text
-Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_question.md: the RQ, threat model, the dogma being challenged, target venue, why it fits that venue, and the topic-gate verdict with its date (copied from the mentor annotation).
+Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_question.md: the RQ, threat model, the supported assumption or limitation/observation IDs (with evidence status), target venue, why it fits that venue, and the topic-gate verdict with its date (copied from the mentor annotation).
 ```
 📄 `research_question.md`
 
@@ -123,26 +123,30 @@ Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_qu
 
 **Step 5 🎓 提出方法 / 深化你的方法 → 候选卡**
 
-从零提方法的顺序:**5a 生成**(两种方式 + 统一检查,最多留 3 个候选)→ **5b 候选卡 + 筛选计划** → Step 6 导师审 → Step 7 修卡 → **Step 7.5 便宜实验筛选,选定 1 个** → Contribution Card。
+从零提方法的顺序:**5a 生成**(三条证据驱动路线 + 统一检查,最多留 3 个不同机制的候选)→ **5b 候选卡 + 筛选计划** → Step 6 导师审 → Step 7 修卡 → **Step 7.5 便宜实验筛选,选定 1 个** → Contribution Card。
 已经有自己的方法:跳过 5a 和 7.5,在 5b 用 `Evaluate…` 那段直接写 `contribution_card.md`。
+
+实证/测量/SoK 型贡献如果不需要新方法,按 `research_loop_protocol.md` S3 的 contribution-type 分支写 Contribution Card,用可复现的测量/分析协议和证据义务替代方法形式化;不强造算法或基线提升目标,直接进入对应 S4 验证路线。
 
 **5a 🎓 生成器 `novelty-engine`**(三个工具都能用)
 
 ```text
-Run novelty-engine candidate generation for the RQ in ./research_question.md. Inputs (direct route): the papers in ./literature.md, the gaps in ./gap_registry.md, and — if it exists — a confirmed limitation list (./runs/*/weaknesses.md from novelty-filter, or ./limitation_ledger.md). The topic-gate verdict recorded in ./research_question.md stands in for Phase 0; do not re-run it.
-Mode A, assumption-breaking: Phase 1 — starting from the dogma named in ./research_question.md, extract the unstated assumptions prior work shares and where each breaks; stop for my choice. Phase 2 — pre-check the novelty of each breaking point. Phase 3A — propose 2–3 methods, each importing a mechanism from a distant field.
-Mode B, limitation-driven: Phase 3B — propose 2–3 mechanisms that remove the causes of the confirmed limitations of the strongest baseline. One mechanism may resolve several limitations; do not produce one patch per limitation. If there is no confirmed limitation list, build one from the strongest baseline paper first and show it to me.
-Phase 3.5, every candidate from both modes: write its candidate card (mechanism, its own claims, the security consequence, nearest prior work, cheapest decisive test with a pass criterion); re-check the novelty of the mechanism itself; run the security framing check; check feasibility against my resources. Shortlist at most three eligible candidates; if both modes have eligible ones, keep at least one from each; never keep a known or unsound candidate to represent its mode. Stop for my choice of shortlist.
-Phase 4: formalize each shortlisted candidate far enough to implement its decisive test (definitions, assumptions, algorithm + complexity). Keep all outputs in ./novelty_engine/; do not write any card yet.
+Run novelty-engine candidate generation for the RQ in ./research_question.md. Inputs (direct route): the papers in ./literature.md, the gaps in ./gap_registry.md, and — when available — a confirmed limitation list (./runs/*/weaknesses.md from novelty-filter, or ./limitation_ledger.md), and located logs/measurements/deployment evidence or ./observation_ledger.md. The topic-gate verdict recorded in ./research_question.md stands in for Phase 0; do not re-run it.
+Read novelty-engine/references/evidence_driven_ideation.md. Use each route whose evidence exists, and record why any route is skipped.
+Mode A, assumption-breaking: Phase 1 — extract source-backed assumptions and breaking points with EXPLICIT / SHARED-DEPENDENCY / HYPOTHESIS labels. Zero supported assumptions is valid; hypotheses stay in a probe queue. Stop for my choice of supported premises. Phase 2 — pre-check the breaking points. Phase 3A — propose distinct methods using structurally suitable mechanisms from adjacent or distant fields; distance is not a quality gate. State transfer assumptions and adaptation costs.
+Mode B, limitation-driven: Phase 3B — propose up to three supported, distinct mechanisms (zero is valid with a probe/evidence-gap note) that remove the causes of the confirmed limitations of the strongest baseline. One mechanism may resolve several limitations; do not produce one patch per limitation. If there is no confirmed limitation list, build one from the strongest baseline paper first and show it to me.
+Mode C, observation-driven: Phase 3C — record observation provenance/status, proposed causes, plausible alternatives and discriminating probes in ./novelty_engine/03_hybrid_methods/observation_ledger.md. Generate a method only when the evidence supports a concrete mechanism hypothesis. Missing artifacts yield a probe plan, not invented findings; a new RQ/threat model returns to Step 2.
+Phase 3.5, every candidate from applicable routes: write its candidate card (origin IDs, evidence status, cause and rival explanation, mechanism, borrowed components, new assumptions/costs, own claims, security consequence, nearest prior work, decisive test and pass/drop criteria). Re-check the mechanism and knowledge delta using ancestor and adjacent-method queries; run security framing and feasibility checks. UNCERTAIN retrieval stays pending. Merge equivalent mechanisms, preserve provenance, and shortlist at most three eligible candidates without route quotas. Stop for my choice of shortlist. Track proposed/eligible/tested IDs and decisions in candidates.md; unrun tests are NOT RUN, and LLM scores are not execution evidence.
+Phase 4: formalize each shortlisted candidate far enough to implement its decisive test (definitions, assumptions, algorithm + complexity). Keep all outputs in ./novelty_engine/; write candidates.md here, but do not write the root-level candidate_cards.md or contribution_card.md yet.
 ```
-📄 `novelty_engine/03_hybrid_methods/candidates.md`(候选卡 + shortlist + 被淘汰的及原因)、`hybrid_methods.md`、`limitation_driven_methods.md`、`02_novelty_check/novelty_verification.md`、`04_formal_spec/formal_specification.md`。Claude Code 里各角色作为独立子代理运行;Codex / opencode 逐个角色顺序执行。
+📄 `novelty_engine/03_hybrid_methods/candidates.md`(候选卡 + shortlist + 被淘汰的及原因)、`hybrid_methods.md`、`limitation_driven_methods.md`、`observation_ledger.md`、`observation_driven_methods.md`(只输出有依据的路线)、`02_novelty_check/novelty_verification.md`、`04_formal_spec/formal_specification.md`。Claude Code 里各角色作为独立子代理运行;Codex / opencode 逐个角色顺序执行。
 
 > 可选(仅 Claude Code):`novelty-filter <基线论文>`(原名 develop-novel-method)——只过滤、不生成。**5a 之前跑**:它的 `runs/<日期>-method-<slug>/weaknesses.md` 就是方式 B 要的 limitation 列表。**5a 之后跑**:对 `candidates.md` 里的候选做一遍更强的查新(Elicit + Litmaps + 两个盲评模型),结论写回候选卡。
 
 **5b 🎓 候选卡 + 筛选计划**
 
 ```text
-From ./novelty_engine/03_hybrid_methods/candidates.md and ./novelty_engine/04_formal_spec/formal_specification.md, write ./candidate_cards.md: one card per shortlisted candidate (at most three). Each card carries its OWN 1–3 falsifiable claims; the novelty verdict per claim (NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature, nearest prior work cited); the security consequence; the formalization (algorithm + complexity) plus the threat model; honest weaknesses; and its cheapest decisive test with a numeric pass criterion.
+From ./novelty_engine/03_hybrid_methods/candidates.md and ./novelty_engine/04_formal_spec/formal_specification.md, write ./candidate_cards.md: one card per shortlisted candidate (at most three). Each card carries its origin IDs/evidence status, cause and rival explanation, new assumptions/costs and borrowed components; its OWN 1–3 falsifiable claims; the novelty verdict per claim (NOVEL-WITHIN-SEARCH / INCREMENTAL / KNOWN from real retrieval against Big-4 + tier-2 literature, nearest prior work cited); the security consequence; the formalization (algorithm + complexity) plus the threat model; honest weaknesses; and its cheapest decisive test with a numeric pass criterion.
 Then write ./screening_plan.md, marked DRAFT and shared by all candidates: the development data (it can never become the held-out), the strongest baseline to reproduce, the ONE comparison criterion used to choose between candidates, and the implementation and tuning budget per candidate (the same for all).
 ```
 📄 `candidate_cards.md`、`screening_plan.md (DRAFT)`。规则:判 KNOWN 的候选当场丢弃,不为了"代表某种生成方式"而保留。
@@ -179,7 +183,7 @@ Revise ./candidate_cards.md per the mentor annotations. (If I brought my own met
 
 ```text
 Run the candidate screening in ./screening_plan.md (FROZEN). First reproduce the strongest baseline on the development data and log it in ./ledger/. Then, for each candidate in ./candidate_cards.md, implement it only as far as its cheapest decisive test needs, within the frozen budget, and run that test on the development data — never on held-out data. Log one ledger entry per run: candidate id, planned vs executed, raw log path, and the verdict against the candidate's own pass criterion (GOOD / ENGINEER / BAD; a BAD candidate gets a root-cause note). Do not change the plan or any pass criterion after seeing results. Then recommend ONE candidate by the frozen comparison criterion (on a tie, the simpler one or the one with weaker assumptions) and stop for my confirmation.
-After I confirm: write ./contribution_card.md for the selected method with the eight Contribution Card items of research_loop_protocol.md §S3, tagged M-v1; complete its formalization (the theorem or bound its claims need); write ./method_changelog.md with the M-v1 entry; and mark the runners-up in ./candidate_cards.md as reserve, with their screening results.
+After I confirm: write ./contribution_card.md for the selected method with the eight Contribution Card items of research_loop_protocol.md §S3, tagged M-v1; complete its formalization (the theorem or bound its claims need); write ./method_changelog.md with the M-v1 entry; and mark the runners-up in ./candidate_cards.md as reserve, with their screening results. Update the evidence summary in ./novelty_engine/03_hybrid_methods/candidates.md with tested IDs, ledger links, MET/UNMET/INCONCLUSIVE results and the selected ID; keep unrun tests as NOT RUN. Investigate failure causes and feed them back into generation; do not infer publication readiness from a model score.
 ```
 📄 `ledger/`(筛选记录)、`contribution_card.md`(M-v1)、`method_changelog.md`。🚦 **你决定**:确认选哪一个。全部 BAD 时不降标准:带着失败原因回 5a,或找导师。落选的候选留作后备,论文里可如实报告筛了几个、为什么选这个。
 
