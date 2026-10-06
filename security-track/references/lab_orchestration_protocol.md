@@ -36,11 +36,19 @@
 | **GLM** (opencode) | Security scientist | What is the actual attacker/defender problem? | Threat model, attack surface, defense assumptions, hypotheses, adversarial cases, experiment proposals; candidate generation (`novelty-engine`); independent checker of implementation and interpretation |
 | **Codex** | Research engineer; Reviewer #2 | Can we prove this experimentally and reproduce it? Why should this paper be rejected? | Experiment framework, runs on gpu1, reproducibility manifests, statistical pipeline, regression tests, artifact. As Reviewer #2: attacks on novelty (with retrieved papers), threat model, design and paper; review rounds; the reject-reasons register |
 
-**Codex has two roles; keep them apart.** As Reviewer #2 it never reviews its
-own code or results: GLM checks the implementation and the Director checks
-statistics and reproducibility. Run Reviewer #2 work in a separate Codex
-thread from the engineering thread, so the review is not written from inside
-the build context.
+**Codex has two roles in one thread.** Engineering and Reviewer #2 work run in
+the same Codex thread (Tom's decision, 2026-10-06: VS Code opens one Codex
+window). Three rules keep the review honest without a fresh context:
+
+1. As Reviewer #2 it never reviews its own code or results: GLM checks the
+   implementation and the Director checks statistics and reproducibility.
+2. Every review brief is artifact-only. It names the files under review, and
+   each objection must cite the file and section it rests on, plus a retrieved
+   paper for any novelty objection. An objection without a citation does not
+   count.
+3. Review records say the review ran in the engineering thread, not a fresh
+   context. The fully independent check is the final blind review in a fresh
+   GLM session.
 
 **Model families.** Claude, GLM and OpenAI are three independent sources of
 error; that independence is the point. The final blind review (HOWTO Step 17)
