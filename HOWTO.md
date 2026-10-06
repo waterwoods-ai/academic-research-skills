@@ -1,4 +1,4 @@
-# HOWTO — 研究组协作分步指南:Claude Code(Director)× Kimi × GLM × Codex × Antigravity(Reviewer #2)
+# HOWTO — 研究组协作分步指南:Claude Code(Director)× GLM(安全科学家)× Codex(研究工程师 + Reviewer #2)
 
 > 只想 5 分钟跑起来?看 [`QuickStart-security.md`](QuickStart-security.md)。本文件是完整参考。
 >
@@ -12,58 +12,55 @@
 > 若你只有 Claude Code 一个工具,🎓 执行步骤也可在 Claude Code 里跑(用同样的 prompt,
 > 前缀改为对应 `/ars-*` 命令),但每次核查都换新会话,🔍 审稿步骤尽量换到不同模型家族以保持独立性。
 >
-> 图例:🎓 执行步骤(标题里写明交给 Kimi / GLM / Codex)  🧑‍🏫 Claude Code(Director,判断)  🔍 Antigravity(Reviewer #2,判定)  🚦 你的决定门  📄 产出文件
+> 图例:🎓 执行步骤(标题里写明交给 GLM / Codex)  🧑‍🏫 Claude Code(Director,判断)  🔍 Codex(Reviewer #2,判定)  🚦 你的决定门  📄 产出文件
 
 ---
 
-## 为什么这样分工(五个 agent 的研究组,按 `orchestration.md`,2026-10-05 起)
+## 为什么这样分工(三个 agent 的研究组,按 `orchestration.md`,2026-10-06 起)
 
 | 角色 | 工具 | 问的问题 | 负责 | 只写这些文件 |
 |---|---|---|---|---|
 | PI | 你 | 我们到底要做出什么贡献? | 方向、安全范围、设计冻结、每次算力启动、结论与 claim | — |
-| 🧑‍🏫 Director | Claude Code | 我们在回答对的科学问题吗? | 研究问题、假设拆解、任务分派、证据追踪、决定记录、论文架构、分歧裁决、门禁 | `research_question.md` `contribution_card.md` `claims.md` `decisions.md` `method_changelog.md` `paper/` |
-| 文献与新颖性审计 | Kimi | 别人做过了吗? | 系统文献综述、文献矩阵、最接近的 5 篇、novelty 报告;投稿前逐句核对引用 | `gap_registry.md` `literature.md` `literature/` |
-| 安全科学家 | GLM(opencode) | 真正的攻防问题是什么? | 威胁模型、攻击面、防御假设、研究假设、对抗用例、候选方法生成(novelty-engine)、实验设计 | `rq_cards.md` `security/` `novelty_engine/` `candidate_cards.md`;冻结前的 `screening_plan.md` `validation_plan.md` |
-| 研究工程师 | Codex | 能用实验证明并复现吗? | 实验框架、gpu1 运行、复现清单、统计、回归测试(泄漏、种子、指标)、artifact | 代码、`tests/`、`ledger/`、`results/` |
-| 🔍 Reviewer #2 | Antigravity | 这篇为什么该被拒? | 独立攻击新颖性、威胁模型、方法、统计、评估、贡献;拒稿理由登记;审稿轮 | `reviews/` `ars-review/` |
+| 🧑‍🏫 Director(兼文献与新颖性) | Claude Code | 我们在回答对的科学问题吗?别人做过了吗? | 研究问题、假设拆解、任务分派、证据追踪、决定记录、论文架构与写作、分歧裁决、门禁;用 Elicit / Zotero API、选题 skill 和检索子代理做文献综述与 novelty 报告 | `research_question.md` `contribution_card.md` `claims.md` `decisions.md` `method_changelog.md` `paper/` `gap_registry.md` `literature.md` `literature/` |
+| 安全科学家 | GLM(opencode) | 真正的攻防问题是什么? | 威胁模型、攻击面、防御假设、研究假设、对抗用例、候选方法生成(novelty-engine)、实验设计;独立核查实现与结果解释 | `rq_cards.md` `security/` `novelty_engine/` `candidate_cards.md`;冻结前的 `screening_plan.md` `validation_plan.md` |
+| 研究工程师 + 🔍 Reviewer #2 | Codex | 能用实验证明并复现吗?这篇为什么该被拒? | 实验框架、gpu1 运行、复现清单、统计、回归测试、artifact;作为 Reviewer #2:用检索到的文献攻击 novelty,审威胁模型、实验设计和论文,审稿轮,拒稿理由登记 | 代码、`tests/`、`ledger/`、`results/`、`reviews/`、`ars-review/` |
 
 四条纪律:
-- **任何关键结果都不只一个负责人**:每项都有主责和独立核查(见下表);核查者不核查自己做的东西。
+- **任何关键结果都不只一个负责人**:每项都有主责和独立核查(见下表);核查者不核查自己做的东西。**Codex 当 Reviewer #2 时不审自己的代码和结果**(实现由 GLM 核查,统计与复现由 Director 核查),审稿工作放在和工程不同的 Codex 线程里做。
 - **新颖性只认检索到的文献**:凭记忆说"没人做过"只算线索。
-- **Reviewer #2 不参与产生想法**,并且最好跑和 Director 不同的模型家族:Antigravity 若选 Claude 模型,就和 Director 共享盲点。
+- **Reviewer #2 不参与产生想法、不写论文**;最终盲审(Step 17)用一个新的 GLM 会话——它没写论文,也没参加审稿轮。
 - **方向文件只按你的决定改**:Director 先把你的原话记进 `decisions.md`,再改文件;其他 agent 只写自己的文件,意见写进报告。
 
-所有交接都通过**磁盘文件**,零对话依赖。完整规则(核查矩阵、claims 登记、拒稿理由登记、Gate 1–4、拒绝时怎么分派):`security-track/references/lab_orchestration_protocol.md`。
+所有交接都通过**磁盘文件**,零对话依赖。三个 agent 都装了 ARS / security-track skill。完整规则(核查矩阵、claims 登记、拒稿理由登记、Gate 1–4、拒绝时怎么分派):`security-track/references/lab_orchestration_protocol.md`。
 
 ### 谁做哪一步
 
 | Step | 谁做 | 谁独立核查 |
 |---|---|---|
-| 0 选题侦察 | 🧑‍🏫 Director(`find-research-topic` 只能在 Claude Code 跑) | Kimi |
-| 1 文献 + gap | Kimi | 🔍 Antigravity(补漏文献);Director 抽查检索 |
+| 0 选题侦察 | 🧑‍🏫 Director(`find-research-topic` 只能在 Claude Code 跑) | — |
+| 1 文献 + gap | 🧑‍🏫 Director | 🔍 Codex(补漏文献,带检索证据) |
 | 2 RQ 卡片 + 威胁模型草图 | GLM | Director |
-| 3 选题把关(Gate 1:>30 篇直接相关、最接近 5 篇、差异写清) | 🧑‍🏫 Director + Kimi 检索 | 🔍 Antigravity:用检索到的文献试图推翻 novelty |
+| 3 选题把关(Gate 1:>30 篇直接相关、最接近 5 篇、差异写清) | 🧑‍🏫 Director | 🔍 Codex:用检索到的文献试图推翻 novelty |
 | 4 落定课题 | 🧑‍🏫 Director 按你的决定写 `research_question.md` | — |
-| 5a 生成候选 | GLM(novelty-engine) | Kimi(机制查新) |
+| 5a 生成候选 | GLM(novelty-engine) | Director(机制查新) |
 | 5b 候选卡 + 筛选计划 | GLM | Codex(可实现性、统计、公平性) |
-| 6 审候选与计划(Gate 2:威胁模型) | 🧑‍🏫 Director + 🔍 Antigravity | 🚦 你冻结 |
+| 6 审候选与计划(Gate 2:威胁模型) | 🧑‍🏫 Director + 🔍 Codex | 🚦 你冻结 |
 | 7 修卡 | GLM | Director |
-| 7.5 筛选 | Codex(gpu1) | Antigravity(实现);Director 推荐,🚦 你选定 |
+| 7.5 筛选 | Codex(gpu1) | GLM(实现);Director 推荐,🚦 你选定 |
 | 8 验证计划 | GLM | Codex |
-| 9 冻结 | 🧑‍🏫 Director + 🔍 Antigravity | 🚦 你冻结 |
-| 10–11 运行与改进 | Codex | Antigravity(实现)、Director(统计) |
-| 12 检查点(Gate 3:实验有效性) | 🧑‍🏫 Director | Antigravity |
+| 9 冻结 | 🧑‍🏫 Director + 🔍 Codex | 🚦 你冻结 |
+| 10–11 运行与改进 | Codex | GLM(实现)、Director(统计) |
+| 12 检查点(Gate 3:实验有效性) | 🧑‍🏫 Director | GLM |
 | 12.5 消融 | Codex | Director |
-| 13 写论文(先过 Gate 4:贡献) | 🧑‍🏫 Director | Kimi(逐句核对引用) |
-| 14、16 审稿 | 🔍 Antigravity | GLM(第二读) |
-| 15 修改 | 🧑‍🏫 Director;实验项交 Codex | Antigravity |
-| 17 投稿前终审 | 没参与审稿轮的模型家族,新会话,盲审 | 🚦 你 |
-| 17.2 审计 + artifact | Codex | Antigravity |
-| 17.5 复盘、18 投稿规划、19 真实审稿 | 🧑‍🏫 Director | Kimi(引用) |
+| 13 写论文(先过 Gate 4:贡献) | 🧑‍🏫 Director | 🔍 Codex(逐句核对引用) |
+| 14、16 审稿 | 🔍 Codex | GLM(第二读) |
+| 15 修改 | 🧑‍🏫 Director;实验项交 Codex | Codex 复核文字项;实验项由 GLM 复核 |
+| 17 投稿前终审 | 新的 GLM 会话,盲审 | 🚦 你 |
+| 17.2 审计 + artifact | Codex | Director(干净检出重跑) |
+| 17.5 复盘、18 投稿规划、19 真实审稿 | 🧑‍🏫 Director | Codex(rebuttal 审查) |
 
 - 步骤 prompt 里的 "Mentor" 就是 Director;其余 prompt 发给上表「谁做」那一列的 agent,文件名不变。
-- **Kimi 和 Antigravity 没装 ARS / security-track skill。** 给它们的任务要写明要读的文件(例如 `<SRC>/security-track/references/security_reviewer_personas.md`、`major_revision_playbook.md`)。Step 14/16 和 rebuttal audit 交给 Antigravity 时,让它按这两个文件审稿,按 security-track `SKILL.md` 的 Review Workspace 格式写入 `ars-review/round-N/`;Director 用 `security-track/scripts/validate_review_workspace.py` 检查。
-- **某个 agent 拒绝任务时,不要把同一请求原样转给另一个 agent。** 由 Director 拆分:文献 → Kimi,威胁模型 → GLM,防御实现与统计 → Codex;对目标的攻击执行、或超出 `AUTHORIZED_RESEARCH.md`(模板在 `security-track/templates/`)的部分交你决定。
+- **某个 agent 拒绝任务时,不要把同一请求原样转给另一个 agent。** 由 Director 拆分:文献 → Director,威胁模型 → GLM,防御实现与统计 → Codex;对目标的攻击执行、或超出 `AUTHORIZED_RESEARCH.md`(模板在 `security-track/templates/`)的部分交你决定。
 - 只有一两个工具时:角色可以合并,核查不能省——每次核查换新会话,只给产出物不给推理过程。
 
 ---
@@ -103,7 +100,7 @@ python3 $SRC/security-track/scripts/init_project.py --name my-paper --venue "<ve
 What is the NDSS Major Revision process, and which Big-4 venues still have one?
 ```
 
-正确答案要点:只有 NDSS 还有;S&P 2024 起 Accept/Reject;USENIX '26 取消;CCS 只有 Minor revision。装了 skill 的工具都答对 = 环境就绪。Kimi 和 Antigravity 没装这些 skill,不参加这个测试;给它们的任务里写明要读的文件路径。
+正确答案要点:只有 NDSS 还有;S&P 2024 起 Accept/Reject;USENIX '26 取消;CCS 只有 Minor revision。三个工具都答对 = 环境就绪。
 
 ---
 
@@ -119,7 +116,7 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 > | 有一篇想在其上改进的基线论文 | Step 1–4 照常定题;到 Step 5 先跑 `novelty-filter <论文>` 建 limitation 列表(5a 的方式 B 从它出发) |
 > | 已经有自己的方法 | 跳到 Step 5 的 `Evaluate…` 分支 |
 
-**Step 1 🎓 Kimi 文献综述 + gap 登记**
+**Step 1 🧑‍🏫 Director 文献综述 + gap 登记(Codex 补漏)**
 
 ```text
 ars-lit-review <your area, e.g. physics-based sensor spoofing detection for ICS>, ensure broad coverage.
@@ -147,7 +144,7 @@ Write ranked RQ cards to ./rq_cards.md — each with a threat-model sketch, cont
 Mentor review of ./rq_cards.md and ./gap_registry.md for a Big-4 security venue.
 For each of the top-3 RQs: retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers and rule SATURATED (name the papers) / MISFRAMED (restate the better question) / VIABLE (name the open territory). Then identify any source-backed assumption worth challenging, or the confirmed limitation/located observation motivating the RQ. Zero supported assumptions is valid; distinguish explicit assumptions, shared dependencies and unverified hypotheses. Then run the topic verification gate (topic_verification_gate.md) on the top RQ: answer the 12 questions with evidence and a pass / weak / fail status each, freeze them, and give a go / revise / stop verdict with the deciding question. Write your verdicts as annotations into ./rq_cards.md; do not rewrite the student's cards.
 ```
-🚦 **你决定**:选定 1 个 RQ,go / pivot / stop。这道门防止在饱和方向烧半年。想要独立的第二意见:让另一个模型家族(🔍 Antigravity,或 Claude Code 里的 `verify-research-topic` 走 ChatGPT 盲评)只看设计事实、不看你的答案,再按证据逐条对账。
+🚦 **你决定**:选定 1 个 RQ,go / pivot / stop。这道门防止在饱和方向烧半年。想要独立的第二意见:让另一个模型家族(🔍 Codex,或 Claude Code 里的 `verify-research-topic` 走 ChatGPT 盲评)只看设计事实、不看你的答案,再按证据逐条对账。
 
 **Step 4 🧑‍🏫 Director 落定课题(按你的决定)**
 
@@ -167,7 +164,7 @@ Finalize RQ-<n> per the mentor annotations in ./rq_cards.md. Write ./research_qu
 
 实证/测量/SoK 型贡献如果不需要新方法,按 `research_loop_protocol.md` S3 的 contribution-type 分支写 Contribution Card,用可复现的测量/分析协议和证据义务替代方法形式化;不强造算法或基线提升目标,直接进入对应 S4 验证路线。
 
-**5a 🎓 GLM 运行生成器 `novelty-engine`**(装了 skill 的工具都能用)
+**5a 🎓 GLM 运行生成器 `novelty-engine`**(三个工具都能用)
 
 ```text
 Run novelty-engine candidate generation for the RQ in ./research_question.md. Inputs (direct route): the papers in ./literature.md, the gaps in ./gap_registry.md, and — when available — a confirmed limitation list (./runs/*/weaknesses.md from novelty-filter, or ./limitation_ledger.md), and located logs/measurements/deployment evidence or ./observation_ledger.md. The topic-gate verdict recorded in ./research_question.md stands in for Phase 0; do not re-run it.
@@ -205,7 +202,7 @@ Write ./contribution_card.md with: 3–5 falsifiable claims; per-claim novelty v
 > 产出该篇的 8 问骨架、论证链与最弱环、Introduction P1–P7 标注、以及它的 evaluation 会招来哪些审稿人问题。
 > (需要多篇检索/覆盖面用 `ars-lit-review` + 「确保覆盖全面」;`ars-3w` 是轻量筛选。)
 
-**Step 6 🧑‍🏫 Director 审候选与筛选计划(🔍 Antigravity 独立攻击;Gate 2)** 🚦
+**Step 6 🧑‍🏫 Director 审候选与筛选计划(🔍 Codex 独立攻击;Gate 2)** 🚦
 
 ```text
 Mentor review of ./candidate_cards.md and ./screening_plan.md (if I brought my own method, review ./contribution_card.md the same way instead). For each candidate: independently re-verify each novelty verdict by real retrieval (do not trust the student's search). Which claim would a Big-4 reviewer kill first, and with which of the standard rejection anchors? Is the security consequence real, or only a better number? Is the formalization actually a method (algorithm + threat model) or still a sketch? Is the decisive test really decisive, with a numeric pass criterion? For the screening plan: is it fair to every candidate (same data, same baseline, same budgets), and is the development data disjoint from anything that could later serve as the held-out? Annotate the files in place; do not rewrite them.
@@ -237,7 +234,7 @@ Design validation experiments for the method in ./contribution_card.md. First cl
 ```
 📄 `validation_plan.md (DRAFT)`
 
-**Step 9 🧑‍🏫 Director 审设计(🔍 Antigravity 独立攻击)→ 冻结** 🚦
+**Step 9 🧑‍🏫 Director 审设计(🔍 Codex 独立攻击)→ 冻结** 🚦
 
 ```text
 Review ./validation_plan.md as the mentor. Check: does each claim's validation survive the specific refutation a Big-4 reviewer of THIS paper type will attempt (adaptive adversary for defenses; real target end-to-end for attacks; artifact-ruling-out for measurement; real testbed + physical consequence for CPS; device diversity for IoT; base rates + temporal split for ML detection; proof for theory)? Are the success criteria numeric and pre-registered? Are the baselines the strongest published ones? Annotate in place. Do not change the criteria yourself — propose, and I decide.
@@ -276,7 +273,7 @@ All frozen criteria in ./validation_plan.md are MET per ./ledger. Run S6a from r
 
 ## 阶段 D · 论文与评审循环(Step 13–17)
 
-**Step 13 🧑‍🏫 Director 写论文(先过 Gate 4;Kimi 核对引用)**
+**Step 13 🧑‍🏫 Director 写论文(先过 Gate 4;Codex 核对引用)**
 
 ```text
 ars-full — target venue: <venue year>
@@ -287,7 +284,7 @@ Security-paper structure (Intro / Threat Model / Design / Implementation / Evalu
 
 > 可选润色:草稿成形后跑一遍 **`academic-humanizer`**(security 校准见 `security_humanizing_overlay.md`)——去 AI 味、把动词强度对齐证据,**只降不升(never inflate)**,绝不动数字 / 引用 / CVE-ATT&CK id / scope hedge。这是**内容冻结后**的语言润色,不是改内容;会议论文跳过 Layer 6(NSF/NIH grant 模式)。
 
-**Step 14 🔍 Reviewer #2 首轮评审(自动建档)**
+**Step 14 🔍 Codex(Reviewer #2)首轮评审(自动建档)**
 
 ```text
 ars-reviewer — target venue: <venue year>, paper: ./paper.tex
@@ -311,14 +308,14 @@ Throughout: maintain ./ars-review/round-N/changelog.md with one line per item `I
 🚦 Phase 3 停下后你回复决定(如 `Run REV-001, REV-002; re-scope REV-006`),它继续执行 cluster C(实验走 Step 10–11 的台账规则)。**cluster D(方法本身被判弱)不在稿子里修**:回 Step 11 改方法(过 provenance guard)→ 新方法只有在开发集上严格更好才替换,否则保留原方法并把异议写成 limitation / 收窄 claim → 若方法变了,重跑 Step 12.5 消融 → 重写受影响章节 → 再 Step 16。上限 2 轮,之后找 Director。
 📄 `round-N/changelog.md`。规则:实验项必须引用 ledger run;替代方案必须显式写明,不许静默跳过。
 
-**Step 16 🔍 Reviewer #2 零参数复审 → 循环至收敛**
+**Step 16 🔍 Codex(Reviewer #2)零参数复审 → 循环至收敛**
 
 ```text
 ars-reviewer re-review
 ```
 它从工作区读 venue/清单/路径,优先采用 Director 写的 `changelog.md`;只逐项判 RESOLVED / NOT;禁止对旧文本提新异议;输出到 `round-2/`。**重复 Step 15–16 直到 CONVERGED。**
 
-**Step 17 投稿前终审(高利害,由没参与审稿轮的模型家族在新会话里盲审)**
+**Step 17 投稿前终审(高利害,由新的 GLM 会话盲审:它没写论文、没参加审稿轮)**
 
 ```text
 /ars-reviewer — target venue: <venue year>, paper: ./paper.tex
@@ -369,7 +366,7 @@ Plan my submission to <venue>: which cycle, deadline from the live calendar (ref
 
 **Step 19 真实审稿意见到达**
 
-🧑‍🏫 Director(rebuttal 里的引用由 Kimi 核对):
+🧑‍🏫 Director(rebuttal 草稿由 🔍 Codex 审):
 
 ```text
 ars-revision-coach — venue: <venue year>, decision: <decision tier>
@@ -402,5 +399,5 @@ rebuttal 草稿写好后:🔍 `ars-rebuttal-audit — venue: <venue year>` + 意
   上游同步:在 `dev` 分支上运行 `git sync-upstream`(不切分支:快进 `main` → 推送 `main` → 合并进 `dev` → 刷新截稿日历 → 跑检查)。
   合并冲突只应出现在 `.claude-plugin/marketplace.json`:取上游的 `version` 和顶层描述,保留我们的插件描述和 skill 注册行;其它上游文件一律取上游版本。
   Claude fork 同步后再跑 `bash security-track/tests/compare_upstream_lints.sh`:与纯上游相比,只允许 `expected_upstream_lint_diffs.txt` 列出的 lint 有差异。
-  最后 `git push origin dev`,并按上面的「更新」把装了 skill 的工具刷新一遍。
+  最后 `git push origin dev`,并按上面的「更新」把三个工具刷新一遍。
 - **CI 邮件** = 上游质量门在审我们的定制,按报错修。

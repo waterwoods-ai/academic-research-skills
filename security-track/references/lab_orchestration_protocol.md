@@ -1,16 +1,18 @@
 # Lab Orchestration Protocol (Custom — Security Track)
 
-> How five AI agents share one research project as a small security lab, so
+> How three AI agents share one research project as a small security lab, so
 > that no critical result rests on a single agent. Run it WITH
 > `research_loop_protocol.md`: that file says what each stage must produce;
 > this one says who produces it, who checks it, and who may write which file.
-> Role design: the researcher's `orchestration.md` (adopted 2026-10-05).
+> Role design: the researcher's `orchestration.md` (adopted 2026-10-05),
+> reduced to three agents on 2026-10-06.
 
 ## Principles
 
 1. **The Director manages the research; it does not do all of it.** Claude
-   Code is never the sole literature reviewer, programmer, statistician,
-   judge of novelty, or reviewer of its own paper.
+   Code is never the sole programmer, statistician, or reviewer of its own
+   paper, and its literature and novelty findings are always checked by
+   another agent.
 2. **No critical result has a single owner.** Every item has a primary agent
    and an independent checker (matrix below). A checker never checks its own
    contribution.
@@ -19,7 +21,7 @@
    such work" from memory is a lead to search, never a verdict. In earlier
    rounds, reviewers judging novelty from memory missed published work twice.
 4. **The reviewer stays out of creation.** Reviewer #2 does not take part in
-   generating the idea, so its attacks are independent.
+   generating the idea or writing the paper, so its attacks are independent.
 5. **The PI decides.** Agents propose; the researcher has final authority over
    the research question, security scope, design freezes, compute launches,
    interpretation and claims.
@@ -27,25 +29,27 @@
 
 ## Roles
 
-| Agent | Role | The question it asks | Owns |
+| Agent | Role | The questions it asks | Owns |
 |---|---|---|---|
 | **You** | Principal Investigator | What contribution are we actually trying to make? | Decisions: direction, scope, freezes, compute go, claims |
-| **Claude Code** | Research Director / orchestrator | Are we answering the right scientific question? | Research question, hypothesis decomposition, roadmap, task assignment, evidence tracking, decisions, paper architecture, disagreement resolution, gates, final integration |
-| **Kimi** | Literature scientist and novelty auditor | Has somebody already answered this? | Systematic review, literature matrix, the closest prior work, novelty reports, missing papers; before submission, citation police |
-| **GLM** (opencode) | Security scientist | What is the actual attacker/defender problem? | Threat model, attack surface, defense assumptions, hypotheses, adversarial cases, experiment proposals; candidate generation (`novelty-engine`) |
-| **Codex** | Research engineer | Can we prove this experimentally and reproduce it? | Experiment framework, runs on gpu1, reproducibility manifests, statistical pipeline, regression tests, artifact |
-| **Antigravity** | Reviewer #2 / scientific red team | Why should this paper be rejected? | Independent attacks on novelty, threat model, methodology, statistics, evaluation and contribution; the reject-reasons register; review rounds |
+| **Claude Code** | Research Director; literature and novelty | Are we answering the right scientific question? Has somebody already answered it? | Research question, hypothesis decomposition, roadmap, task assignment, evidence tracking, decisions, paper architecture and writing, disagreement resolution, gates; systematic review and novelty reports by retrieval (Elicit and Zotero APIs, the scouting skills, retrieval subagents) |
+| **GLM** (opencode) | Security scientist | What is the actual attacker/defender problem? | Threat model, attack surface, defense assumptions, hypotheses, adversarial cases, experiment proposals; candidate generation (`novelty-engine`); independent checker of implementation and interpretation |
+| **Codex** | Research engineer; Reviewer #2 | Can we prove this experimentally and reproduce it? Why should this paper be rejected? | Experiment framework, runs on gpu1, reproducibility manifests, statistical pipeline, regression tests, artifact. As Reviewer #2: attacks on novelty (with retrieved papers), threat model, design and paper; review rounds; the reject-reasons register |
 
-**Model families.** The value of five agents is five independent sources of
-error. Keep Reviewer #2 on a model family that is not the Director's: if the
-Antigravity panel runs a Claude model, its objections share the Director's
-blind spots. Pick a non-Claude model for it, and record which one each review
-used.
+**Codex has two roles; keep them apart.** As Reviewer #2 it never reviews its
+own code or results: GLM checks the implementation and the Director checks
+statistics and reproducibility. Run Reviewer #2 work in a separate Codex
+thread from the engineering thread, so the review is not written from inside
+the build context.
 
-**Fewer tools.** Fold roles, never checks. With three tools: Director (Claude
-Code), executor (opencode: literature, security and engineering roles in turn),
-reviewer (Codex: Reviewer #2 and novelty checker). With one: every check runs
-in a fresh session that sees the artifact but not the producer's reasoning.
+**Model families.** Claude, GLM and OpenAI are three independent sources of
+error; that independence is the point. The final blind review (HOWTO Step 17)
+runs in a fresh GLM session: GLM did not write the paper or run the review
+rounds.
+
+**Fewer tools.** Fold roles, never checks. With one tool, every check runs in a
+fresh session that sees the artifact but not the producer's reasoning, and the
+final review still needs a different model family where one is available.
 
 ## Who writes which file
 
@@ -56,11 +60,9 @@ upper-case duplicates.
 
 | Writer | Files |
 |---|---|
-| Director | `research_question.md`, `contribution_card.md` (contributions, threat model as adopted, limitations), `claims.md`, `decisions.md`, `method_changelog.md`, `paper/` |
-| Kimi | `gap_registry.md`, `literature.md`, `literature/` (literature matrix, novelty reports, missing papers, citation audit) |
+| Director | `research_question.md`, `contribution_card.md` (contributions, threat model as adopted, limitations), `claims.md`, `decisions.md`, `method_changelog.md`, `paper/`; `gap_registry.md`, `literature.md`, `literature/` |
 | GLM | `rq_cards.md`, `security/` (threat model, attack surface, defense assumptions, hypotheses, adversarial cases), `novelty_engine/`, `candidate_cards.md`, `screening_plan.md` and `validation_plan.md` until frozen |
-| Codex | code (`src/`, `experiments/`), `tests/`, the run ledger (`ledger/`), `results/`, the artifact |
-| Antigravity | `reviews/` (including `reject_reasons.md`), `ars-review/` rounds |
+| Codex | code (`src/`, `experiments/`), `tests/`, the run ledger (`ledger/`), `results/`, the artifact; as Reviewer #2: `reviews/` (including `reject_reasons.md`) and `ars-review/` rounds |
 
 - **Direction files change only on a recorded decision.** The Director writes
   the PI's decision into `decisions.md` in the PI's own words, with the date and
@@ -77,18 +79,18 @@ upper-case duplicates.
 
 | Item | Primary | Independent checker | The check must contain |
 |---|---|---|---|
-| Literature search | Kimi | Antigravity | Missing-paper attack with retrieved citations; the Director re-runs a sample of the recorded queries |
-| Novelty of the RQ and of each candidate | Kimi | Antigravity | An attempt to invalidate it with a retrieved paper; no citation, no objection |
+| Literature search | Director | Codex | Missing-paper attack with retrieved citations |
+| Novelty of the RQ and of each candidate | Director (retrieval) | Codex | An attempt to invalidate it with a retrieved paper; no citation, no objection |
 | Threat model | GLM | Director | The 11 fields and three stress tests of `threat_model_workbench.md` |
 | Hypotheses | GLM | Director | Fundamentals stated, decomposed into sub-claims (iron rule 5) |
 | Experiment design | GLM | Codex | Feasibility, statistics, fairness to every baseline and candidate, disjoint held-out |
-| Implementation | Codex | Antigravity | Code read against the method; the pre-run checks of S5 |
+| Implementation | Codex | GLM | Code read against the method and threat model; the pre-run checks of S5 |
 | Statistics | Codex | Director | Recomputed from raw outputs, not from summaries |
-| Result interpretation | Director | Antigravity | Each claim challenged against its evidence in `claims.md` |
-| Related work | Kimi | Director | Every cited difference checked against the cited paper |
-| Paper writing | Director | Kimi | Sentence-level citation audit: SUPPORTED / PARTIALLY SUPPORTED / UNSUPPORTED |
-| Review simulation | Antigravity | GLM | A second reading of the same draft; disagreements listed |
-| Reproducibility | Codex | Antigravity | Clean-checkout re-run of the 4-check audit |
+| Result interpretation | Director | GLM | Each claim challenged against its evidence in `claims.md` |
+| Related work | Director | GLM | Every cited difference checked against the cited paper |
+| Paper writing | Director | Codex | Sentence-level citation audit: SUPPORTED / PARTIALLY SUPPORTED / UNSUPPORTED |
+| Review simulation | Codex | GLM | A second reading of the same draft; disagreements listed |
+| Reproducibility | Codex | Director | Clean-checkout re-run of the 4-check audit |
 
 ## Claims register (`claims.md`)
 
@@ -120,7 +122,8 @@ R01 | <reason to reject> | dimension: novelty / threat model / methodology / sta
 
 FIXED and REBUTTED need evidence (a ledger run, a retrieved source, a proof).
 LIMITATION needs the PI's approval and goes into the paper. Reviewer #2
-confirms each clearance; the agent that fixed it cannot. No serious reason may
+confirms each clearance; the agent that fixed it cannot. A reason about
+Codex's own code or results is confirmed by GLM instead. No serious reason may
 be OPEN at submission. Once a draft exists, `ars-review/` rounds carry the
 review and this register keeps the open items.
 
@@ -131,21 +134,21 @@ The lab's stages run the research loop; the HOWTO step numbers are in brackets.
 | Lab stage | Loop | Primary | Check / gate |
 |---|---|---|---|
 | 0 Problem selection [0] | S0 | Director, with the PI | — |
-| 1 Systematic literature review [1] | S1 | Kimi | Antigravity |
-| 2 Novelty and gap verification [3] | S1–S2 | Kimi | Antigravity — **Gate 1** |
+| 1 Systematic literature review [1] | S1 | Director | Codex |
+| 2 Novelty and gap verification [3] | S1–S2 | Director | Codex — **Gate 1** |
 | 3 Threat model [2] | S2 | GLM | Director — **Gate 2** |
 | 4 Research hypotheses [2–4] | S2–S3 | GLM; the Director writes `research_question.md` on the PI's decision | Director |
 | 5 Experiment design [5a–5b, 8] | S3–S4 | GLM | Codex |
-| 6 Implementation [7.5, 10] | S5 | Codex | Antigravity |
-| 7 Pilot experiments [7.5] | S5a | Codex | Antigravity |
-| 8 Scientific review [6, 9] | S3–S4 | Antigravity, Director | PI freezes |
+| 6 Implementation [7.5, 10] | S5 | Codex | GLM |
+| 7 Pilot experiments [7.5] | S5a | Codex | GLM |
+| 8 Scientific review [6, 9] | S3–S4 | Director, Codex as Reviewer #2 | PI freezes |
 | 9 Confirmatory experiments [10–12.5] | S5–S6a | Codex | **Gate 3** |
 | 10 Evidence and statistics [12, 12.5] | S6–S7 | Codex, Director | `claims.md` |
-| 11 Paper writing [13] | S8 | Director | Kimi — **Gate 4** first |
-| 12 Reviewer #2 attack [14, 16] | S8 | Antigravity | GLM |
-| 13 Additional experiments [15] | S8 | Codex | Antigravity |
-| 14 Artifact and reproducibility [17.2] | S8 | Codex | Antigravity |
-| Final blind review [17] | S8 | A fresh session of a model family not used in the review rounds | PI |
+| 11 Paper writing [13] | S8 | Director | Codex — **Gate 4** first |
+| 12 Reviewer #2 attack [14, 16] | S8 | Codex | GLM |
+| 13 Additional experiments [15] | S8 | Codex | GLM |
+| 14 Artifact and reproducibility [17.2] | S8 | Codex | Director |
+| Final blind review [17] | S8 | A fresh GLM session | PI |
 
 The HOWTO keeps Scientific review (Steps 6 and 9) before any GPU time, so a
 flawed plan is caught before it costs compute.
@@ -176,7 +179,7 @@ get past it. The Director reads what was refused and routes each part:
 
 | Blocked portion | Route |
 |---|---|
-| Literature, explanation | Kimi |
+| Literature, explanation | Director |
 | Threat model, attack-surface analysis | GLM |
 | Defensive implementation | Codex |
 | Analysis, statistics | Codex |
@@ -191,14 +194,13 @@ inside it; the paper's Ethics Considerations section is written from it.
 
 ## Briefing the agents
 
-- **Kimi and Antigravity do not load the ARS or security-track skills.** Each
-  brief names the reference files they must read by full path (for review:
-  `security_reviewer_personas.md`, `major_revision_playbook.md`; for
-  literature: `topic_scouting_overlay.md`, `perspective_retrieval_protocol.md`).
+- All three agents load the ARS and security-track skills (Claude Code and
+  Codex through their plugins, opencode through the links in its skills
+  folder), so a brief can name a skill or a reference file directly.
 - **Every brief states:** the role, the files the agent may write (its own
-  only), the files it must read, the stop point, and a short numbered reply
-  format.
-- **Reviewer #2 gets artifacts, not conclusions:** the plan, code, results or
-  draft, never the Director's opinion of them.
+  only), the stop point, and a short numbered reply format.
+- **Reviewer #2 gets artifacts, not conclusions:** the plan, draft or results,
+  never the Director's opinion of them, and never its own code or results to
+  judge.
 - With the `ide-agent-orchestration` skill installed, the Director sends each
   brief through that agent's bridge and reads results from the files.
