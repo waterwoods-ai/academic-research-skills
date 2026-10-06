@@ -97,3 +97,11 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** =
 - **Bulk import keeps duplicate records** (e.g. 15 DOIs → "Results 20", with RulePilot and CTI-REALM twice). Harmless; dedupe when logging.
 - **The citation canvas is itself a gap signal.** A screenshot of a mixed-seed map showed an older cluster with no citation links to the LLM cluster. That is a bridge-gap signal (step 4b), even when Similar Text fails.
 - **The map title "(N articles)" is not click-to-edit.** No rename control was found in the time spent; log the map URL instead.
+
+### 2026-10-06 — fourth run [live]
+- **Explore card text changed:** now `refs\nREFERENCES\n[badge]\ncites\nCITATIONS\n[badge]` with extra badge numbers, so the old regex returns nothing. Parse by splitting the list text on `/\nTag\nAdd to Litmap/`, then take the first `Author, YYYY` line, the next line as title, and the line before `CITATIONS` as the count. Same split works on keyword-search results (start after the "Custom" date chip).
+- **Similar Text failed again** (stuck "99% / Priority Queue (1st)" twice, including after reload): 3 failures in 4 runs. Go straight to the fallbacks; the seed-only canvas (all edges inside one cluster, other seeds isolated) was the usable bridge-gap signal.
+- **Background tabs:** Litmaps search pages also fail to render when not in front (`Since 2025` chip not found). `close_tab` + `new_tab <url>` brings it front.
+- **Browser WS can drop** mid-run ("Browser WS not connected") and `browser_mode` then reported `headless: true` with the same pid; a plain `eval` reconnected and the window stayed visible. Re-check visibility rather than restarting.
+- **Axis panel:** clicking the bottom axis caption opens About / X Axis / Y Axis / Size / Advanced; `//h5[...='Momentum']` sets X, then click `Y Axis` text and `//h5[...='Map Connectivity']`.
+- Keyword queries of 5–7 words worked this run; "time to physical impact LLM agent" returned only junk.

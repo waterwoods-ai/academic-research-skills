@@ -90,3 +90,11 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the help center, **[ve
 - **Everything above worked as documented:** two Find-papers runs in parallel tabs, one message each with columns plus a paper target; both finished in about 2–3 minutes.
 - **Tab indices shift on every `new_tab`** ("Active tab is now 0"). Once, a `switch_tab 1` landed on an Elicit session tab instead of Litmaps and the navigate replaced it. The session survives server-side, so log each `/agent/<uuid>` URL as soon as it appears, and switch by URL substring.
 - **Custom classification columns can come back in a different key order** from the one requested. Match by `col-id` regex, not by position.
+
+### 2026-10-06 — fourth run (Pro plan) [live]
+- **"Find papers" moved out of the workflow menu.** The `Research agent` dropdown now lists only Research agent / Report / Systematic review. Find papers is a **chip under the input** (`//button[normalize-space(.)='Find papers']`) that inserts a "Find papers" token into the agent box; then type the question and press Enter. Mode shows "Balanced".
+- **Find-papers runs draw from the paid usage pool.** After 3 runs a banner read "You've used 82% of your monthly usage limit" with "Enable extra usage" / "Upgrade to Scale". Treat each run as paid: ask before running more than the 3 framing questions, batch novelty checks (several sub-questions + one "Direct match A/B/C" column each worked well), never click "Enable extra usage".
+- **Plan detection:** Settings → Subscription shows "Downgrade" on lower tiers and "Your current plan" on the active one; Zotero integration shows "Disconnect" when connected.
+- **Tables can omit the year column** (FQ1 table had `name, doi, text_available, attack_vectors, physical_pathway, …` and no `year`); take years from arXiv IDs or the detail view.
+- **Elicit misses some 2026 ICS papers Litmaps keyword search finds** (Shahid 2026 SOCSentinel, NRT-Bench, Gong 2026). Keep the Litmaps keyword pass in step 5.
+- Runs took ~3–5 min each; all three framing runs in parallel tabs finished within ~6 min.
