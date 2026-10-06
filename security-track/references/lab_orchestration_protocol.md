@@ -133,8 +133,8 @@ The lab's stages run the research loop; the HOWTO step numbers are in brackets.
 
 | Lab stage | Loop | Primary | Check / gate |
 |---|---|---|---|
-| 0 Problem selection [0] | S0 | Director, with the PI | — |
-| 1 Systematic literature review [1] | S1 | Director | Codex |
+| 0 Problem selection [1a] | S0 | Director, with the PI | — |
+| 1 Systematic literature review [1b] | S1 | Director | Codex |
 | 2 Novelty and gap verification [3] | S1–S2 | Director | Codex — **Gate 1** |
 | 3 Threat model [2] | S2 | GLM | Director — **Gate 2** |
 | 4 Research hypotheses [2–4] | S2–S3 | GLM; the Director writes `research_question.md` on the PI's decision | Director |

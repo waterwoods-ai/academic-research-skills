@@ -33,8 +33,8 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 
 | 你在做什么 | 复制这段(前缀:Claude 用 `/ars-`,Codex/opencode 用裸别名) |
 |---|---|
-| **还没有题目** 🧑‍🏫 | `find-research-topic <大方向>`(仅 Claude Code;出 3–7 个候选题目) |
-| **找课题** 🎓 | `ars-lit-review <你的方向>, ensure broad coverage`(ARS 自己检索,不用先给文献) |
+| **还没有题目** 🧑‍🏫 | `find-research-topic <大方向>`(HOWTO Step 1a,仅 Claude Code;出 3–7 个候选题目,论文和 LEAD gap 直接写进 `literature.md` / `gap_registry.md`) |
+| **找课题** 🎓 | `ars-lit-review <你的方向>, ensure broad coverage`(Step 1b;有 1a 的文件就从它们接着做,否则 ARS 自己检索) |
 | **定课题** 🧑‍🏫🚦 | `Verify the research topic viability (go/no-go): <RQ>` |
 | **从零提方法** 🎓 | `Run novelty-engine candidate generation for the RQ in ./research_question.md`(三条生成路线:假设、基线局限、观察;最多留 3 个候选;完整 prompt 见 HOWTO Step 5a → 5b 候选卡 → 7.5 筛选选定 1 个) |
 | **评自己的方法** 🎓 | `Evaluate the novelty and contribution of my method: <描述>` |

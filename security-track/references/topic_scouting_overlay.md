@@ -106,7 +106,8 @@
 
 | Tool output | Goes into |
 |---|---|
-| `report.md` (find-research-topic) / `gap-report.md` (research-gaps) | `gap_registry.md` entries, each completed to the S1 three-field form |
+| `find-research-topic` (HOWTO Step 1a) | writes its kept papers to `literature.md` and its candidate gaps to `gap_registry.md` as LEAD entries; the systematic review (Step 1b) starts from those files, searches only what they do not cover, and completes each LEAD to the S1 three-field form or drops it |
+| `gap-report.md` (research-gaps) | `gap_registry.md` entries, each completed to the S1 three-field form |
 | `verification.md` (verify-research-topic) | the go / revise / stop annotation on the RQ card |
 | `weaknesses.md` + `method-proposal.md` (novelty-filter) | S3 limitation ledger, which is the input of `novelty-engine`'s limitation-driven mode; candidate cards and Contribution Card items 2–3 (novelty status, positioning) |
 | every run's `ledger.md` | the search record S1 and S3 cite |

@@ -1,6 +1,6 @@
 ---
 name: find-research-topic
-description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) and Litmaps (citation-network exploration) in a real Chrome window, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps.
+description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) and Litmaps (citation-network exploration) in a real Chrome window, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
   status: active
@@ -16,6 +16,8 @@ metadata:
 # Find a Research Topic with Elicit + Litmaps
 
 You drive two web apps in Chrome through the `use_browser` tool (superpowers-chrome), then write a ranked, evidence-backed topic report.
+
+**Place in the workflow.** This skill is the breadth pass of the literature stage (HOWTO Step 1a), used when the user has only a broad area. The depth pass (Step 1b, ARS `lit-review` on the chosen topic) continues from the files this skill writes, so the same ground is not searched twice. Always write the stage files in step 6, not only the report.
 Load the `superpowers-chrome:browsing` skill first if its instructions are not already in context.
 
 - Elicit operating notes: [references/elicit.md](references/elicit.md)
@@ -138,6 +140,10 @@ Score the surviving candidates with the rubric below. Write `$RUN/report.md` con
   If saving was declined, offer a BibTeX file instead (Litmaps **Export All**, or Elicit's table export on Plus).
 - limitations of this scan (plan limits hit, paywalled PDFs, Elicit results vary between runs).
 
+**Stage files** (project root; append under a dated heading, never overwrite what is there):
+- `literature.md`: one line per kept paper — citation, one-line finding, the candidate it bears on, the tool that found it, `source: scout <date>`.
+- `gap_registry.md`: for each candidate, its gap as `status: LEAD`, with the signals, the evidence papers, and the queries and dates from the ledger. A LEAD is not yet a gap: Step 1b completes it (nearest misses and why each falls short, the security question it blocks, the ancestor and adjacent-method-family queries) or drops it with the reason.
+
 <!-- TODO(user): define how candidate topics are scored — see "Scoring rubric" below. -->
 #### Scoring rubric
 Default (used until the user defines their own): score each 1–5, with equal weights.
@@ -150,4 +156,5 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 ### 7. Wrap-up
 - Summarise the top 3 topics in chat (one line each) and give the report path.
+- Give the next step: the user picks a candidate, then Step 1b runs `ars-lit-review` on it, corpus first from `literature.md`.
 - Add any UI differences you hit to the matching `references/*.md` under "Observed changes", with the date, so the next run is faster.

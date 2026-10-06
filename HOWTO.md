@@ -37,8 +37,8 @@
 
 | Step | 谁做 | 谁独立核查 |
 |---|---|---|
-| 0 选题侦察 | 🧑‍🏫 Director(`find-research-topic` 只能在 Claude Code 跑) | — |
-| 1 文献 + gap | 🧑‍🏫 Director | 🔍 Codex(补漏文献,带检索证据) |
+| 1a 选题侦察(只在没有题目时) | 🧑‍🏫 Director(`find-research-topic`,只能在 Claude Code 跑) | 在 1b 中核查 |
+| 1b 系统综述 + gap 登记(接着 1a 的文件做) | 🧑‍🏫 Director(`ars-lit-review`) | 🔍 Codex(补漏文献,带检索证据) |
 | 2 RQ 卡片 + 威胁模型草图 | GLM | Director |
 | 3 选题把关(Gate 1:>30 篇直接相关、最接近 5 篇、差异写清) | 🧑‍🏫 Director | 🔍 Codex:用检索到的文献试图推翻 novelty |
 | 4 落定课题 | 🧑‍🏫 Director 按你的决定写 `research_question.md` | — |
@@ -110,23 +110,34 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 >
 > | 你现在有 | 从哪里进 |
 > |---|---|
-> | 只有一个大方向,没有题目 | 🧑‍🏫 Claude Code:`find-research-topic <大方向>` 拿 3–7 个候选题目,选一个再进 Step 1(它的 `runs/<日期>-<slug>/report.md` 是 Step 1 的输入) |
-> | 有具体方向,没有论文 | 直接 Step 1——ARS 自己检索,不需要你提供文献 |
-> | 有方向 + 自己攒的论文(Zotero / PDF 文件夹) | Step 1,在 prompt 里写明论文位置;ARS 先筛你的,再补检索没覆盖的部分 |
+> | 只有一个大方向,没有题目 | Step 1a(Claude Code:`find-research-topic <大方向>`)拿 3–7 个候选题目,选一个再做 1b;1a 写下的论文和 LEAD gap 就是 1b 的起点 |
+> | 有具体方向,没有论文 | 直接 Step 1b——ARS 自己检索,不需要你提供文献 |
+> | 有方向 + 自己攒的论文(Zotero / PDF 文件夹) | Step 1b,在 prompt 里写明论文位置;它们就是起始语料,ARS 先筛你的,再补检索没覆盖的部分 |
 > | 有一篇想在其上改进的基线论文 | Step 1–4 照常定题;到 Step 5 先跑 `novelty-filter <论文>` 建 limitation 列表(5a 的方式 B 从它出发) |
 > | 已经有自己的方法 | 跳到 Step 5 的 `Evaluate…` 分支 |
 
-**Step 1 🧑‍🏫 Director 文献综述 + gap 登记(Codex 补漏)**
+**Step 1 🧑‍🏫 Director 文献阶段:1a 侦察(可选)→ 1b 系统综述 + gap 登记(Codex 补漏)**
+
+1a 和 1b 是同一个阶段,共用一份论文清单 `literature.md` 和一份 `gap_registry.md`:1a 管「广」(只有大方向时找候选题目),1b 管「深」(题目定了以后系统检索、核验引用、把 gap 补齐)。1b 不重做 1a 已经做过的检索。
+
+**1a 侦察(只在没有题目时;仅 Claude Code)**
 
 ```text
-ars-lit-review <your area, e.g. physics-based sensor spoofing detection for ICS>, ensure broad coverage.
-If a find-research-topic report (./runs/*/report.md) or a research-gaps gap-report.md exists, start from it: carry its candidate gaps and evidence papers in, then complete each gap to the form below.
-Write the gap registry to ./gap_registry.md — each gap must carry: the search that failed to fill it (queries, indexes, date), the nearest-miss papers and why each falls short, and the security question the gap blocks.
-Save every included paper to ./literature.md (citation, one-line finding, which gap it bears on) — later steps read it.
+find-research-topic <broad area>. Besides the report, write the stage files: save every kept paper to ./literature.md and save every candidate's gap to ./gap_registry.md as a LEAD entry (signals, evidence papers, the queries and dates that found it).
 ```
-📄 `gap_registry.md`、`literature.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
+📄 `runs/<日期>-<slug>/report.md`(3–7 个排序的候选题目)、`literature.md`、`gap_registry.md`(LEAD 条目)。🚦 你选一个候选,1b 在它上面做深。
 
-> **检索前端(Claude Code,见 `topic_scouting_overlay.md`)**:还没有题目 → `find-research-topic`(Elicit + Litmaps 浏览器侦察,出 3–7 个候选);题目已定、要系统化的 gap 证据 → `research-gaps`(Elicit API,需 Elicit Pro + `ELICIT_API_KEY`,结果归档到 Zotero)。它们的 `open / narrow / saturated` 只是扫描级线索,不是 novelty 结论;每个 gap 仍要补齐上面三项。**两条必跑检索**:不限年份、去掉流行词的「祖先检索」,以及不分应用领域的「相邻方法族检索」。Codex / opencode 没有浏览器,用 `ars-lit-review` + 这两条检索规则。
+**1b 系统综述 + gap 登记(所有工具)**
+
+```text
+ars-lit-review <the chosen topic, or your area>, ensure broad coverage.
+Corpus first: treat the papers already in ./literature.md (and the Zotero collection <name>, if I name one) as the pre-screened corpus. Screen them with the same inclusion criteria first and record which came from there, then search only for what they do not cover. Do not repeat queries already recorded in ./runs/*/ledger.md. Run the ancestor query (no year filter, no buzzwords) and the adjacent-method-family query.
+Write the gap registry to ./gap_registry.md: complete every LEAD entry to the full form or drop it with the reason. Each gap must carry: the search that failed to fill it (queries, indexes, date), the nearest-miss papers and why each falls short, and the security question the gap blocks.
+Save every included paper to the same ./literature.md (citation, one-line finding, which gap it bears on); do not start a second list — later steps read it.
+```
+📄 `gap_registry.md`(全部是完整条目,没有 LEAD)、`literature.md`。你的动作:划掉不感兴趣的;没检索证据的 gap 让它补检索。
+
+> **说明(见 `topic_scouting_overlay.md`)**:1a 的 `open / narrow / saturated` 只是扫描级线索,不是 novelty 结论;LEAD 条目要在 1b 补齐三项才算 gap。题目已定、要系统化的 gap 证据也可以加跑 `research-gaps`(Elicit API,结果归档到 Zotero),它的结果同样写进这两个文件。Codex / opencode 没有浏览器:跳过 1a,直接 1b。
 
 > 顺带:agent 按你的子领域从 `knowledge_index.md` 加载该领域的审稿门槛(adaptive-eval / 测床+物理后果 / OTA 对标 in-toto/SLSA 等),S1–S3/S7 全程套用。
 
