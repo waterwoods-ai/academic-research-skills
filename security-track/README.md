@@ -6,8 +6,9 @@
 > 面向安全顶会（四大 + tier-2）研究的覆盖层，校准方向为 CPS / IoT / AI 安全。
 > 同一插件另带 4 个自有 skill：`find-research-topic`、`verify-research-topic`、
 > `novelty-filter`（选题与查新前端，需浏览器）和 `novelty-engine`（想法生成器）。
-> 上游文件零改动（唯一例外：`marketplace.json` 注册行），`main` 分支保持
-> upstream 纯净镜像，全部定制在 `dev` 分支（GitHub 默认分支已设为 `dev`）。
+> 2026-10-06 起本仓库作为独立产品维护：任何文件都可修改，不再从上游合并；
+> 上游更新经审阅后手工移植（见仓库根目录 `UPSTREAM.md`）。全部工作在 `dev`
+> 分支（GitHub 默认分支已设为 `dev`），`main` 冻结在最后一次合并的上游版本，只作对照基线。
 
 ## 这个 skill 包含什么
 
@@ -21,7 +22,7 @@
 | `references/perspective_retrieval_protocol.md` | 视角驱动检索协议（STORM 检索侧机制改造，opt-in） |
 | `references/conference_ranking_2025.json` | 22 会 CIF 排名快照（源：jianying.space，每年更新） |
 | `references/deadlines_current.md` | 截稿日历（**生成文件，勿手改**，源：sec-deadlines.github.io） |
-| `scripts/fetch_deadlines.py` | 截稿日历拉取脚本（每次 `git sync-upstream` 自动执行） |
+| `scripts/fetch_deadlines.py` | 截稿日历拉取脚本（超过 7 天自动重拉） |
 | `contracts/reviewer/security_full.json` | 安全顶会版 sprint contract（盲态预提交标尺；Schema 13.2 验证通过，F 条件语法与上游一致） |
 | `references/research_loop_protocol.md` | 研究闭环协议：S0 选题→S1 gap→S2 课题延伸→S3 方法提出/评估（novelty+contribution）→S4 证伪实验设计→S5 执行→S6 有界改进循环→S7 对抗压测→S8 论文 |
 
@@ -72,10 +73,9 @@ Python 3.10+ / pyyaml）；拉取失败时明确说明日历过期，绝不凭�
 ## 维护（fork 工作流）
 
 ```bash
-git sync-upstream   # 拉 upstream → ff-only 更新 main → 推送 → 合并进 dev → 刷新截稿日历
+git upstream-review   # 拉取上游，列出上次审阅之后的改动和文件（不合并）
 ```
 
-- 定制永远走加法：新文件放本目录；不改上游文件（`marketplace.json` 的
-  一行注册是唯一例外，冲突时保留双方条目即可）。
+- 上游的改动逐项审阅后手工移植，结论记在 `UPSTREAM.md`；任何文件都可修改。
 - `conference_ranking_2025.json`：排名源每年更新一次，届时重新快照。
 - venue 档案钉的是结构性事实；页数限制、轮次数会漂移，临近投稿时以当年 CFP 为准。

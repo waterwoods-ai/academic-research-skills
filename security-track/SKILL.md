@@ -2,10 +2,10 @@
 name: security-track
 description: "Security-conference overlay for the ARS suite: Big-4 venue profiles (IEEE S&P, NDSS, ACM CCS, USENIX Security) + tier-2 fallbacks, systems-security writing conventions (threat model, ethics, artifact evaluation), security reviewer personas for CPS/IoT/AI-security papers, the 22-conference CIF ranking, and a live deadline calendar fetched from sec-deadlines.github.io. Use WITH the other ARS skills whenever a paper task targets a security venue: venue selection, submission planning, deadline questions, outlining, drafting, reviewing, or revising a security paper. Triggers: security paper, security conference, Big 4, S&P, Oakland, NDSS, CCS, USENIX Security, threat model, CVE, MITRE ATT&CK, ATT&CK technique mapping, responsible disclosure, artifact evaluation, CPS security, ICS security, IoT security, firmware, AI security, adversarial ML, research gap, extend topic, topic viability, go/no-go, propose method, novelty assessment, contribution, experiment design, falsification, run experiments, improve method, method substitution, rename check, prior art check, taxonomy, define categories, security framing, dissect this paper, peruse this paper, peruse paper, introduction structure, subfield reviewer bar, retrospective, lessons learned, knowledge index, mentor me, guide me step by step, be my research mentor, pre-registration, pre-register, research integrity, cherry-picking, seed hacking, HARKing, data leakage, eval-set overfitting, reproducibility check, humanize, humanizer, polish prose, language polish, de-slop, remove AI tells, AI slop, clarity pass, find research topic, scout topic, research gap mapping, Elicit, Litmaps, verify research topic, topic verification, stress-test my topic, novelty check, build on this paper, multi-agent lab, research team roles, orchestrator, Reviewer #2, claims register, reject reasons, agent refused, authorized research scope, 一步一步指导, 带我完成, 安全会议, 安全论文, 四大安全会议, 威胁模型, 顶会, 研究缺口, 延伸课题, 新方法, 创新点, 实验设计, 精读, 拆解论文, 预注册, 研究诚信, 实验诚信, 润色, 语言润色, 去AI味, 选题, 找课题, 验证课题, 查新."
 metadata:
-  version: "0.1.0"
-  last_updated: "2026-08-14"
+  version: "0.2.0"
+  last_updated: "2026-10-06"
   status: active
-  data_access_level: verified_only
+  data_access_level: raw
   task_type: open-ended
   overlay: true
   related_skills:
@@ -21,6 +21,25 @@ metadata:
 ---
 
 # Security Track Overlay
+
+<!-- routing-core:begin -->
+**Step 0 — Escape hatch check (before any classification):** If the user's first message begins with `[direct-mode]` (case-insensitive byte-0 token, optionally preceded by whitespace/newlines that are stripped on parse), record this fact, strip the prefix and surrounding whitespace from the message, and skip directly to **Step 1 explicit-intent handling** on the stripped content. The literal `[direct-mode]` is NOT passed through to the dispatched agent. If the stripped message itself has no clear skill named, Step 1 falls through to Step 3 clarification (the escape hatch bypasses cross-phase clarification (Step 2), not all routing). When the token is honored and the named agent or skill needs inputs the message does not supply, read that agent's or skill's file and ask for what it requires, in its terms. Without the byte-0 token, naming an agent is not explicit intent: such a message goes through Steps 1-3 like any other, so cross-phase materials still get Step 2 clarification.
+
+Otherwise, classify the user's input:
+
+1. **Explicit clear intent** — user invokes a specific skill via `/ars-*` slash command, or uses an unambiguous trigger keyword that maps to a single skill (e.g., "lit-review this", "review my paper", "draft an abstract"):
+   → Route directly; no clarification, no orchestrator detour.
+   → The request stays explicit when the mode's usual input is absent or a word in it has other everyday senses. A revision request with no reviewer comments is revision mode's "feel certain sections need improvement" case, and "revisar artículo" is the reviewer's trigger. Route to that mode and let the mode handle what is missing; do not reopen the choice of workflow.
+
+2. **Cross-phase materials detected** — user provides artifacts spanning ≥ 2 pipeline phases without naming a specific skill (e.g., pre-written abstract + pre-collected literature; full draft + reviewer comments + bibliography):
+   → **Clarify**. Do NOT auto-route to a single-phase agent. List candidate workflows as a-d options in markdown body (NOT via AskUserQuestion tool). See `shared/references/intent_clarification_protocol.md` for the message template.
+   → Reason: clarification is the safest action when materials don't unambiguously identify intent. (v3.10 active conductor (#134) will handle this via structured intake; v3.9.2 asks.)
+
+3. **Ambiguous intent, no materials** — user provides no artifacts and no clear request:
+   → Clarify per `shared/references/intent_clarification_protocol.md`.
+
+**Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
+<!-- routing-core:end -->
 
 This skill is an **overlay, not a pipeline**: it never runs alone. It
 reconfigures the four stock ARS skills — which assume ML/journal
@@ -63,7 +82,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Pre-registering an experiment / evaluation integrity / research-integrity self-audit (freeze success criteria before running, no cherry-picking, anti-HARKing, claim-vs-artifact) — load at S4/S5, S7/S8, S8.5 | `references/research_integrity_protocol.md` |
 | Step-by-step Socratic mentor (idea→submission, one step per turn, stateful) — NOT ars-plan's whole-plan-at-once | `references/security_mentor_protocol.md` |
 | Subfield reviewer bar / best practice (load at S1/S2/S3/S7) | `references/knowledge_index.md` |
-| Skill self-check (run manually or via `git sync-upstream`) | `tests/run_all_checks.sh` → behavior linter + workspace validator + knowledge-index consistency |
+| Skill self-check (run before every commit and after porting an upstream change) | `tests/run_all_checks.sh` → behavior linter + workspace validator + knowledge-index consistency |
 | Post-submission / post-review retrospective (L2 knowledge distillation) | `references/research_loop_protocol.md` § S8.5 + `references/knowledge_notes/` |
 
 ## Overrides of stock ARS defaults
@@ -205,3 +224,13 @@ local review + tooling Python.)
 - Venue profiles pin structural facts (formats, decision processes);
   page limits and cycle counts drift — verify against the current CFP
   when a submission is imminent.
+
+## Version Info
+
+| Item | Content |
+|------|---------|
+| Skill Version | 0.2.0 |
+| Last Updated | 2026-10-06 |
+| Maintainer | Tom |
+| Dependent Skills | academic-paper, academic-paper-reviewer, academic-pipeline, deep-research |
+| Role | Security-conference overlay: venues and deadlines, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration |

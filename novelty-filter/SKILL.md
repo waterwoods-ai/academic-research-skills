@@ -3,6 +3,8 @@ name: novelty-filter
 description: This skill should be used when the user gives a paper (PDF path, DOI, arXiv id or URL) and asks to "find the gap in this paper", "extend this paper", "what could I build on this paper", "find problems with the authors' method", "improve on this method", "is this idea already published", "novelty-check these ideas", or "check nobody else is working on this method". Builds a confirmed limitation list for one paper (own read + ChatGPT/Claude.ai Projects in Chrome), maps references, citing work and related work (Elicit, Litmaps), and filters candidate improvements against prior work with an open / narrow / saturated verdict. A filter, not a generator - it does not develop a method; to generate and formalize one use novelty-engine. Not for plain summaries.
 argument-hint: "<paper: PDF path | DOI | arXiv id | URL> [field / constraints]"
 metadata:
+  version: "1.0.0"
+  last_updated: "2026-10-06"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -14,6 +16,25 @@ metadata:
 ---
 
 # Novelty Filter: one paper's limitations, and whether an improvement is already published
+
+<!-- routing-core:begin -->
+**Step 0 — Escape hatch check (before any classification):** If the user's first message begins with `[direct-mode]` (case-insensitive byte-0 token, optionally preceded by whitespace/newlines that are stripped on parse), record this fact, strip the prefix and surrounding whitespace from the message, and skip directly to **Step 1 explicit-intent handling** on the stripped content. The literal `[direct-mode]` is NOT passed through to the dispatched agent. If the stripped message itself has no clear skill named, Step 1 falls through to Step 3 clarification (the escape hatch bypasses cross-phase clarification (Step 2), not all routing). When the token is honored and the named agent or skill needs inputs the message does not supply, read that agent's or skill's file and ask for what it requires, in its terms. Without the byte-0 token, naming an agent is not explicit intent: such a message goes through Steps 1-3 like any other, so cross-phase materials still get Step 2 clarification.
+
+Otherwise, classify the user's input:
+
+1. **Explicit clear intent** — user invokes a specific skill via `/ars-*` slash command, or uses an unambiguous trigger keyword that maps to a single skill (e.g., "lit-review this", "review my paper", "draft an abstract"):
+   → Route directly; no clarification, no orchestrator detour.
+   → The request stays explicit when the mode's usual input is absent or a word in it has other everyday senses. A revision request with no reviewer comments is revision mode's "feel certain sections need improvement" case, and "revisar artículo" is the reviewer's trigger. Route to that mode and let the mode handle what is missing; do not reopen the choice of workflow.
+
+2. **Cross-phase materials detected** — user provides artifacts spanning ≥ 2 pipeline phases without naming a specific skill (e.g., pre-written abstract + pre-collected literature; full draft + reviewer comments + bibliography):
+   → **Clarify**. Do NOT auto-route to a single-phase agent. List candidate workflows as a-d options in markdown body (NOT via AskUserQuestion tool). See `shared/references/intent_clarification_protocol.md` for the message template.
+   → Reason: clarification is the safest action when materials don't unambiguously identify intent. (v3.10 active conductor (#134) will handle this via structured intake; v3.9.2 asks.)
+
+3. **Ambiguous intent, no materials** — user provides no artifacts and no clear request:
+   → Clarify per `shared/references/intent_clarification_protocol.md`.
+
+**Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
+<!-- routing-core:end -->
 
 Take one paper. Find what is wrong with it or missing from it, confirm those weaknesses against the text, collect candidate improvements that remove them, and check whether each is already published. This skill does not develop a method: it produces no formal specification, no code and no experiment.
 
@@ -162,3 +183,13 @@ Append any UI differences to the matching reference's "Observed changes", with t
 | "No results" from one tool taken as "novel" | Run all of (a)–(e); word the verdict as searched-and-not-found |
 | Pasting P4 before approval | P4 carries unpublished ideas; approve the exact text first |
 | Target lands in Litmaps "Missing" and you carry on | Re-add it by arXiv id or title search before exploring |
+
+## Version Info
+
+| Item | Content |
+|------|---------|
+| Skill Version | 1.0.0 |
+| Last Updated | 2026-10-06 |
+| Maintainer | Tom |
+| Dependent Skills | novelty-engine, security-track |
+| Role | One paper's confirmed limitations and a novelty check of candidate improvements |

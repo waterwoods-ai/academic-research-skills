@@ -407,8 +407,6 @@ rebuttal 草稿写好后:🔍 `ars-rebuttal-audit — venue: <venue year>` + 意
   - 🔍 Codex:`codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`(同上)。**注意**:上游插件版本号(0.1.24)由 upstream 拥有,我们不 bump(bump 会破坏零冲突同步)。若 upgrade 后仍是旧内容(security-track 改动没生效),强制清缓存重装:`rm -rf ~/.codex/plugins/cache/ars-codex && codex plugin marketplace upgrade ars-codex && codex plugin add ars-codex@ars-codex`
   - 🎓 opencode:**无需操作**——symlink 直读 fork,`git pull` 后即最新
   三个安装是三份独立拷贝;只更新一边会造成各 agent 跑在不同版本的协议上。
-  上游同步:在 `dev` 分支上运行 `git sync-upstream`(不切分支:快进 `main` → 推送 `main` → 合并进 `dev` → 刷新截稿日历 → 跑检查)。
-  合并冲突只应出现在 `.claude-plugin/marketplace.json`:取上游的 `version` 和顶层描述,保留我们的插件描述和 skill 注册行;其它上游文件一律取上游版本。
-  Claude fork 同步后再跑 `bash security-track/tests/compare_upstream_lints.sh`:与纯上游相比,只允许 `expected_upstream_lint_diffs.txt` 列出的 lint 有差异。
+  上游更新(2026-10-06 起不再合并,只审阅后移植):在 `dev` 上运行 `git upstream-review`,列出上次审阅之后的上游改动和文件。逐项决定:移植 / 改写后移植 / 不要(写明原因);手工移植后跑 `bash security-track/tests/run_all_checks.sh` 和 `compare_upstream_lints.sh`,把结论写进 `UPSTREAM.md` 的审阅记录,并更新「上次审阅的上游提交」。截稿日历照旧按 >7 天规则自动刷新。
   最后 `git push origin dev`,并按上面的「更新」把三个工具刷新一遍。
 - **CI 邮件** = 上游质量门在审我们的定制,按报错修。

@@ -10,6 +10,11 @@ A suite of Claude Code skills for rigorous academic research, paper writing, pee
 | `academic-paper` v3.3.1 | 12-agent paper writing | full, plan, outline-only, revision, revision-coach, abstract-only, lit-review, format-convert, citation-check, disclosure, rebuttal-audit |
 | `academic-paper-reviewer` v1.11.1 | Multi-perspective paper review (5 reviewers + optional cross-model DA critique) | full, re-review, quick, methodology-focus, guided, calibration |
 | `academic-pipeline` v3.22.2 | Full pipeline orchestrator | (coordinates all above) |
+| `security-track` v0.2.0 | Security-conference overlay: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
+| `novelty-engine` v1.3.0 | Idea generator: three evidence-led routes, candidate checks, formalization | verify, discover, gaps, assess, dogma, limitations, observations, candidates, formalize, falsify, experiment, stress-test, paper |
+| `find-research-topic` v1.0.0 | Topic scouting with Elicit and Litmaps (literature stage 1a) | — |
+| `verify-research-topic` v1.0.0 | Twelve-question topic check with a blind second opinion | — |
+| `novelty-filter` v1.0.0 | One paper's limitations and a novelty check of candidate improvements | — |
 
 ## v3.22.2 Key Additions (run ledger and handoff check + acronym check + wider instruction/data boundary + routing and front-page repairs)
 

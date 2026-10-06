@@ -47,7 +47,7 @@ NON_PROTOCOL_REFS = {
 def load_routing_refs(skill_md: Path) -> set[str]:
     """Reference filenames named anywhere in SKILL.md (routing table + prose)."""
     text = skill_md.read_text(encoding="utf-8")
-    return set(re.findall(r"references/([A-Za-z0-9_./-]+\.(?:md|json|jsonl))", text))
+    return set(re.findall(r"(?<![\w/])references/([A-Za-z0-9_./-]+\.(?:md|json|jsonl))", text))
 
 
 def check(root: Path) -> list[str]:

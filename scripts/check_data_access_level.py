@@ -58,6 +58,16 @@ EXPECTED_LEVELS = {
     "academic-paper-reviewer": "raw",
     "academic-pipeline": "raw",
     "deep-research": "raw",
+    # User-owned skills (registered 2026-10-06, when the fork became its own
+    # product). Dirtiest input: security-track reads user drafts, reviewer
+    # comments and experiment logs; novelty-engine, find-research-topic,
+    # verify-research-topic and novelty-filter read user papers, notes and
+    # third-party web/LLM output.
+    "security-track": "raw",
+    "novelty-engine": "raw",
+    "find-research-topic": "raw",
+    "verify-research-topic": "raw",
+    "novelty-filter": "raw",
 }
 
 # The pins themselves must stay inside the closed vocabulary.

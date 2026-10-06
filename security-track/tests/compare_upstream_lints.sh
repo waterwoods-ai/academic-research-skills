@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Claude fork only; run after every upstream sync (takes a few minutes).
 #
-# Runs every upstream lint (scripts/check_*.py) twice: on pure upstream (a
-# temporary worktree of `main`) and on this tree. Lints whose result differs
+# Runs every upstream lint (scripts/check_*.py) twice: on the upstream
+# baseline (a temporary worktree of the last reviewed upstream commit in
+# UPSTREAM.md) and on this tree. Lints whose result differs
 # are caused by this fork's additions. The ones listed in
 # expected_upstream_lint_diffs.txt are known and accepted; any other
 # difference fails this check.
@@ -14,7 +15,10 @@ if ! ls "$root"/scripts/check_*.py >/dev/null 2>&1 || ! git -C "$root" rev-parse
 fi
 tmp="$(mktemp -d)"
 trap 'git -C "$root" worktree remove --force "$tmp/up" >/dev/null 2>&1; rm -rf "$tmp"' EXIT
-git -C "$root" worktree add --detach "$tmp/up" main >/dev/null 2>&1 || { echo "could not create the upstream worktree"; exit 1; }
+base="$(grep -m1 -o "Last reviewed upstream commit: [0-9a-f]*" "$root/UPSTREAM.md" 2>/dev/null | awk '{print $NF}')"
+base="${base:-main}"
+git -C "$root" worktree add --detach "$tmp/up" "$base" >/dev/null 2>&1 || { echo "could not create the upstream worktree at $base"; exit 1; }
+echo "baseline: upstream $base"
 results() { (cd "$1" && for f in scripts/check_*.py; do python3 "$f" >/dev/null 2>&1; echo "$? $f"; done); }
 results "$tmp/up" > "$tmp/upstream.txt"
 results "$root"   > "$tmp/ours.txt"

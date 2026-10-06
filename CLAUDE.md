@@ -53,21 +53,25 @@ If its `Fetched` timestamp is older than 7 days, refresh first:
 `python3 security-track/scripts/fetch_deadlines.py`. If the fetch fails,
 say the calendar is stale — do not fill in dates from model memory.
 
-## Repo conventions (fork hygiene)
+## Repo conventions (own product; upstream is a reference)
 
-- `main` mirrors upstream (ff-only); ALL personal work goes on `dev`.
-- Customizations are additive only: the five user-owned skills
-  (`security-track/`, `find-research-topic/`, `verify-research-topic/`,
-  `novelty-filter/`, `novelty-engine/`), their `skills/<name>` symlinks,
-  and this file. Sole permitted upstream-file edit: their `"./<name>"` entries
-  (plus the skill count in the description) in
-  `.claude-plugin/marketplace.json` (keep that edit minimal when resolving
-  any future sync conflict). Never edit other upstream-owned files — that is
-  what keeps `git sync-upstream` conflict-free.
-- Upstream lints pin the top-level `agents/` and `commands/` inventories and
-  flag any `*/agents/*.md` or `*_agent.md` file they do not roster, so
-  user-owned agent prompts live in `novelty-engine/roles/` (no `agents`
-  folder, no `_agent` suffix) and user-owned skills add no slash commands.
+- Since 2026-10-06 this repository is maintained as its own product (Tom's
+  decision). The security track and the other user-owned skills are part of
+  the suite, and any file may be edited, upstream-owned or not. Nothing is
+  merged from upstream any more.
+- All work is on `dev`. `main` is frozen at the last merged upstream commit
+  and serves only as a comparison baseline.
+- Upstream updates are reviewed and ported by hand: `git upstream-review`,
+  then port what is worth having. The procedure, the last reviewed upstream
+  change and the review log are in `UPSTREAM.md`.
+- Upstream is CC-BY-NC 4.0: keep its attribution (LICENSE, NOTICE.md,
+  CITATION.cff, author credits) and keep the work non-commercial.
+- Every skill is a full member of the suite and passes the suite's own lints:
+  registered in `.claude/CLAUDE.md`, the marketplace and plugin manifests, the
+  `MODE_REGISTRY.md` count and `scripts/check_data_access_level.py`, and
+  carrying the routing-core block and a Version Info table.
+- Agent prompts for our skills live in `novelty-engine/roles/` (the `agents/`
+  inventory lints still apply), and our skills add no slash commands.
 
 ## Review & execution conventions
 

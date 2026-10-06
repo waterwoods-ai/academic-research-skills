@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# security-track fork-owned check runner (local + sync-upstream hook).
+# security-track check runner (run locally before every commit).
 #
 # Not a GitHub Actions workflow: pushing to .github/workflows/ requires an
 # OAuth `workflow` scope this fork's token lacks. Instead this script runs the
-# three static checks manually and is wired into the `git sync-upstream` alias,
-# so every upstream sync re-verifies the overlay. Run from anywhere.
+# the static checks manually; run it before committing and after porting an
+# upstream change (see UPSTREAM.md). Run from anywhere.
 set -euo pipefail
 here="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"   # security-track/
 fail=0

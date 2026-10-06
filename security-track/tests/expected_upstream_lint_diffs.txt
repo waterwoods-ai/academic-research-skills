@@ -1,9 +1,4 @@
-# Upstream lints whose result on this fork differs from pure upstream, and why.
-# Accepted 2026-09-30 (see HISTORY.md). Since v3.20 upstream treats every
-# top-level <name>/SKILL.md as an official suite skill and requires it in
-# upstream-owned files; this fork does not edit those files.
-# compare_upstream_lints.sh fails if the set of differing lints is not exactly this.
-scripts/check_data_access_level.py       our skills are not in the lint's own EXPECTED_LEVELS registry
-scripts/check_routing_core_sync.py       our SKILL.md files do not carry upstream's routing-core block
-scripts/check_skill_inventory_parity.py  our skills are not in .claude/CLAUDE.md, plugin.json or MODE_REGISTRY.md
-scripts/check_spec_consistency.py        our SKILL.md files lack upstream's Version Info table
+# Upstream lints whose result on this tree differs from the upstream baseline.
+# Since 2026-10-06 the user-owned skills are full members of the suite, so the
+# expected set is empty: every lint that passes on the baseline must pass here.
+# The baseline is the "Last reviewed upstream commit" in UPSTREAM.md.

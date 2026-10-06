@@ -2,7 +2,7 @@
 """Fetch upcoming submission deadlines for the 22 tracked security/crypto
 conferences from sec-deadlines.github.io and render deadlines_current.md.
 
-Run at every upstream sync (wired into the `git sync-upstream` alias).
+Run when the calendar's Fetched timestamp is more than 7 days old.
 Source of truth: https://sec-deadlines.github.io (community-maintained YAML).
 Static venue knowledge lives in big4_venue_profiles.md; dates live here only.
 """
@@ -134,7 +134,7 @@ def render_markdown(rows: list[dict]) -> str:
         "# Upcoming Deadlines — 22 Tracked Conferences",
         "",
         f"> GENERATED FILE — do not edit. Refreshed by `fetch_deadlines.py` "
-        f"at every `git sync-upstream`. Fetched {fetched}.",
+        f"when this is more than 7 days old. Fetched {fetched}.",
         f"> Source: {SOURCE_URL.replace('raw.githubusercontent.com/', 'github.com/').replace('/master/', '/blob/master/')}",
         "> All deadlines are AoE (UTC-12) unless the venue states otherwise.",
         "",
