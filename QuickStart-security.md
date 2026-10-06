@@ -1,17 +1,18 @@
 # QuickStart — 安全顶会研究,5 分钟上手
 
 > 一页纸让你跑起来。完整 19 步分步指南见 [`HOWTO.md`](HOWTO.md)。
-> 三个工具的分工:🎓 opencode = 学生(干活)· 🧑‍🏫 Claude Code = 导师(把关)·
-> 🔍 Codex = 审稿人(判定)。只有一个工具也能用(见文末)。
+> 三个工具的分工(2026-10-06):🧭 Codex = 顾问 + 审稿人(定总体计划、给专业意见、审稿;不写代码)·
+> 🔬 Claude Code = 研究员 + 协调(拆子计划、想法、方法论与新颖性核查、结果分析、写论文)·
+> 🧪 opencode = 研究员 + 实验(想法、提出新方法、跑全部实验)。谁都不核查自己的工作。只有一个工具也能用(见文末)。
 
 ---
 
 ## 一次性设置(做一次,之后不用管)
 
 **1. 装 skill**
-- 🧑‍🏫 Claude Code:`/plugin marketplace add waterwoods-ai/academic-research-skills` → `/plugin install academic-research-skills@academic-research-skills`
-- 🔍 Codex:`codex plugin marketplace add waterwoods-ai/academic-research-skills-codex --ref dev` → `codex plugin add ars-codex@ars-codex`
-- 🎓 opencode(可选):把 fork 的 6 个 skill(5 个 ARS / security-track + `novelty-engine`)symlink 进 `~/.claude/skills/`(见 HOWTO Step 0.1)
+- 🔬 Claude Code:`/plugin marketplace add waterwoods-ai/academic-research-skills` → `/plugin install academic-research-skills@academic-research-skills`
+- 🧭 Codex:`codex plugin marketplace add waterwoods-ai/academic-research-skills-codex --ref dev` → `codex plugin add ars-codex@ars-codex`
+- 🧪 opencode:把 fork 的 6 个 skill(5 个 ARS / security-track + `novelty-engine`)symlink 进 `~/.claude/skills/`(见 HOWTO Step 0.1)
 
 **2. 建项目 + 锚文件**(让 skill 在你论文目录里确定性加载)
 ```bash
@@ -33,21 +34,22 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 
 | 你在做什么 | 复制这段(前缀:Claude 用 `/ars-`,Codex/opencode 用裸别名) |
 |---|---|
-| **还没有题目** 🧑‍🏫 | `find-research-topic <大方向>`(HOWTO Step 1a,仅 Claude Code;出 3–7 个候选题目,论文和 LEAD gap 直接写进 `literature.md` / `gap_registry.md`) |
-| **找课题** 🎓 | `ars-lit-review <你的方向>, ensure broad coverage`(Step 1b;有 1a 的文件就从它们接着做,否则 ARS 自己检索) |
-| **定课题** 🧑‍🏫🚦 | `Verify the research topic viability (go/no-go): <RQ>` |
-| **从零提方法** 🎓 | `Run novelty-engine candidate generation for the RQ in ./research_question.md`(三条生成路线:假设、基线局限、观察;最多留 3 个候选;完整 prompt 见 HOWTO Step 5a → 5b 候选卡 → 7.5 筛选选定 1 个) |
-| **评自己的方法** 🎓 | `Evaluate the novelty and contribution of my method: <描述>` |
-| **查某个想法是否已发表** 🧑‍🏫 | `novelty-filter <基线论文>`(仅 Claude Code;只过滤、不生成) |
+| **研究总体规划** 🧭🚦 | `As my research advisor, write ./research_plan.md …`(HOWTO Step 0.5;Claude 核查后拆成子计划 `subplans/`;确定 RQ 后 Step 4.5 再修订) |
+| **还没有题目** 🔬 | `find-research-topic <大方向>`(HOWTO Step 1a,仅 Claude Code;出 3–7 个候选题目,论文和 LEAD gap 直接写进 `literature.md` / `gap_registry.md`) |
+| **找课题** 🔬 | `ars-lit-review <你的方向>, ensure broad coverage`(Step 1b;有 1a 的文件就从它们接着做,否则 ARS 自己检索) |
+| **定课题** 🧭🔬🚦 | `Verify the research topic viability (go/no-go): <RQ>` |
+| **从零提方法** 🧪 | `Run novelty-engine candidate generation for the RQ in ./research_question.md`(三条生成路线:假设、基线局限、观察;最多留 3 个候选;完整 prompt 见 HOWTO Step 5a → 5b 候选卡 → 7.5 筛选选定 1 个) |
+| **评自己的方法** 🔬 | `Evaluate the novelty and contribution of my method: <描述>` |
+| **查某个想法是否已发表** 🔬 | `novelty-filter <基线论文>`(仅 Claude Code;只过滤、不生成) |
 | **精读一篇论文** | `Peruse this paper: <path> — full single-paper dissection` |
-| **设计实验** 🎓🧑‍🏫🚦 | `Design validation experiments for this method`(导师审后你标 FROZEN) |
-| **跑实验** 🎓 | `Implement and run the experiments`(数字只进 `./ledger/`) |
-| **写论文** 🎓 | `ars-full — target venue: <venue>` |
-| **模拟审稿** 🔍 | `ars-reviewer — target venue: <venue>, paper: ./paper.tex` |
-| **改完复审** 🔍 | `ars-reviewer re-review`(零参数,读 `ars-review/`) |
-| **投稿前终审** 🧑‍🏫🚦 | `/ars-reviewer — target venue: <venue>, judge blind` |
-| **投稿规划** 🧑‍🏫🚦 | `Plan my submission to <venue>` |
-| **收到审稿意见** | `ars-revision-coach — venue: <venue>, decision: <判定档>` + 粘意见 |
+| **设计实验** 🧪🔬🧭🚦 | `Design validation experiments for this method`(Claude 核方法论、Codex 审后你标 FROZEN) |
+| **跑实验** 🧪 | `Implement and run the experiments`(在 gpu1 上;Claude 先核代码;数字只进 `./ledger/`) |
+| **写论文** 🔬 | `ars-full — target venue: <venue>` |
+| **模拟审稿** 🧭 | `ars-reviewer — target venue: <venue>, paper: ./paper.tex` |
+| **改完复审** 🧭 | `ars-reviewer re-review`(零参数,读 `ars-review/`) |
+| **投稿前终审** 🧭🚦 | `ars-reviewer — target venue: <venue>, final review`(同一个 Codex 会话;它看过审稿轮,不是盲审,记录里写明) |
+| **投稿规划** 🧭🚦 | `Plan my submission to <venue>` |
+| **收到审稿意见** 🔬 | `ars-revision-coach — venue: <venue>, decision: <判定档>` + 粘意见 |
 
 🚦 = 你拍板的门(agent 只提名)。
 
@@ -73,7 +75,7 @@ What is the NDSS Major Revision process, and which Big-4 venues still have one?
 
 ## 只有一个工具?
 
-- **只有 Claude Code**:学生步骤也在这跑(前缀 `/ars-*`);审稿建议仍换 Codex 保独立,至少投稿前终审换。
+- **只有 Claude Code**:实验和想法步骤也在这跑(前缀 `/ars-*`);审稿建议仍换 Codex 保独立,至少投稿前终审换。
 - **只有 Codex**:全程裸别名(`ars-reviewer ...`,**不要加斜杠**);高利害终审建议换 Claude Code。
 
 下一步:打开 [`HOWTO.md`](HOWTO.md) 看完整 19 步 + 每步的产出物和决定门。

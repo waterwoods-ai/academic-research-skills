@@ -351,7 +351,7 @@ cases, seed reproducibility, the correct model checkpoint loaded, and
 baselines tuned with the same budget as the method. An attack also runs on
 the undefended target first, as a positive control.
 
-In a multi-agent lab the research engineer owns the ledger, the manifests
+In a multi-agent lab the experimenter (GLM) owns the ledger, the manifests
 and these tests; `lab_orchestration_protocol.md` says who checks them.
 
 **S5a — Reproduce the strongest baseline first, then screen cheaply**
