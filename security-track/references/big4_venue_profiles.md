@@ -5,7 +5,7 @@
 > **CPS security, IoT security, and AI/ML security**.
 > Concrete deadline dates are NEVER stored here — they are pulled from
 > https://sec-deadlines.github.io into `deadlines_current.md` by
-> `fetch_deadlines.py` at every upstream sync. Page limits shift year to year;
+> `fetch_deadlines.py` (refresh when its Fetched stamp is >7 days old). Page limits shift year to year;
 > verify against the current CFP. Structural facts below are stable as of early 2026.
 
 ## Venue ranking context

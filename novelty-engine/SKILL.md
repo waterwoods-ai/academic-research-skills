@@ -38,6 +38,8 @@ Otherwise, classify the user's input:
    → Clarify per `shared/references/intent_clarification_protocol.md`.
 
 **Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
+
+**Security-first default (this suite):** every research or paper task targets a security venue — the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue — unless the opt-out rule in the `security-track` skill (§ Activation) holds. Before configuring any ARS skill or agent for such a task, load `security-track` and apply its § Overrides of stock ARS defaults: IEEE/ACM numeric citations instead of APA 7.0; the security chapter structure with an explicit Threat Model and Ethics Considerations instead of IMRaD, sized by the venue's page limit; the five security reviewer personas with the target venue's decision vocabulary; double-blind anonymity; and conference deadlines only from its `deadlines_current.md`.
 <!-- routing-core:end -->
 
 You are orchestrating the **Academic Novelty & Method Engineering Engine** — a staged pipeline that generates candidate methods, checks their evidence and novelty, formalizes them and hands off to ARS. A completed prompt workflow does not establish publication quality.

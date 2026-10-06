@@ -2,7 +2,7 @@
 name: security-track
 description: "Security-conference overlay for the ARS suite: Big-4 venue profiles (IEEE S&P, NDSS, ACM CCS, USENIX Security) + tier-2 fallbacks, systems-security writing conventions (threat model, ethics, artifact evaluation), security reviewer personas for CPS/IoT/AI-security papers, the 22-conference CIF ranking, and a live deadline calendar fetched from sec-deadlines.github.io. Use WITH the other ARS skills whenever a paper task targets a security venue: venue selection, submission planning, deadline questions, outlining, drafting, reviewing, or revising a security paper. Triggers: security paper, security conference, Big 4, S&P, Oakland, NDSS, CCS, USENIX Security, threat model, CVE, MITRE ATT&CK, ATT&CK technique mapping, responsible disclosure, artifact evaluation, CPS security, ICS security, IoT security, firmware, AI security, adversarial ML, research gap, extend topic, topic viability, go/no-go, propose method, novelty assessment, contribution, experiment design, falsification, run experiments, improve method, method substitution, rename check, prior art check, taxonomy, define categories, security framing, dissect this paper, peruse this paper, peruse paper, introduction structure, subfield reviewer bar, retrospective, lessons learned, knowledge index, mentor me, guide me step by step, be my research mentor, pre-registration, pre-register, research integrity, cherry-picking, seed hacking, HARKing, data leakage, eval-set overfitting, reproducibility check, humanize, humanizer, polish prose, language polish, de-slop, remove AI tells, AI slop, clarity pass, find research topic, scout topic, research gap mapping, Elicit, Litmaps, verify research topic, topic verification, stress-test my topic, novelty check, build on this paper, multi-agent lab, research team roles, orchestrator, Reviewer #2, claims register, reject reasons, agent refused, authorized research scope, 一步一步指导, 带我完成, 安全会议, 安全论文, 四大安全会议, 威胁模型, 顶会, 研究缺口, 延伸课题, 新方法, 创新点, 实验设计, 精读, 拆解论文, 预注册, 研究诚信, 实验诚信, 润色, 语言润色, 去AI味, 选题, 找课题, 验证课题, 查新."
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
   last_updated: "2026-10-06"
   status: active
   data_access_level: raw
@@ -39,6 +39,8 @@ Otherwise, classify the user's input:
    → Clarify per `shared/references/intent_clarification_protocol.md`.
 
 **Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
+
+**Security-first default (this suite):** every research or paper task targets a security venue — the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue — unless the opt-out rule in the `security-track` skill (§ Activation) holds. Before configuring any ARS skill or agent for such a task, load `security-track` and apply its § Overrides of stock ARS defaults: IEEE/ACM numeric citations instead of APA 7.0; the security chapter structure with an explicit Threat Model and Ethics Considerations instead of IMRaD, sized by the venue's page limit; the five security reviewer personas with the target venue's decision vocabulary; double-blind anonymity; and conference deadlines only from its `deadlines_current.md`.
 <!-- routing-core:end -->
 
 This skill is an **overlay, not a pipeline**: it never runs alone. It
@@ -50,12 +52,33 @@ venue knowledge, personas, and formatting defaults.
 
 ## Activation
 
-Activate whenever a paper task targets a security venue — the Big 4
-(IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue in
-`references/conference_ranking_2025.json`. When the user's profile says
-their research is security (e.g., CPS / IoT / AI security), treat security
-as the default target and this overlay as active for every paper task
-unless the user says otherwise.
+This suite is **security-first**. The routing core carried by every skill
+and by the session-start announcement tells the agent to load this skill for
+every research or paper task, so it applies even in a folder without a
+project `CLAUDE.md` / `AGENTS.md` anchor. The agents that choose defaults
+(paper intake, reviewer field analyst, report compiler) say the same. Venues:
+the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue in
+`references/conference_ranking_2025.json`.
+
+**Opt-out rule** — the one place that decides when the stock ARS defaults
+(APA 7.0, IMRaD, journal-field reviewer panel, word counts) apply instead:
+
+- **The user says so** ("not security research", "use APA") → stock
+  defaults for that task.
+- **A non-security target venue** (an ML venue such as NeurIPS / ICML /
+  ICLR, or a journal outside security) → that venue's own template,
+  citation style, length and review form. A paper with an adversary keeps
+  its threat-model section wherever it goes.
+- **A security journal** (IEEE TDSC, IEEE TIFS, ACM TOPS, Computers &
+  Security) → partial: keep the security structure, numeric citations and
+  the security personas; take length and decision vocabulary (Minor / Major
+  Revision) from the journal's author guidelines, not a conference page limit.
+- **Grant proposals, theses, teaching material** → the funder's or
+  institution's structure; this skill still supplies the security content
+  (threat model, venue and prior-work knowledge).
+- **Unclear** (no venue named, topic not obviously security) → stay
+  security-first; do not ask just to settle the default.
+
 
 ## Reference routing
 
@@ -229,7 +252,7 @@ local review + tooling Python.)
 
 | Item | Content |
 |------|---------|
-| Skill Version | 0.2.0 |
+| Skill Version | 0.3.0 |
 | Last Updated | 2026-10-06 |
 | Maintainer | Tom |
 | Dependent Skills | academic-paper, academic-paper-reviewer, academic-pipeline, deep-research |

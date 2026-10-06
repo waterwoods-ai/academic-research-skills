@@ -10,7 +10,7 @@ A suite of Claude Code skills for rigorous academic research, paper writing, pee
 | `academic-paper` v3.3.1 | 12-agent paper writing | full, plan, outline-only, revision, revision-coach, abstract-only, lit-review, format-convert, citation-check, disclosure, rebuttal-audit |
 | `academic-paper-reviewer` v1.11.1 | Multi-perspective paper review (5 reviewers + optional cross-model DA critique) | full, re-review, quick, methodology-focus, guided, calibration |
 | `academic-pipeline` v3.22.2 | Full pipeline orchestrator | (coordinates all above) |
-| `security-track` v0.2.0 | Security-conference overlay: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
+| `security-track` v0.3.0 | Security-first defaults for the suite: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
 | `novelty-engine` v1.3.0 | Idea generator: three evidence-led routes, candidate checks, formalization | verify, discover, gaps, assess, dogma, limitations, observations, candidates, formalize, falsify, experiment, stress-test, paper |
 | `find-research-topic` v1.0.0 | Topic scouting with Elicit and Litmaps (literature stage 1a) | — |
 | `verify-research-topic` v1.0.0 | Twelve-question topic check with a blind second opinion | — |
@@ -351,6 +351,8 @@ Otherwise, classify the user's input:
    → Clarify per `shared/references/intent_clarification_protocol.md`.
 
 **Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
+
+**Security-first default (this suite):** every research or paper task targets a security venue — the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue — unless the opt-out rule in the `security-track` skill (§ Activation) holds. Before configuring any ARS skill or agent for such a task, load `security-track` and apply its § Overrides of stock ARS defaults: IEEE/ACM numeric citations instead of APA 7.0; the security chapter structure with an explicit Threat Model and Ethics Considerations instead of IMRaD, sized by the venue's page limit; the five security reviewer personas with the target venue's decision vocabulary; double-blind anonymity; and conference deadlines only from its `deadlines_current.md`.
 <!-- routing-core:end -->
 
 **Forward note (v3.10):** Active conductor (#134) will reframe this gate as structured intake with task envelope dispatch. v3.9.2 ships clarification-only as interim hot-fix.

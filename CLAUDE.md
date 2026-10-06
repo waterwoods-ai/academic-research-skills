@@ -10,8 +10,10 @@ overridden here.
 
 Unless the user says otherwise, every paper task targets a security venue:
 the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue from
-the tracked list. If a task is explicitly NOT security research, ignore this
-overlay and use stock ARS behavior.
+the tracked list. Since 2026-10-06 this is built into the suite (the routing
+core in every skill and the session-start announcement). When the stock ARS
+defaults apply instead is decided only by the opt-out rule in
+`security-track/SKILL.md` § Activation.
 
 ## Required reading before paper work
 

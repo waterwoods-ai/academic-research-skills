@@ -162,6 +162,8 @@ Present options with brief descriptions:
 
 Default: IMRaD (for empirical research) or Literature Review (for synthesis topics)
 
+**Security-first default (this suite):** unless the opt-out rule in `security-track/SKILL.md` § Activation holds, the default is **Conference Paper** with the security chapter structure from `security-track/references/security_paper_conventions.md` (Introduction / Threat Model / Design / Implementation / Evaluation / Discussion / Related Work / Ethics Considerations), sized by the target venue's page limit instead of a word count.
+
 ### Step 3: Target Journal (Optional)
 - Ask if the user has a target journal
 - If yes, note journal name for formatting agent
@@ -186,6 +188,8 @@ Default: IMRaD (for empirical research) or Literature Review (for synthesis topi
 | **Vancouver** | Medicine, Biomedical Sciences, Nursing |
 
 Auto-suggest based on discipline; user can override.
+
+**Security-first default (this suite):** unless the opt-out rule in `security-track/SKILL.md` § Activation holds, the default is **IEEE** numeric (ACM's numeric reference format when the target is ACM CCS), not APA 7th.
 
 ### Step 5: Output Format
 - **Markdown** (default) — universal, easy to convert

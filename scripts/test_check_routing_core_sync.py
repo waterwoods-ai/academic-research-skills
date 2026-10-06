@@ -205,3 +205,22 @@ def test_announce_without_the_core_file_still_emits_valid_json(tmp_path: Path) -
     context = "\n\n".join(_announce(script, "startup"))
     assert "ARS routing discipline" not in context
     assert "Requests outside academic research and writing do not invoke ARS" in context
+
+
+def test_block_sets_the_security_first_default() -> None:
+    """Own-product decision (2026-10-06): every carrier configures ARS for a security venue."""
+    block = _canonical_block()
+    for needed in ("**Security-first default", "`security-track`",
+                   "Overrides of stock ARS defaults", "IEEE/ACM", "Threat Model"):
+        assert needed in block, needed
+
+
+@pytest.mark.parametrize("rel", [
+    "academic-paper/agents/intake_agent.md",
+    "academic-paper-reviewer/agents/field_analyst_agent.md",
+    "deep-research/agents/report_compiler_agent.md",
+    "agents/report_compiler_agent.md",
+])
+def test_default_choosing_agents_name_the_security_default(rel: str) -> None:
+    """Subagents choose citation style, paper type or panel without seeing the routing core."""
+    assert "security-first default" in (REPO_ROOT / rel).read_text(encoding="utf-8").lower()

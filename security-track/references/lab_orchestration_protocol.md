@@ -197,6 +197,10 @@ inside it; the paper's Ethics Considerations section is written from it.
 - All three agents load the ARS and security-track skills (Claude Code and
   Codex through their plugins, opencode through the links in its skills
   folder), so a brief can name a skill or a reference file directly.
+- **The suite is security-first** (routing core; opt-out only under
+  security-track § Activation), so a brief does not restate the security
+  conventions. It names the target venue, which sets the template, page
+  limit, ethics requirements and decision terms.
 - **Every brief states:** the role, the files the agent may write (its own
   only), the stop point, and a short numbered reply format.
 - **Reviewer #2 gets artifacts, not conclusions:** the plan, draft or results,

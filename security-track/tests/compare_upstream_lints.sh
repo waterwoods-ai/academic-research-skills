@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude fork only; run after every upstream sync (takes a few minutes).
+# Claude fork only; run before every commit that touches a skill and after porting an upstream change (takes a few minutes).
 #
 # Runs every upstream lint (scripts/check_*.py) twice: on the upstream
 # baseline (a temporary worktree of the last reviewed upstream commit in

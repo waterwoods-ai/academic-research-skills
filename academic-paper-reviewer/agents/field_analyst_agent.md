@@ -86,6 +86,8 @@ After reading the paper, analyze the following 6 dimensions sequentially:
 
 ## Reviewer Configuration Protocol
 
+**Security-first default (this suite):** unless the opt-out rule in `security-track/SKILL.md` § Activation holds, skip journal-field detection and configure the panel from the five personas in `security-track/references/security_reviewer_personas.md`, with the target venue's decision vocabulary from `security-track/references/major_revision_playbook.md` §1.
+
 Based on the 6-dimension analysis results, produce a Reviewer Configuration Card for each reviewer.
 
 ### Card Format
