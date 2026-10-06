@@ -1,4 +1,11 @@
 # Upstream lints whose result on this tree differs from the upstream baseline.
-# Since 2026-10-06 the user-owned skills are full members of the suite, so the
-# expected set is empty: every lint that passes on the baseline must pass here.
+# Since 2026-10-06 the user-owned skills are full members of the suite, so every
+# lint that passes on the baseline must pass here, with the one exception below.
 # The baseline is the "Last reviewed upstream commit" in UPSTREAM.md.
+#
+# check_changelog_covers_merges: upstream's pre-tag release gate. While the
+# plugin version is ahead of the last reachable release tag, every commit since
+# that tag must cite an upstream PR number (#N) in CHANGELOG.md. Our own commits
+# never carry upstream PR numbers (own product, no PRs), so it fails here and
+# passes on the baseline, where the release tag sits on the reviewed commit.
+scripts/check_changelog_covers_merges.py

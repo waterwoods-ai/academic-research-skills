@@ -655,9 +655,9 @@ def test_announce_prepends_reminder_when_behind(tmp_path):
     r = run_announce('{"source":"startup"}', env)
     ctx = _additional_context(r.stdout)
     assert ctx.startswith(
-        "ARS update available: v3.18.0 (installed: v3.17.0). "
-        "Run /plugin update academic-research-skills, "
-        "or enable auto-update in /plugin -> Marketplaces."
+        "Upstream ARS update available: v3.18.0 (installed: v3.17.0). "
+        "Review it with git upstream-review in your fork and port what you want; "
+        "/plugin update installs only what has been ported."
     )
     assert "ARS (academic-research-skills) plugin loaded." in ctx
 
@@ -793,7 +793,7 @@ def test_announce_valid_and_reminder_bearing_when_tr_absent(tmp_path):
     assert "ARS (academic-research-skills) plugin loaded." in ctx
     # The blank line between reminder and body (the literal `\n\n`) survives.
     assert (
-        "or enable auto-update in /plugin -> Marketplaces.\n\nARS "
+        "/plugin update installs only what has been ported.\n\nARS "
         "(academic-research-skills) plugin loaded." in ctx
     )
 

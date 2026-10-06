@@ -1,6 +1,6 @@
 # Mode Registry
 
-Single source of truth for all modes across the ARS suite. **35 modes** across 5 skills (the four core skills and sr-screener). The suite has 10 skills; the other five (security-track, novelty-engine, find-research-topic, verify-research-topic, novelty-filter) have no registered modes.
+Single source of truth for all modes across the ARS suite. **35 modes** across the four core skills and sr-screener. The suite has 10 skills; the other five (security-track, novelty-engine, find-research-topic, verify-research-topic, novelty-filter) have no registered modes.
 
 When adding or modifying modes, update this file first — SKILL.md files and CLAUDE.md should reference this registry.
 

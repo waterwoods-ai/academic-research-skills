@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# version: 1.5.0
+# version: 1.6.0
 #
 # SessionStart hook script for the ARS Claude Code plugin (v3.7.0+).
 #
@@ -69,7 +69,7 @@ case "${SOURCE}" in
       _UPD=$(bash "${CLAUDE_PLUGIN_ROOT}/scripts/ars_update_check.sh" 2>/dev/null || true)
       _UPDATE_RE='^UPDATE_AVAILABLE[[:space:]]([^[:space:]]+)[[:space:]]([^[:space:]]+)$'
       if [[ "${_UPD}" =~ ${_UPDATE_RE} ]]; then
-        UPDATE_LINE="ARS update available: v${BASH_REMATCH[2]} (installed: v${BASH_REMATCH[1]}). Run /plugin update academic-research-skills, or enable auto-update in /plugin -> Marketplaces.
+        UPDATE_LINE="Upstream ARS update available: v${BASH_REMATCH[2]} (installed: v${BASH_REMATCH[1]}). Review it with git upstream-review in your fork and port what you want; /plugin update installs only what has been ported.
 
 "
       fi

@@ -100,6 +100,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Ranking / tier questions | `references/conference_ranking_2025.json` |
 | Reviewer comments / rebuttal / revision / re-review | `references/major_revision_playbook.md` |
 | Literature search / coverage expansion ("broad coverage", lit-review, gap analysis) | `references/perspective_retrieval_protocol.md` |
+| SoK or other systematic-literature paper: screening records against fixed eligibility criteria (two blinded AI reviewers + adjudicator, PRISMA 2020 counts, kappa) — write the criteria in security terms (threat model, attacker capability, evaluation setting), not a clinical protocol | the `sr-screener` skill (after `ars-lit-review` has built the record set) |
 | Finding / scouting a research topic, gap mapping with Elicit + Litmaps, building on one baseline paper (which front-end at which stage, and what its verdict counts for) | `references/topic_scouting_overlay.md` |
 | Verifying a chosen topic before method work (12 questions, go / revise / stop) | `references/topic_verification_gate.md` |
 | Running the project as a multi-agent lab: roles (Director with literature and novelty, security scientist, research engineer and Reviewer #2), who writes which file, the independent-check matrix, gates 1–4, claims and reject-reasons registers, refusal routing, authorization scope | `references/lab_orchestration_protocol.md` |
