@@ -31,7 +31,7 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** =
 2. Type the DOIs, comma-separated, into `textarea[placeholder^="Enter DOIs"]`.
 3. Click `//button[normalize-space(.)='Parse']`.
 4. Check the result tabs: **Results N | Missing N | Duplicates N**. Log any Missing DOIs and add those papers by title search instead.
-5. Everything is pre-selected ("N Selected"). The action bar offers **Tags** and **Litmaps**. Use **Litmaps** to add the papers to a new Litmap named `scout <date> <slug>` [verify: wording of the create-new option].
+5. Everything is pre-selected ("N Selected"). The action bar offers **Tags** and **Litmaps**. Use **Litmaps** to add the papers to a new Litmap named after its real topic (SKILL.md step 3.1) [verify: wording of the create-new option].
 - Alternative: "Import" also accepts BibTeX, RIS and PubMed files. The ID importer also takes arXiv IDs, PMIDs and OpenAlex IDs [docs].
 
 ## Explore [live + docs]

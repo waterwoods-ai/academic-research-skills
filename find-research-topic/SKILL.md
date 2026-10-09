@@ -57,7 +57,7 @@ Read the reference for a tool before touching it. When the UI differs from the n
 2. **Ask before spending paid usage or anything outward-facing:**
    - paid usage: Elicit Research Report, Research Agent on "Smartest"/Extended Thinking, Systematic Review;
    - outward-facing: Litmaps Monitor, Elicit Alerts, public share links.
-3. **Never delete or edit the user's existing Elicit sessions, Litmaps, Tags, or Zotero collections.** Create new ones named `scout <YYYY-MM-DD> <slug>`.
+3. **Never delete or edit the user's existing Elicit sessions, Litmaps, Tags, or Zotero collections.** Create new ones named `scout <YYYY-MM-DD> <slug>`, except Litmaps maps, which are named after their real topic (step 3.1).
    - **Litmaps' Zotero sync is two-way:** adding or removing an article in a synced Tag adds or removes it in the user's Zotero. Sync only to an empty collection the user created for this run, never remove articles from a synced Tag, and never delete the synced collection. Details: [references/zotero.md](references/zotero.md).
    - Elicit's Zotero import is one-way and never writes to Zotero.
 4. **Only cite papers you actually saw in a tool**, with their title, year and DOI. Label anything you inferred as `[inferred]`.
@@ -122,7 +122,7 @@ Optional, and only if the user approves the usage: a **Research Report** with th
      2. Tag the seeds into it, which also saves them to Zotero.
      3. Open the Tag → **Explore Related Articles** to build the map from it.
      Papers you keep later go into the same Tag. **Never** sync a Tag to any other collection.
-   - **Name the map at once.** Explore saves it as "(N articles)", which is useless in the user's sidebar. Hover the map's sidebar item, real-click its **⋮** button, choose **Rename**, type `scout <YYYY-MM-DD> <slug>` (the run's slug) and confirm. Renaming the run's own new map is allowed; never rename or touch other maps, and never choose **Duplicate** or **Delete Litmap** in that menu. Record the name and the map URL in the ledger.
+   - **Name the map after its real topic, at once.** Explore saves it as "(N articles)", which tells the user nothing. Name it for what the seed papers actually cover, as a short title a researcher would recognise: e.g. "Prompt-Injection Defenses for LLM Agents" or "Detection Deadlines for CBTC Attacks". No dates, run slugs or "scout" prefixes; the ledger keeps those. If the user already has a map with that name, add a short qualifier (the angle or the year). To rename: hover the map's sidebar item, real-click its **⋮** button, choose **Rename**, type the name and confirm. Renaming the run's own new map is allowed; never rename or touch other maps, and never choose **Duplicate** or **Delete Litmap** in that menu. Record the name, the map URL and the run date in the ledger.
 2. **Record the Explore list** in the ledger. Use the list, not the canvas; the canvas cannot be read from the DOM.
 3. **Switch to Similar Text** and run Explore again. List the papers that appear here but did not appear in step 2. These are **disconnected neighbours**: work that is close in meaning but not linked by citations. They usually come from different communities or different vocabulary, and they are the strongest bridge-gap signal.
    - Similar Text is flaky and can return "There were no results." If it fails twice, use two substitutes: the Map Connectivity axis (low-connectivity seeds are the weakly linked periphery), and papers that Elicit's semantic search returned but that are missing from Litmaps' citation list.
