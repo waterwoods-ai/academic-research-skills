@@ -16,7 +16,7 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** =
 - Search: `https://app.litmaps.com/search?q=<text>` [code]. Or type into the search box and press Enter.
 - Bulk import by DOI: `https://app.litmaps.com/import/bulk`
 - Single-seed preview map: `/preview/<id>` (you land here after "Explore Related Articles")
-- Saved maps: `/map/<mapId>` and `/map/<mapId>/explore` [code]
+- Saved maps: `/map/<mapId>` is the map's article view (its saved list, shown at once); `/map/<mapId>/explore` is Explore, which recomputes suggestions on every open [live 2026-10-09].
 
 ## Search [live]
 - **Search box:** the main input on the home page. Type the query and press Enter. The date chips are: Most Relevant | Since 2026 | Since 2025 | Since 2022 | Custom.
@@ -96,7 +96,7 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** =
 - **Keyword search needs a second read.** The first read after clicking "Since 2025" often returns 0 rows; re-reading 15–20 s later returned 15–17. Always re-read before recording "no results".
 - **Bulk import keeps duplicate records** (e.g. 15 DOIs → "Results 20", with RulePilot and CTI-REALM twice). Harmless; dedupe when logging.
 - **The citation canvas is itself a gap signal.** A screenshot of a mixed-seed map showed an older cluster with no citation links to the LLM cluster. That is a bridge-gap signal (step 4b), even when Similar Text fails.
-- **The map title "(N articles)" is not click-to-edit.** No rename control was found in the time spent; log the map URL instead.
+- **The map title "(N articles)" is not click-to-edit.** Superseded on 2026-10-09: rename through the sidebar's ⋮ menu (see that entry).
 
 ### 2026-10-06 — fourth run [live]
 - **Explore card text changed:** now `refs\nREFERENCES\n[badge]\ncites\nCITATIONS\n[badge]` with extra badge numbers, so the old regex returns nothing. Parse by splitting the list text on `/\nTag\nAdd to Litmap/`, then take the first `Author, YYYY` line, the next line as title, and the line before `CITATIONS` as the count. Same split works on keyword-search results (start after the "Custom" date chip).
@@ -105,3 +105,18 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** =
 - **Browser WS can drop** mid-run ("Browser WS not connected") and `browser_mode` then reported `headless: true` with the same pid; a plain `eval` reconnected and the window stayed visible. Re-check visibility rather than restarting.
 - **Axis panel:** clicking the bottom axis caption opens About / X Axis / Y Axis / Size / Advanced; `//h5[...='Momentum']` sets X, then click `Y Axis` text and `//h5[...='Map Connectivity']`.
 - Keyword queries of 5–7 words worked this run; "time to physical impact LLM agent" returned only junk.
+
+### 2026-10-08: fifth run [live]
+- **Chrome came back on the wrong profile.** After a resumed session the MCP restarted Chrome on `superpowers-chrome`, headless, port 9223, and the import page still loaded. Check `browser_mode` for **both** `headless` and `profile` after any "[Chrome auto-restarted]" banner, then run `kill_chrome`, `set_profile research-scout` and `show_browser` again.
+- **The axis captions are lowercase in the DOM.** Use `//h4[normalize-space(.)='more recently published']`, not the uppercase text shown on screen. After clicking, `//h5[...='Momentum']` sets X. The Y tab is `//span[normalize-space(.)='Y Axis']`, then `//h5[...='Map Connectivity']`. `Escape` leaves the panel open, and the screenshot is still usable.
+- **Explore "next page" runs a new search** of about 20–40 s. `await_element` on the next "N - M of T" label for more than 25 s hits the `Runtime.evaluate` session timeout. Instead, click next, `await_element` on `Add to Litmap` with a timeout of 25 s or less, and re-read.
+- **Similar Text failed again:** "99% / Priority Queue (1st)" for more than 5 min, including after a reload. That is 4 failures in 5 runs. Go straight to the fallbacks. Switching back with `Shared Citations & References` then `Apply` works.
+- **Bulk import missing DOI.** A guessed arXiv DOI (10.48550/arXiv.2003.12909) came back Missing. Use only DOIs copied from Elicit or arXiv. Older ICML papers often have no DOI in Elicit.
+- Keyword queries of 5–7 words returned 12–20 rows on the second read. Every query still mixes in junk (non-academic "Robot"/"Electro" pages), so skip rows without a venue.
+
+### 2026-10-09: checked in the user's account [live]
+- **The sidebar reopens each map in the view last used.** Every map this skill built (twelve "(N articles)" maps and "scout 2026-09-20 paper2-litscan") had been left in Explore, so opening it from the sidebar re-ran "Searching thousands of citations and references…". The user's own maps opened as lists. Loading `/map/<id>` once switched each to its list. **Wait for the list to load** (a few seconds; "Add to Litmap" appears): navigating on immediately left 5 of 11 maps in Explore.
+- **Rename exists after all.** Hover a map's sidebar item, then real-click its ⋮ button (`//span[normalize-space(.)='<title>']/ancestor::div[contains(@class,'SidebarItem__Container')]//button`). The menu offers **Rename**, **Duplicate** and **Delete Litmap**; Escape closes it. The rename dialog itself was not exercised [verify on the next run].
+- **Sidebar items are not links.** Open a map by clicking `[class*="SidebarMapsList__StyledSidebarItem"] [class*="SidebarItem__MainContainer"]` (by index) and read `location.pathname`.
+- **One name can be both a map and a Tag** (the user has "Jailbreak" under LITMAPS and under TAGS). Only Tag membership syncs to Zotero.
+

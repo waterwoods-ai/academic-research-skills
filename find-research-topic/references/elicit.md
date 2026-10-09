@@ -98,3 +98,8 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the help center, **[ve
 - **Tables can omit the year column** (FQ1 table had `name, doi, text_available, attack_vectors, physical_pathway, …` and no `year`); take years from arXiv IDs or the detail view.
 - **Elicit misses some 2026 ICS papers Litmaps keyword search finds** (Shahid 2026 SOCSentinel, NRT-Bench, Gong 2026). Keep the Litmaps keyword pass in step 5.
 - Runs took ~3–5 min each; all three framing runs in parallel tabs finished within ~6 min.
+
+### 2026-10-08: fifth run (API, Pro) [live]
+- **An API `search` costs nothing measurable.** `elicit_api.py check` read 86% before and after 36 searches of 20–30 results each. Paid usage comes from UI Find-papers runs, Reports and reviews, not from API search. Breadth and novelty passes can therefore go entirely through `elicit_api.py search`. Still log the count, because users may cap it.
+- API results carry `abstract`, `doi`, `citedByCount` and `venue`, but no extraction columns. Get limitations and future work from full text instead; an arXiv-HTML subagent pass over about 15 papers took about 10 min.
+- **zsh gotcha:** `echo ======` fails in zsh ("= not found") and aborts the rest of a `&&` chain. Use `echo "-----"`.

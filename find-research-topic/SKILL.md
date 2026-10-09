@@ -3,8 +3,8 @@ name: find-research-topic
 description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) and Litmaps (citation-network exploration) in a real Chrome window, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-10-06"
+  version: "1.1.0"
+  last_updated: "2026-10-09"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -122,12 +122,14 @@ Optional, and only if the user approves the usage: a **Research Report** with th
      2. Tag the seeds into it, which also saves them to Zotero.
      3. Open the Tag → **Explore Related Articles** to build the map from it.
      Papers you keep later go into the same Tag. **Never** sync a Tag to any other collection.
+   - **Name the map at once.** Explore saves it as "(N articles)", which is useless in the user's sidebar. Hover the map's sidebar item, real-click its **⋮** button, choose **Rename**, type `scout <YYYY-MM-DD> <slug>` (the run's slug) and confirm. Renaming the run's own new map is allowed; never rename or touch other maps, and never choose **Duplicate** or **Delete Litmap** in that menu. Record the name and the map URL in the ledger.
 2. **Record the Explore list** in the ledger. Use the list, not the canvas; the canvas cannot be read from the DOM.
 3. **Switch to Similar Text** and run Explore again. List the papers that appear here but did not appear in step 2. These are **disconnected neighbours**: work that is close in meaning but not linked by citations. They usually come from different communities or different vocabulary, and they are the strongest bridge-gap signal.
    - Similar Text is flaky and can return "There were no results." If it fails twice, use two substitutes: the Map Connectivity axis (low-connectivity seeds are the weakly linked periphery), and papers that Elicit's semantic search returned but that are missing from Litmaps' citation list.
    - Seeds that are mostly IEEE conference papers may show no citation links at all, because their reference lists are often missing from open metadata. Treat that as a data gap, not a research gap.
 4. **Look for cutting-edge papers.** Set the axes to x = Momentum, y = Map Connectivity and take a screenshot. Papers in the top right are cutting edge; recent papers in the bottom right have high momentum but few links to the map. Read titles from the list and use the screenshot only for the shape of the map.
 5. **Check whether foundations have been followed up.** For 2–3 foundational seeds, use "More Like This" and "MORE RECENTLY PUBLISHED". A highly cited older paper with few recent follow-ups is a possible stale-foundation gap.
+6. **Leave the map as a list.** The sidebar reopens each map in the view last used, and a map left in Explore (`/map/<id>/explore`) re-runs "Searching thousands of citations and references…" every time the user opens it. Before leaving Litmaps, open `/map/<id>` (no `/explore`) and wait until its article list has loaded; a navigation that leaves before the list appears is not remembered.
 
 ### 4. Candidate synthesis
 - **What counts as a candidate:** a topic needs **at least 2 independent signals** out of:
@@ -188,8 +190,8 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.0.0 |
-| Last Updated | 2026-10-06 |
+| Skill Version | 1.1.0 |
+| Last Updated | 2026-10-09 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |
 | Role | Topic scouting with Elicit and Litmaps; literature stage 1a |

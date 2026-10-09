@@ -13,7 +13,7 @@ A suite of Claude Code skills for rigorous academic research, paper writing, pee
 | `sr-screener` v1.0.0 | Protocol-driven study screening (2 blinded AI reviewers + adjudicator) | protocol, quick, pilot, ta-screen, ft-screen, adjudicate, audit, report |
 | `security-track` v0.3.0 | Security-first defaults for the suite: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
 | `novelty-engine` v1.3.0 | Idea generator: three evidence-led routes, candidate checks, formalization | verify, discover, gaps, assess, dogma, limitations, observations, candidates, formalize, falsify, experiment, stress-test, paper |
-| `find-research-topic` v1.0.0 | Topic scouting with Elicit and Litmaps (literature stage 1a) | — |
+| `find-research-topic` v1.1.0 | Topic scouting with Elicit and Litmaps (literature stage 1a) | — |
 | `verify-research-topic` v1.0.0 | Twelve-question topic check with a blind second opinion | — |
 | `novelty-filter` v1.0.0 | One paper's limitations and a novelty check of candidate improvements | — |
 
