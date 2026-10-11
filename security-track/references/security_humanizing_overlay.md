@@ -56,6 +56,9 @@ citation") stays absolute. In the security track it is TIGHTENED and EXTENDED:
   "no prior work within our search" — these bound the claim and are NOT AI
   vagueness. Keep them; de-slopping must not delete a qualifier that a
   reviewer relies on (`threat_model_workbench.md`, search-bounded novelty).
+- **One statement per hedge.** Protection covers a scope hedge once, where its claim is made.
+  Copies of the same hedge added during review rounds are not protected: merge them into that
+  one place (`major_revision_playbook.md` §6, cold read).
 
 ## Security-specific tells to also catch (beyond the ML examples in the skill)
 

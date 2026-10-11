@@ -2,8 +2,8 @@
 name: security-track
 description: "Security-conference overlay for the ARS suite: Big-4 venue profiles (IEEE S&P, NDSS, ACM CCS, USENIX Security) + tier-2 fallbacks, systems-security writing conventions (threat model, ethics, artifact evaluation), security reviewer personas for CPS/IoT/AI-security papers, the 22-conference CIF ranking, and a live deadline calendar fetched from sec-deadlines.github.io. Use WITH the other ARS skills whenever a paper task targets a security venue: venue selection, submission planning, deadline questions, outlining, drafting, reviewing, or revising a security paper. Triggers: security paper, security conference, Big 4, S&P, Oakland, NDSS, CCS, USENIX Security, threat model, CVE, MITRE ATT&CK, ATT&CK technique mapping, responsible disclosure, artifact evaluation, CPS security, ICS security, IoT security, firmware, AI security, adversarial ML, research gap, extend topic, topic viability, go/no-go, propose method, novelty assessment, contribution, experiment design, falsification, run experiments, improve method, method substitution, rename check, prior art check, taxonomy, define categories, security framing, dissect this paper, peruse this paper, peruse paper, introduction structure, subfield reviewer bar, retrospective, lessons learned, knowledge index, mentor me, guide me step by step, be my research mentor, pre-registration, pre-register, research integrity, cherry-picking, seed hacking, HARKing, data leakage, eval-set overfitting, reproducibility check, humanize, humanizer, polish prose, language polish, de-slop, remove AI tells, AI slop, clarity pass, find research topic, scout topic, research gap mapping, Elicit, Litmaps, verify research topic, topic verification, stress-test my topic, novelty check, build on this paper, multi-agent lab, research team roles, orchestrator, Reviewer #2, claims register, reject reasons, agent refused, authorized research scope, 一步一步指导, 带我完成, 安全会议, 安全论文, 四大安全会议, 威胁模型, 顶会, 研究缺口, 延伸课题, 新方法, 创新点, 实验设计, 精读, 拆解论文, 预注册, 研究诚信, 实验诚信, 润色, 语言润色, 去AI味, 选题, 找课题, 验证课题, 查新."
 metadata:
-  version: "0.3.0"
-  last_updated: "2026-10-06"
+  version: "0.4.0"
+  last_updated: "2026-10-11"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -182,8 +182,14 @@ ars-review/
 └── round-1/
     ├── decision.md       verdict + numbered task list + panel reports
     ├── compliance.md     Phase-0 table
-    └── manuscript-snapshot.<ext>   copy of the paper as reviewed
+    ├── manuscript-snapshot.<ext>   copy of the paper as reviewed
+    ├── changelog.md      written by the reviser: ID → CHANGE | ANSWER | LIMITATION → where
+    └── response.md       written by the reviser: answers to items the paper does not need to change
 ```
+
+Revisions follow `references/major_revision_playbook.md` §6: each item is
+closed by a CHANGE to the paper, an ANSWER in `response.md`, or one
+LIMITATION line, so review rounds do not turn the paper into a rebuttal.
 
 On `re-review`, NOTHING needs to be supplied. Defaults, in order:
 1. Venue + paper path from `state.json`; latest `round-N/decision.md` is
@@ -199,7 +205,14 @@ On `re-review`, NOTHING needs to be supplied. Defaults, in order:
    changelog is an index; every verdict must cite evidence of the class the
    task demands:
    - *Text task* (clarify, add section, fix claim) → quote the revised
-     manuscript text; the diff against the snapshot must show it.
+     manuscript text; the diff against the snapshot must show it, and the
+     new text must pass the reader test (playbook §6): a reader who never
+     saw this review would need it.
+   - *Answered task* (disposition ANSWER) → the paper is unchanged by
+     design; judge the answer in `round-N/response.md`. RESOLVED if it is
+     correct and points to text or ledger evidence that already exists;
+     NOT RESOLVED if the paper genuinely needs the change. Never demand new
+     paper text that only a reviewer would read.
    - *Experiment/result task* (add adaptive evaluation, new baseline,
      ablation, more devices) → the ledger (`./ledger/` or the paper's
      provenance record) must contain a run for it, and the numbers in the
@@ -255,8 +268,8 @@ local review + tooling Python.)
 
 | Item | Content |
 |------|---------|
-| Skill Version | 0.3.0 |
-| Last Updated | 2026-10-06 |
+| Skill Version | 0.4.0 |
+| Last Updated | 2026-10-11 |
 | Maintainer | Tom |
 | Dependent Skills | academic-paper, academic-paper-reviewer, academic-pipeline, deep-research |
 | Role | Security-conference overlay: venues and deadlines, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration |

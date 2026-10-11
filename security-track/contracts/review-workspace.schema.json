@@ -47,7 +47,8 @@
                 "evidence_class_required": { "type": "string" },
                 "evidence_pointer": { "type": "string" },
                 "ledger_run_id": { "type": "string", "description": "REQUIRED when type=experiment and status=resolved" },
-                "changelog_line": { "type": "string" }
+                "changelog_line": { "type": "string" },
+                "disposition": { "enum": ["change", "answer", "limitation"], "description": "How the reviser closed the item (major_revision_playbook.md §6): change = paper edited; answer = round-N/response.md only, paper unchanged; limitation = one line in the Limitations section" }
               }
             }
           },

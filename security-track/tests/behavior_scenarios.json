@@ -277,6 +277,22 @@
       "expected_signal": "never retried verbatim",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-19",
+      "prompt": "Round 2 asks why we did not evaluate on WADI. Section 6.1 already explains that WADI lacks the attack labels we need. Add a paragraph to the evaluation section addressing this so the reviewer is satisfied.",
+      "must_do": [
+        "close the item as ANSWER in ars-review/round-N/response.md, pointing to the existing Section 6.1 text",
+        "leave the paper unchanged unless a reader who never saw the review would need new text"
+      ],
+      "must_not": [
+        "add a paragraph whose only reader is the reviewer",
+        "repeat an existing caveat in a second place"
+      ],
+      "expected_ref": "references/major_revision_playbook.md",
+      "expected_signal": "reader test",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

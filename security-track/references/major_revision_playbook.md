@@ -266,7 +266,52 @@ otherwise.
   venue's exact decision vocabulary from §1 — do not offer "Major
   Revision" as a verdict when simulating S&P, CCS, or USENIX '26+.
 
-## 6. Sources
+## 6. Keep the paper a paper (simulated review rounds)
+
+Our own review rounds (Reviewer #2, the ARS panel, re-review) raise many
+items each round. If every item is closed by adding text, the paper turns
+into a rebuttal: sentences that answer a reviewer nobody else has read,
+caveats repeated in several places, preemptive "this is not X" lines. A
+real submission does not read like that, and its reviewers notice. Real
+peer review separates the paper from the response; so do we.
+
+**Close each item one of three ways, and record which** (`round-N/changelog.md`:
+`ID → CHANGE | ANSWER | LIMITATION → section/line or response.md`):
+
+| Disposition | When | Where it goes |
+|---|---|---|
+| **CHANGE** | A reader who never saw the review needs it: an error, a missing method detail or result, an overclaim, an unclear passage. | The paper. Prefer rewriting or deleting over adding. Narrow an overclaim instead of defending it. |
+| **ANSWER** | The reviewer misread, asked what the paper already says, or raised a point a normal paper in this venue does not address. | `ars-review/round-N/response.md`, citing where the paper already covers it. The paper stays unchanged. |
+| **LIMITATION** | The objection is valid and cannot be fixed now. | One line in the single Limitations section, merged with existing lines. Never scatter caveats through the paper. |
+
+**The reader test.** Before adding any sentence, ask: would a reader who
+never saw this review need it? If not, it is an ANSWER, not paper text.
+
+**Signs of defensive prose** (write none of these; the cold read flags them):
+- addressing an absent reviewer: "one might argue", "a natural question is
+  whether", "to address concerns about", "reviewers may wonder";
+- preemptive denials: "this is not merely X", "our approach does not simply";
+- meta-emphasis: "we emphasize / stress / note that", "it is important to note";
+- the same caveat or scope hedge stated in more than one place;
+- hedge stacks ("may potentially in some cases");
+- a Limitations or threats-to-validity section that grew every round;
+- results or discussion paragraphs that exist only to answer an objection.
+
+**Watch the growth.** Each round, report the net word change from
+text-only fixes. If text-only fixes made the paper longer, re-check every
+added sentence against the reader test before the next round. Space is
+for results, not for defence.
+
+**Cold read before the final review.** After the last revision round
+and before the final review, a fresh agent that has never seen
+`ars-review/` (a new Claude subagent given only the paper) reads it as a
+venue reader would and lists every passage that sounds like a reply to an
+unseen reviewer, plus repeated caveats and hedge stacks. Claude then
+rewrites each into plain paper prose, merges it into one place, or moves
+it to the response file. Claims, numbers and the one statement of each
+scope hedge do not change. Record the result in `ars-review/cold-read.md`.
+
+## 7. Sources
 
 Official: sp2026/sp2027.ieee-security.org/cfpapers.html;
 sp2024.ieee-security.org/changes-cfp.html; ndss-symposium.org/ndss2026 and

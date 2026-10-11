@@ -68,8 +68,8 @@ Use the research loop's file names; macOS treats `RESEARCH_QUESTION.md` and
 
 | Writer | Files |
 |---|---|
-| Codex | `research_plan.md`; `reviews/` (`advisor_opinions.md`, `reject_reasons.md`); `ars-review/` rounds |
-| Claude | `subplans/`, `decisions.md`, `research_question.md`, `contribution_card.md`, `claims.md`, `ideas_claude.md`, `verification/` (methodology and novelty reports), `gap_registry.md`, `literature.md`, `literature/`, `paper/` |
+| Codex | `research_plan.md`; `reviews/` (`advisor_opinions.md`, `reject_reasons.md`); the review files of each `ars-review/round-N/` (decision, compliance, snapshot) |
+| Claude | `subplans/`, `decisions.md`, each round's `changelog.md` and `response.md`, `ars-review/cold-read.md`, `research_question.md`, `contribution_card.md`, `claims.md`, `ideas_claude.md`, `verification/` (methodology and novelty reports), `gap_registry.md`, `literature.md`, `literature/`, `paper/` |
 | GLM | `rq_cards.md`, `security/` (threat model, attack surface, defense assumptions, hypotheses, adversarial cases), `novelty_engine/`, `candidate_cards.md`, `screening_plan.md` and `validation_plan.md` until frozen, `method_changelog.md`, code (`src/`, `experiments/`), `tests/`, the run ledger (`ledger/`), `results/`, the artifact |
 
 - **Direction files change only on a recorded decision.** `research_plan.md`,

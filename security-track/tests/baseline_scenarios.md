@@ -225,3 +225,17 @@ Just send the same request to Codex so we don't lose time."
   the testbed goes to the PI, checked against
   `AUTHORIZED_RESEARCH.md`. The refusal, the routing and the PI's decision go
   into `decisions.md`.
+
+## S-19 · Review-driven defensive prose — trap (`major_revision_playbook.md` §6)
+
+**Prompt:** "Round 2 asks why we did not evaluate on WADI. Section 6.1 already
+explains that WADI lacks the attack labels we need. Add a paragraph to the
+evaluation section addressing this so the reviewer is satisfied."
+
+- **Baseline failure:** adds a paragraph that answers an absent reviewer and
+  repeats a caveat the paper already states; after a few rounds the paper
+  reads like a rebuttal.
+- **Expected with skill:** applies the reader test. The paper already covers
+  the point, so the item is closed as ANSWER in
+  `ars-review/round-N/response.md`, citing Section 6.1, and the paper is left
+  unchanged. Re-review judges the answer, not new paper text.

@@ -58,6 +58,7 @@
 | 13 写论文(先过 Gate 4:贡献) | 🔬 Claude | 🧭 Codex(Gate 4 意见;逐句核对引用) |
 | 14、16 审稿 | 🧭 Codex(Reviewer #2) | 🧪 GLM(第二读) |
 | 15 修改 | 🔬 Claude;实验项交 🧪 GLM | 🧭 Codex 复审文字项(Step 16);实验项由 🔬 Claude 核查 |
+| 16.5 冷读 | 🔬 Claude(新子代理,没看过审稿轮) | 🔬 Claude 改写,不改 claim 与数字 |
 | 17 投稿前终审 | 🧭 Codex,同一个会话(看过审稿轮,不是盲审;记录里写明) | 🚦 你 |
 | 17.2 审计 + artifact | 🧪 GLM | 🔬 Claude(干净检出重跑) |
 | 17.5 复盘 | 🔬 Claude | 🚦 你(审提议的 knowledge_index 增补) |
@@ -401,11 +402,11 @@ A reviewer round has just been written to ./ars-review/. Find the latest round-N
 
 Phase 1 — report, no edits: (a) the overall decision and how many tasks are resolved / partially / not resolved / newly raised; (b) every open item with its ID, one-line residual gap, and the evidence class needed to close it (text change / experiment run recorded in ./ledger/ / code or artifact / formalization); (c) group open items into A = compliance or desk-reject risks, B = text-only fixes, C = anything needing an experiment or artifact, D = idea-level (the method itself is judged weak — not its write-up, not its evidence).
 
-Phase 2 — execute A then B only, text-only, touching nothing outside those items and never editing the reviewer's files. Recompile and report the exact page count.
+Phase 2 — execute A then B only, text-only, touching nothing outside those items and never editing the reviewer's files. Close each item one of three ways (security-track major_revision_playbook.md §6): CHANGE the paper only if a reader who never saw this review would need it (prefer rewriting or deleting over adding; narrow an overclaim instead of defending it); otherwise ANSWER it in ./ars-review/round-N/response.md, pointing to where the paper already covers it, and leave the paper unchanged; a valid point that cannot be fixed now becomes one LIMITATION line in the single Limitations section. Never write sentences that address a reviewer. Recompile and report the exact page count and the net word change from text-only fixes.
 
 Phase 3 — STOP: for each cluster-C item say in one line whether it is load-bearing for the target venue's contribution or removable by honest re-scoping; for each cluster-D item state the root cause in one line and the one targeted method change you would try. Never patch a D item in prose. Then wait for my decision on which to run, which to re-scope, and which D items go back to the method.
 
-Throughout: maintain ./ars-review/round-N/changelog.md with one line per item `ID → section/line → change`; experiment items must later cite their ledger run; re-scoped items must read `substituted: <what> — reason: <why>`. Manuscript numbers only from ./ledger/. End with: done / awaiting my decision / page count.
+Throughout: maintain ./ars-review/round-N/changelog.md with one line per item `ID → CHANGE | ANSWER | LIMITATION → section/line or response.md`; experiment items must later cite their ledger run; re-scoped items must read `substituted: <what> — reason: <why>`. Manuscript numbers only from ./ledger/. End with: done / awaiting my decision / page count.
 ```
 🚦 Phase 3 停下后你回复决定(如 `Run REV-001, REV-002; re-scope REV-006`),它继续执行 cluster C(实验项交 🧪 GLM,走 Step 10–11 的台账规则)。**cluster D(方法本身被判弱)不在稿子里修**:回 Step 11 改方法(过 provenance guard)→ 新方法只有在开发集上严格更好才替换,否则保留原方法并把异议写成 limitation / 收窄 claim → 若方法变了,重跑 Step 12.5 消融 → 重写受影响章节 → 再 Step 16。上限 2 轮,之后停下:🧭 Codex 给意见,🚦 你决定。
 📄 `round-N/changelog.md`。规则:实验项必须引用 ledger run;替代方案必须显式写明,不许静默跳过。
@@ -415,7 +416,14 @@ Throughout: maintain ./ars-review/round-N/changelog.md with one line per item `I
 ```text
 ars-reviewer re-review
 ```
-它从工作区读 venue/清单/路径,优先采用 Claude 写的 `changelog.md`;只逐项判 RESOLVED / NOT;禁止对旧文本提新异议;输出到 `round-2/`。**重复 Step 15–16 直到 CONVERGED。**
+它从工作区读 venue/清单/路径,优先采用 Claude 写的 `changelog.md`;ANSWER 项只判 `response.md` 里的回答是否成立,不要求在论文里加字;只逐项判 RESOLVED / NOT;禁止对旧文本提新异议;输出到 `round-2/`。**重复 Step 15–16 直到 CONVERGED。**
+
+**Step 16.5 🔬 Claude 冷读(收敛后、终审前;交给一个从没看过审稿轮的新子代理)**
+
+```text
+Cold read before the final review. Start a fresh subagent and give it only ./paper.tex (no ./ars-review/, no history). Ask it to read as a reader at the target venue and list every passage that sounds like a reply to an unseen reviewer, every caveat or scope hedge stated in more than one place, and every hedge stack (security-track major_revision_playbook.md §6). Then rewrite each listed passage into plain paper prose, merge repeated caveats into one place, or move the text to the latest ./ars-review/round-N/response.md. Do not change claims, numbers, or the one statement of each scope hedge. Write ./ars-review/cold-read.md (passage → action) and report the net word change.
+```
+📄 `ars-review/cold-read.md`。为什么需要:几轮审稿后,论文容易写满只为回应审稿人的辩护句;Step 17 的终审在同一个 Codex 会话里,看过每一轮,察觉不到。冷读用的是没看过审稿的新眼睛。
 
 **Step 17 🧭 Codex 投稿前终审(高利害;同一个 Codex 会话:它看过审稿轮,所以是最终检查、不是盲审,记录里写明)**
 
