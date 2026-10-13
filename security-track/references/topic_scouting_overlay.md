@@ -49,8 +49,8 @@
    | Tool verdict | What it means | Status in the loop |
    |---|---|---|
    | `open` | no direct match found in N queries | candidate only; becomes NOVEL-WITHIN-SEARCH after the S3 full-text check of the nearest work |
-   | `narrow` | a partial match, or the same mechanism in a new domain / on new hardware | INCREMENTAL unless the mechanism itself is sharpened |
-   | `saturated` | a direct match exists | KNOWN — drop or rework the *approach*; keep the *problem* (iron rule 6) |
+   | `narrow` | a partial match, or the same mechanism in a new domain / on new hardware | a lead to peruse: KEEP, SHARPEN or NARROW only after the overlap perusal of the matching paper (`paper_dissection_protocol.md`) |
+   | `saturated` | a direct match was found | peruse the matching papers first; KNOWN only if the overlap card shows they deliver the contribution at comparable depth — then drop or rework the *approach* and keep the *problem* (iron rules 6, 7) |
 
 2. **A reported gap enters the gap registry only with S1's three fields**: the
    search that failed to fill it (the tool run's ledger supplies queries,
@@ -99,7 +99,7 @@
   whether timestamps survive (a shuffled release cannot support a
   chronological claim).
 - **Hot-paper saturation.** If every candidate derived from a recent,
-  heavily-followed paper comes back `saturated`, stop iterating on "improve
+  heavily-followed paper is still `saturated` after the overlap perusal, stop iterating on "improve
   this paper" and generate problem-first instead, then filter the survivors.
 - **Wording.** Write "no direct match found in N queries across <tools>
   (<date>)". Never "nobody has done this": preprints and work under review

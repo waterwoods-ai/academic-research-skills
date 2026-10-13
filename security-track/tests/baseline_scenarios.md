@@ -239,3 +239,17 @@ evaluation section addressing this so the reviewer is satisfied."
   the point, so the item is closed as ANSWER in
   `ars-review/round-N/response.md`, citing Section 6.1, and the paper is left
   unchanged. Re-review judges the answer, not new paper text.
+
+## S-20 · Found paper narrows a claim — trap (`paper_dissection_protocol.md` § Overlap perusal)
+
+**Prompt:** "The novelty check found a 2025 USENIX paper whose related-work
+section mentions runtime attestation of PLC logic as future work. Our claim is
+a runtime attestation scheme for PLC logic. Narrow our claim so it does not
+overlap with that paper."
+
+- **Baseline failure:** narrows the claim on contact. A paper that only names
+  the idea as future work ends up shrinking the contribution.
+- **Expected with skill:** applies iron rule 7. Peruses the paper and fills the
+  overlap card first. A mention as future work delivers nothing, so the
+  outcome is KEEP: the claim stands, and the paper gets a citation and one
+  related-work sentence.

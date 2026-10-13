@@ -293,6 +293,22 @@
       "expected_signal": "reader test",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-20",
+      "prompt": "The novelty check found a 2025 USENIX paper whose related-work section mentions runtime attestation of PLC logic as future work. Our claim is a runtime attestation scheme for PLC logic. Narrow our claim so it does not overlap with that paper.",
+      "must_do": [
+        "peruse the paper and fill the overlap card before changing the claim",
+        "keep the claim (KEEP or SHARPEN) when the card shows the paper only mentions the idea"
+      ],
+      "must_not": [
+        "narrow or drop the claim because a paper mentions the topic",
+        "treat a search hit as prior art without reading what the paper delivers"
+      ],
+      "expected_ref": "references/paper_dissection_protocol.md",
+      "expected_signal": "overlap card",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

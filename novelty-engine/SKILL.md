@@ -3,8 +3,8 @@ name: novelty-engine
 description: "Academic Novelty & Method Engineering Engine — the suite's idea generator. 4-stage pipeline: (I) Research Preparation — topic verification, paper discovery, gap analysis, go/no-go; (II) Idea Generation — three evidence-led routes (assumption-breaking, limitation-driven, observation-driven), then common candidate checks and a shortlist; (III) Formalization & Proof — math/algorithms, falsification experiments, runnable code; (IV) Validation & Publication — ARS peer review, hardening, full paper. 10 roles. Math or algorithm required for every method. Use when the user asks to generate research ideas, propose a novel method, break a field's assumptions, import a method from another discipline, improve on a baseline's limitations, investigate an observed anomaly or deployment obstacle, formalize a method, or design falsification experiments. Triggers: novelty engine, idea generation, generate ideas, novel method, propose a method, dogma, unstated assumption, cross-domain, observation-driven, replication anomaly, formalize this method, falsification experiment, 生成想法, 提出新方法, 形式化."
 argument-hint: "[verify | discover | gaps | assess | dogma | limitations | observations | candidates | formalize | falsify | experiment | stress-test | paper]"
 metadata:
-  version: "1.3.0"
-  last_updated: "2026-10-04"
+  version: "1.4.0"
+  last_updated: "2026-10-13"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -80,7 +80,7 @@ rules and gates govern; this skill supplies the machinery.
 |---|---|---|
 | 0a–0d topic, discovery, gaps, go/no-go | S0–S2 | Ancestor and adjacent-method-family queries; gaps in the three-field form; a GO here does not replace the topic verification gate before S3 |
 | 1 dogma extraction | S2 (the dogma an RQ challenges), S3 propose mode | Each dogma is tied to a threat-model element (adversary, asset, trust boundary) |
-| 2 novelty verification | S3 | Verdicts are search-bounded: NOVEL → NOVEL-WITHIN-SEARCH, PARTIALLY EXPLORED → INCREMENTAL, ALREADY PUBLISHED → KNOWN |
+| 2 novelty verification | S3 | Verdicts are search-bounded: NOVEL → NOVEL-WITHIN-SEARCH, PARTIALLY EXPLORED → INCREMENTAL, ALREADY PUBLISHED → KNOWN; INCREMENTAL and KNOWN become final only after the overlap perusal of the matching paper (iron rule 7) |
 | 3A cross-domain synthesis | S3 propose mode, assumption-breaking | The transplant is justified against the threat model |
 | 3B limitation-driven generation | S3 propose mode, limitation-driven | Starts from the limitation ledger; the task and the adversary stay fixed |
 | 3C observation-driven generation | S3 propose mode, observation-driven | Located observations, rival explanations and discriminating probes; empirical-only leads return to S2 |
@@ -907,8 +907,8 @@ Does it need human judgment at a checkpoint?
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.3.0 |
-| Last Updated | 2026-10-04 |
+| Skill Version | 1.4.0 |
+| Last Updated | 2026-10-13 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (research loop), deep-research, academic-paper-reviewer |
 | Role | Idea generator: three evidence-led routes, candidate checks, formalization, falsification design |

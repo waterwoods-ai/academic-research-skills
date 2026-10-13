@@ -45,13 +45,13 @@ Run all of these, then give a verdict:
 - (a) **Follow-up search:** on the step 2 Litmap, use the Explore **keyword filter** (free) with at least 3 phrasings of the mechanism, including the generic method-family name. This finds papers linked to the target that mention the idea. Also re-read `citing.md`.
 - (b) **Elicit, recent:** a Find papers query phrased as the candidate's research question, with `+year:>{current_year-3}` and a `Direct match? (yes/partial/no)` column.
 - (c) **Elicit, adjacent communities:** a query on the generic method family (e.g. "uncertainty-aware thresholding", "test-time adaptation"), regardless of domain.
-- (d) **Litmaps:** keyword search (≤6 words, plain phrases) with "Since {last_year}". Re-read after 15–20 s before recording zero.
+- (d) **Litmaps (MCP):** `find_related_articles` from the candidate's 3–5 closest papers with `start_date` = 1 January of last year; keyword search only as a last resort (it is noisy). Notes: `find-research-topic/references/litmaps.md` § MCP.
 - (e) **P4 answers** from both tools, with every named paper verified.
 
 **Verdicts:**
 - `open`: no direct or partial match in (a)–(e).
-- `narrow`: one or more partial matches, *or* the only difference is "same mechanism, new domain / new hardware". Needs a sharper differentiator before proceeding.
-- `saturated`: one or more direct matches. Drop the candidate, or change its mechanism.
+- `narrow`: one or more partial matches, *or* the only difference is "same mechanism, new domain / new hardware". Peruse the matching paper first (overlap perusal); if the overlap stands, it needs a sharper differentiator before proceeding.
+- `saturated`: one or more apparent direct matches. Peruse them first (overlap perusal); drop the candidate or change its mechanism only if the overlap card shows comparable delivery.
 
 **Wording:** write "no direct match found in N queries across Litmaps follow-ups, Elicit, Litmaps search and two LLM reviews (date)". **Never** write "nobody is working on this". Preprints and in-review work are invisible to all of these tools.
 

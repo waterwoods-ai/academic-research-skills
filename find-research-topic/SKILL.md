@@ -3,7 +3,7 @@ name: find-research-topic
 description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
   last_updated: "2026-10-13"
   status: active
   data_access_level: raw
@@ -141,13 +141,13 @@ Use the Litmaps MCP tools; parameters and known quirks are in [references/litmap
 - **Output:** draft 3–7 candidates. Phrase each as a research question and tag it with its signals and evidence papers.
 
 ### 5. Novelty check (every candidate)
-1. **Elicit.** Run the candidate as a Find Papers query with `+year:>{current_year-3}`. If 3 or more papers already answer it directly, it is **saturated**: narrow it (population, method or setting) or drop it.
+1. **Elicit.** Run the candidate as a Find Papers query with `+year:>{current_year-3}`. If papers seem to answer it directly, the candidate is only **saturated-pending**: peruse the closest 1–3 of them (the overlap perusal (`security-track/references/paper_dissection_protocol.md` § Overlap perusal)) and let the overlap card decide. A paper that mentions the idea, or treats it without the depth the candidate rests on, keeps the candidate (KEEP or SHARPEN); only comparable delivery narrows or drops it.
    - **Also run an adjacent-community query.** Name the generic ML or security *method family* the candidate belongs to (e.g. "test-time adaptation", "backdoor detection", "federated learning robustness") and ask Elicit for its best-known methods and benchmarks, regardless of application domain.
      - A candidate whose only difference is "same method, new domain" or "same method, on hardware" is at most `narrow`.
      - (Lesson from the 2026-09-18 run: domain-phrased queries missed NOTE, RoTTA, SAR, TTAB, ROID, TinyTTA and FORGE.)
    - "Not found in this scan" is never evidence that nobody has done it. Write verdicts as "no direct match found in N queries", not "open".
 2. **Litmaps.** To catch recent work Elicit might miss, take the candidate's 3–5 closest papers as seeds and run `find_related_articles(strategy="citation_connected", start_date=<1 January of last year>)`. Litmaps' keyword search (`search_articles`) is noisy (an irrelevant forum post ranked first on 2026-10-13); use it only as a last resort and discard rows without a DOI or venue.
-3. **Ledger.** Record the verdict (`open` / `narrow` / `saturated`) with the papers that justify it.
+3. **Ledger.** Record the verdict (`open` / `narrow` / `saturated`) with the papers that justify it, and for `narrow` or `saturated` the overlap card's path and outcome (KEEP / SHARPEN / NARROW / DROP).
 
 ### 6. Score and report
 Score the surviving candidates with the rubric below. Write `$RUN/report.md` containing:
@@ -190,7 +190,7 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.2.0 |
+| Skill Version | 1.3.0 |
 | Last Updated | 2026-10-13 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |

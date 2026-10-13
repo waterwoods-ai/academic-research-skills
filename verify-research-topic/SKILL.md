@@ -3,7 +3,7 @@ name: verify-research-topic
 description: Use when the user asks to verify, stress-test, sanity-check or review a security research topic, paper idea or study design before committing to it, including requests to answer a fixed list of research questions about a topic or to cross-check a topic with ChatGPT.
 argument-hint: "<topic, or a path to a report/design file> [more topics]"
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   last_updated: "2026-10-13"
   status: active
   data_access_level: raw
@@ -113,7 +113,7 @@ Write `verification.md` in the format below, then give the user the verdict and 
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.1.0 |
+| Skill Version | 1.2.0 |
 | Last Updated | 2026-10-13 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic verification gate) |

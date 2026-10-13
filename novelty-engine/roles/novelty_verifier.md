@@ -64,8 +64,8 @@ For every novelty claim, assign one of:
 | Status | Meaning | Action |
 |--------|---------|--------|
 | **NOVEL** | No published work found matching this specific combination | Proceed — flag for ARS lit-review confirmation |
-| **PARTIALLY EXPLORED** | Related work exists but the specific formulation is new | Proceed with caution — must cite prior work and differentiate |
-| **ALREADY PUBLISHED** | This has been done; found specific paper(s) | STOP — reframe or select different approach |
+| **PARTIALLY EXPLORED** | Related work exists but the specific formulation is new | Peruse the related work (overlap perusal, security-track `paper_dissection_protocol.md`); then proceed, citing it and stating the difference the overlap card shows |
+| **ALREADY PUBLISHED** | The paper(s) found appear to have done this | Provisional until the overlap perusal: a paper that only mentions the idea, or treats it shallowly, does not make it published. STOP and reframe only if the overlap card shows comparable delivery |
 | **UNCERTAIN** | Cannot confirm or deny with available search | Phase 2 may explore provisionally with the flag; Phase 3.5 keeps it pending outside the eligible shortlist until retrieval resolves it |
 
 ### Step 4: Prior Art Report

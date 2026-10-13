@@ -284,6 +284,12 @@ peer review separates the paper from the response; so do we.
 | **ANSWER** | The reviewer misread, asked what the paper already says, or raised a point a normal paper in this venue does not address. | `ars-review/round-N/response.md`, citing where the paper already covers it. The paper stays unchanged. |
 | **LIMITATION** | The objection is valid and cannot be fixed now. | One line in the single Limitations section, merged with existing lines. Never scatter caveats through the paper. |
 
+**A reviewer who names a similar paper.** Peruse it first (overlap perusal,
+`paper_dissection_protocol.md`). If the overlap card shows it only mentions
+the idea or treats it shallowly, the claim stays: ANSWER with the card's
+findings, and add one related-work sentence only if a reader needs the
+difference. Narrow only what the paper actually delivers.
+
 **The reader test.** Before adding any sentence, ask: would a reader who
 never saw this review need it? If not, it is an ANSWER, not paper text.
 

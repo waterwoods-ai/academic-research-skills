@@ -91,7 +91,7 @@ Use the research loop's file names; macOS treats `RESEARCH_QUESTION.md` and
 | Full research plan | Codex | Claude | Feasibility against the resources and compute budget; a testable success criterion per phase; then PI approval |
 | Sub-plans | Claude | Codex | Every plan item covered; nothing added that the plan does not ask for |
 | Literature search | Claude | Codex | Missing-paper attack with retrieved citations |
-| Novelty of GLM's ideas and candidates | Claude (retrieval) | Codex | An attempt to invalidate it with a retrieved paper; no citation, no objection |
+| Novelty of GLM's ideas and candidates | Claude (retrieval) | Codex | An attempt to invalidate it with a retrieved paper; no citation, no objection. The objection changes the claim only after the overlap perusal shows the paper delivers it |
 | Novelty of Claude's ideas | Codex (retrieval) | GLM | A second, independent retrieval |
 | Threat model | GLM | Claude | The 11 fields and three stress tests of `threat_model_workbench.md` |
 | Method and formalization | GLM | Claude | Correctness, complexity and convergence proven or cited (iron rule 5) |
@@ -174,7 +174,9 @@ flawed plan is caught before it costs compute.
 
 - **Gate 1 — novelty, before implementation:** more than 30 directly relevant
   papers checked; the closest 5 identified; the difference from each
-  documented; Codex unable to invalidate the novelty with a retrieved paper.
+  documented; Codex unable to invalidate the novelty with a retrieved paper,
+  where every paper raised has been perused (overlap card) before any claim
+  changed (iron rule 7).
   Also `topic_verification_gate.md` and the Phase 3.5 mechanism re-check.
 - **Gate 2 — threat model, before experiments:** attacker goal, knowledge,
   capability and budget; defender assumptions; success criteria

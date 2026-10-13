@@ -44,6 +44,11 @@
    Digging deeper never licenses fabrication, goalpost-moving, or
    cherry-picking (`research_integrity_protocol.md`): change the disposition,
    not the integrity rules.
+7. **A found paper does not change a claim; its perusal does.** Before any
+   claim is narrowed, merged or dropped because of prior work, peruse that
+   paper and fill the overlap card (`paper_dissection_protocol.md` § Overlap
+   perusal). A mention, a partial treatment or a shallower evaluation keeps
+   the claim (KEEP or SHARPEN); only comparable delivery narrows or drops it.
 
 ## Stage map and runtime routing
 
@@ -65,7 +70,8 @@
 Before any investment: is the topic saturated, misframed, or viable?
 Retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers on the
 topic; verdict with evidence: SATURATED (recent top-venue work occupies
-the space — name the papers), MISFRAMED (the interesting question is
+the space — name the papers, and only after perusing them: a paper that
+mentions the topic does not saturate it, iron rule 7), MISFRAMED (the interesting question is
 adjacent — restate it), or VIABLE (name the open territory). HUMAN GATE:
 the researcher decides to proceed, pivot, or stop.
 

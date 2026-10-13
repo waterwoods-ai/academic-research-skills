@@ -3,8 +3,8 @@ name: novelty-filter
 description: This skill should be used when the user gives a paper (PDF path, DOI, arXiv id or URL) and asks to "find the gap in this paper", "extend this paper", "what could I build on this paper", "find problems with the authors' method", "improve on this method", "is this idea already published", "novelty-check these ideas", or "check nobody else is working on this method". Builds a confirmed limitation list for one paper (own read + ChatGPT/Claude.ai Projects in Chrome), maps references, citing work and related work (Elicit, Litmaps), and filters candidate improvements against prior work with an open / narrow / saturated verdict. A filter, not a generator - it does not develop a method; to generate and formalize one use novelty-engine. Not for plain summaries.
 argument-hint: "<paper: PDF path | DOI | arXiv id | URL> [field / constraints]"
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-10-06"
+  version: "1.1.0"
+  last_updated: "2026-10-13"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -159,7 +159,7 @@ Merge `analysis.md`, the P2 answers from both tools, the Elicit Limitations colu
 2. **Write P4** from `candidates.md` and **get the user's approval of the exact text** (rule 1).
 3. **Send P4 in a new chat inside each project.**
 4. **Verify every paper P4 names.** Assign the verdict `open`, `narrow` or `saturated` with the justifying papers, and log it in the ledger.
-5. **Sharpen or drop.** A `narrow` candidate gets one sharpening round: change the mechanism, then re-run all of (a)–(e), with P4 in a new chat and approved again. A `saturated` candidate is dropped.
+5. **Peruse, then sharpen or drop.** Before acting on a `narrow` or `saturated` verdict, peruse the matching papers (the overlap perusal (`security-track/references/paper_dissection_protocol.md` § Overlap perusal)): a paper that only mentions the idea, or treats it without the depth the candidate rests on, keeps the candidate (KEEP or SHARPEN). A `narrow` candidate that still overlaps after the perusal gets one sharpening round: change the mechanism, then re-run all of (a)–(e), with P4 in a new chat and approved again. A `saturated` candidate is dropped only if the overlap card shows the paper delivers it at comparable depth.
 
 ### 8. Report
 Score the survivors with §5 of the critique reference. Write `method-proposal.md`:
@@ -192,8 +192,8 @@ Append any UI differences to the matching reference's "Observed changes", with t
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.0.0 |
-| Last Updated | 2026-10-06 |
+| Skill Version | 1.1.0 |
+| Last Updated | 2026-10-13 |
 | Maintainer | Tom |
 | Dependent Skills | novelty-engine, security-track |
 | Role | One paper's confirmed limitations and a novelty check of candidate improvements |
