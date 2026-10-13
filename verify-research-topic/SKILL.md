@@ -3,8 +3,8 @@ name: verify-research-topic
 description: Use when the user asks to verify, stress-test, sanity-check or review a security research topic, paper idea or study design before committing to it, including requests to answer a fixed list of research questions about a topic or to cross-check a topic with ChatGPT.
 argument-hint: "<topic, or a path to a report/design file> [more topics]"
 metadata:
-  version: "1.0.0"
-  last_updated: "2026-10-06"
+  version: "1.1.0"
+  last_updated: "2026-10-13"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -53,7 +53,7 @@ Load `superpowers-chrome:browsing` if it is not already in context.
 1. **Nothing is sent to ChatGPT until the user approves the exact brief text.** It is unpublished research leaving the machine. Show the brief, get a yes, then paste exactly that.
 2. **Never paste** credentials, file paths, hostnames, unpublished data, author names, or anything from the user's private libraries. Follow the user's rule on private data.
 3. **ChatGPT never adjudicates.** Settle a disagreement by checking the design, the ledgers, or the paper in question. Never by asking which of you is right.
-4. **Every paper ChatGPT names is unverified** until a registry (Crossref / arXiv / OpenAlex) or the publisher page confirms the title, authors and year. It enters the report only then; unresolvable ones are listed as `claimed by ChatGPT, not found`.
+4. **Every paper ChatGPT names is unverified** until a registry (Crossref / arXiv / OpenAlex) or the publisher page confirms the title, authors and year. It enters the report only then; unresolvable ones are listed as `claimed by ChatGPT, not found`. If the Litmaps MCP is connected, `mcp__litmaps__get_articles_by_doi` counts as one registry lookup, but take the author list from the publisher or another registry (Litmaps' author order can be wrong); run `mcp__litmaps__check_retraction` on every DOI that enters the report.
 5. **The user logs in and sets the model.** Never type or store a ChatGPT password. **Never click the model menu:** it has nested effort submenus, and a mis-click changes the user's settings. Ask the user to set the model and effort, then only *read* the button. Use a **Temporary Chat** unless the user says otherwise.
 6. **Every paste step aborts unless `location.hostname === 'chatgpt.com'`,** Temporary Chat is on, and the chat is empty. Other tabs in the same browser (e.g. claude.ai) use the same `.ProseMirror` editor, and focus can move between tabs without warning.
 
@@ -64,6 +64,8 @@ Load `superpowers-chrome:browsing` if it is not already in context.
 
 ### 1. Gather the evidence
 Read the topic's design / report / ledgers. List the sources you will cite. A topic with no written design gets a one-paragraph design from the user first.
+
+**Expand the prior work before answering Q3 (if the Litmaps MCP is connected).** Take the topic's 5–20 key papers by DOI (`get_articles_by_doi`, deduplicated by arXiv id or title), then run `find_related_articles` with `strategy="citation_connected"` (limit 100) and, for the newest work, again with `start_date` set to the start of last year. Papers that sit close to the topic but are not in its design or ledgers are prior-work candidates: read each one before using it as evidence. This is read-only and needs no browser; tool notes are in `find-research-topic/references/litmaps.md` § MCP.
 
 ### 2. Answer all 12 yourself, then freeze
 Write `answers.md` against the pass criteria in `references/questions.md`: answer, the evidence behind it (file §, or a verified paper), and a status per question. Do not edit it after step 4 begins; later changes go in `verification.md` as resolutions.
@@ -111,8 +113,8 @@ Write `verification.md` in the format below, then give the user the verdict and 
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.0.0 |
-| Last Updated | 2026-10-06 |
+| Skill Version | 1.1.0 |
+| Last Updated | 2026-10-13 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic verification gate) |
 | Role | Twelve-question topic check with a blind second opinion |

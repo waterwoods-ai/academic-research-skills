@@ -54,6 +54,7 @@ The two integrations work in **opposite directions**, and that difference is the
 - **Seed a map from the Tag:** open the Tag → **Explore Related Articles** at the top. This replaces the DOI bulk-import step when the seeds already live in Zotero.
 - **Keep a paper:** tag it into the synced Tag from the Explore list or the map, and it appears in the Zotero collection. The Explore "Advanced" toggle "Apply More Like This when tagging" makes tagging also grow the map; turn it off if you only want to save [live, 2026-09-18].
 - **Other exports:** "Export All" → BibTeX / RIS / CSV from a Litmap or Tag.
+- **Through the MCP (since 2026-10-13):** creating the synced Tag still happens in the app (the user does it). After that, `list_collections` shows the Tag by name (no field marks it as synced, so take the user's word for which Tag it is), and `add_articles_to_collection` adds papers to it, which puts them in the Zotero collection. The MCP cannot remove papers from a Tag. Verify the result in Zotero with the local read API, as above.
 
 ## Observed changes
 <!-- Append dated notes when the live UI differs from the above. -->

@@ -3,6 +3,42 @@
 Sources are docs.litmaps.com (articles updated Dec 2024 – Sep 2025) and live checks on 2026-09-18.
 Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** = inferred from the app bundle, **[verify]** = confirm on the first logged-in run.
 
+## MCP (preferred since 2026-10-13) [live]
+Litmaps' MCP server (beta) replaces the browser for this skill. Everything below this section describes the web app and is the fallback for when the MCP is unavailable.
+
+- **Server:** `https://mcp.litmaps.com/mcp` (HTTP), added at user scope with `claude mcp add --transport http -s user litmaps https://mcp.litmaps.com/mcp`. The user authenticates once through `/mcp` (log in to Litmaps, click Allow). A session started before that authentication does not see the tools; start a new one.
+- **Tools are deferred:** load them with one `ToolSearch` `select:` call before use.
+
+| Tool | Key parameters | Use |
+|---|---|---|
+| `list_workspaces` | — | Workspace ids (the user has "Default Workspace" and "IOT-MCPGuard"). |
+| `list_litmaps` | `workspace_id` | Map names and ids. No article counts. |
+| `get_litmap_articles` | `litmap_id`, `limit` ≤200, `page` | A map's papers. |
+| `get_articles_by_doi` | `dois` ≤100, `include_abstract` (default true) | Seed resolution; returns Litmaps article ids. |
+| `get_articles` | `article_ids` ≤200 | Details by id. |
+| `search_articles` | `query`, `limit`, `use_reranker` | Keyword search. Noisy; last resort only. |
+| `find_related_articles` | `seed_article_ids` 1–20, `strategy` (`citation_connected` default, `similar_text`, `common_authors`, `references`, `citations`, `seed` = exactly 1 seed), `start_date`/`end_date` (not for `references`/`citations`), `limit` ≤100, `page`, `include_abstract` | Explore. |
+| `check_retraction` | `doi` (one per call) | Retraction status. |
+| `show_litmap` | `litmap_id` or `article_ids` / `seed_article_ids` | Read-only; in Claude Code it returns JSON only (no image, no link). |
+| `list_collections` / `get_collection_articles` | `workspace_id` / `collection_id` | Collections are the sidebar **Tags**. No field shows Zotero sync. |
+| `create_litmap` | `name`, `workspace_id`, `article_ids` | **Write.** Names the map at creation. Free plans hold only a few maps. |
+| `add_articles_to_litmap` | `litmap_id`, `article_ids` ≤200 | **Write**, add only. |
+| `add_articles_to_collection` | `collection_id`, `article_ids` ≤200 | **Write**, add only; syncs to Zotero if the Tag is synced. |
+| `annotate_litmap` | labels, outlines, icons, `groups` | **Write.** A group reuses or creates a Tag with that name and adds the papers to it, so it can reach Zotero. This skill does not use it. |
+| `create_collection`, `update_read_later` | — | **Write.** Not used by this skill (`update_read_later` can remove). |
+
+No Litmaps tool deletes a map or Tag, or removes papers from one.
+
+**Measured on 2026-10-13 (read-only tests on the user's account):**
+- **Duplicate records are common.** The same paper as an arXiv record and a publisher record (one map of 28 ids held 22 papers), sometimes under two different DOIs (SecAlign: arXiv and ACM). Deduplicate by arXiv id, then normalised title; prefer the record with a `referenceCount`.
+- **`citation_connected` works**, with sensible results from 20 seeds, but scores sit in a narrow band (2.86–2.99); with 2 seeds every score was identical.
+- **`similar_text` stalled** ("still running after 120s, #1 in queue") twice. Try once, then fall back to Elicit's semantic search.
+- **`common_authors` works** (integer scores, apparently shared-author counts).
+- **`search_articles` is noisy:** "prompt injection defense" ranked a car-forum post first, and the total suggests any-word matching.
+- **Result fields:** `id`, `title`, `publicationTitle`, `publicationDate`, `doi`, `year`, `authors` (one string), `url`, `litmapsUrl`, `referenceCount`, `citedByCount`, `retracted`, `score`. No momentum or map-connectivity field, so the axis recipes below are browser-only.
+- **Pagination bug:** `get_litmap_articles` with a page size larger than the map repeats rows; count unique ids.
+- **Author order can differ from the publication** (Abdelnabi listed first for the Greshake et al. paper); take author lists from the publisher or a registry before citing.
+
 ## Access
 - **App [live]:** `https://app.litmaps.com/`. It works in guest mode for search, single-seed Explore and bulk import.
 - **Logged-out signal [live]:** the left sidebar shows "Welcome! Sign up for a free account…" with "Create Free Account" and "Sign In", and a yellow banner reads "You're in Guest Mode".
@@ -121,3 +157,10 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the docs, **[code]** =
 - **Sidebar items are not links.** Open a map by clicking `[class*="SidebarMapsList__StyledSidebarItem"] [class*="SidebarItem__MainContainer"]` (by index) and read `location.pathname`.
 - **One name can be both a map and a Tag** (the user has "Jailbreak" under LITMAPS and under TAGS). Only Tag membership syncs to Zotero.
 
+
+### 2026-10-12: sixth run [live]
+- **An MCP promo pop-up intercepts clicks.** A "Use Litmaps from your AI assistant" card (with "Set it up" / "Not now") appears bottom-left on map and search pages. A real click on the "Since 2025" chip landed on it and opened docs.litmaps.com in a **new tab**. Dismiss it first, or click the chip through `eval` (`[...document.querySelectorAll('*')].find(e=>e.children.length===0&&e.textContent.trim()==='Since 2025').click()`). Afterwards, `list_tabs` and close only the stray help tab.
+- **Other sessions' tabs share the profile.** `list_tabs` showed SingCloud, ChatGPT and Google AI Edge tabs from other work. Switch by URL substring and never close tabs you did not open.
+- **Keyword search is noisy on generic words.** "self-improvement" and "success" queries returned healthcare and education papers. Use the robot-specific terms (VLA, LIBERO) or rely on Elicit for novelty.
+- **Explore "next page" is slow.** The first `await_element` on the "N - M of T" label usually times out at 25 s, and a second one succeeds.
+- **Checkpoint availability.** For feasibility, the Hugging Face Hub search (`hub_repo_search` by author) found matched SFT → RL checkpoint pairs through their `base_model` tags. Worth a step-5 check whenever a candidate could run inference-only.

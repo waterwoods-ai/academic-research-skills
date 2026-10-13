@@ -1,10 +1,10 @@
 ---
 name: find-research-topic
-description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) and Litmaps (citation-network exploration) in a real Chrome window, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
+description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.1.0"
-  last_updated: "2026-10-09"
+  version: "1.2.0"
+  last_updated: "2026-10-13"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -40,10 +40,10 @@ Otherwise, classify the user's input:
 **Security-first default (this suite):** every research or paper task targets a security venue — the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue — unless the opt-out rule in the `security-track` skill (§ Activation) holds. Before configuring any ARS skill or agent for such a task, load `security-track` and apply its § Overrides of stock ARS defaults: IEEE/ACM numeric citations instead of APA 7.0; the security chapter structure with an explicit Threat Model and Ethics Considerations instead of IMRaD, sized by the venue's page limit; the five security reviewer personas with the target venue's decision vocabulary; double-blind anonymity; and conference deadlines only from its `deadlines_current.md`.
 <!-- routing-core:end -->
 
-You drive two web apps in Chrome through the `use_browser` tool (superpowers-chrome), then write a ranked, evidence-backed topic report.
+You drive Elicit in Chrome through the `use_browser` tool (superpowers-chrome) and Litmaps through its MCP tools (`mcp__litmaps__*`), then write a ranked, evidence-backed topic report.
 
 **Place in the workflow.** This skill is the breadth pass of the literature stage (HOWTO Step 1a), used when the user has only a broad area. The depth pass (Step 1b, ARS `lit-review` on the chosen topic) continues from the files this skill writes, so the same ground is not searched twice. Always write the stage files in step 6, not only the report.
-Load the `superpowers-chrome:browsing` skill first if its instructions are not already in context.
+Load the `superpowers-chrome:browsing` skill first if its instructions are not already in context. Litmaps needs no browser: its MCP tools are deferred, so load them in one `ToolSearch` (`select:` all `mcp__litmaps__*` tools you need) before step 3.
 
 - Elicit operating notes: [references/elicit.md](references/elicit.md)
 - Litmaps operating notes: [references/litmaps.md](references/litmaps.md)
@@ -60,6 +60,7 @@ Read the reference for a tool before touching it. When the UI differs from the n
 3. **Never delete or edit the user's existing Elicit sessions, Litmaps, Tags, or Zotero collections.** Create new ones named `scout <YYYY-MM-DD> <slug>`, except Litmaps maps, which are named after their real topic (step 3.1).
    - **Litmaps' Zotero sync is two-way:** adding or removing an article in a synced Tag adds or removes it in the user's Zotero. Sync only to an empty collection the user created for this run, never remove articles from a synced Tag, and never delete the synced collection. Details: [references/zotero.md](references/zotero.md).
    - Elicit's Zotero import is one-way and never writes to Zotero.
+   - **Litmaps MCP write tools:** use only `create_litmap` (one map per run, named by its topic), `add_articles_to_litmap` (that map only) and `add_articles_to_collection` (only the Tag the user named for this run; adding to a synced Tag also adds to Zotero). Never call `annotate_litmap` with groups (a group creates or extends a Tag, which may sync to Zotero), `update_read_later`, or `create_collection` unless the user asks.
 4. **Only cite papers you actually saw in a tool**, with their title, year and DOI. Label anything you inferred as `[inferred]`.
 5. **CAPTCHA, Cloudflare, or login wall:** stop and ask the user to clear it in the window. Do not try to bypass it.
 
@@ -73,11 +74,12 @@ Set `RUN=runs/<YYYY-MM-DD>-<slug>` under the project root. Append to `$RUN/ledge
 1. Call `get_profile`. If the profile is not `research-scout`: `kill_chrome`, then `set_profile research-scout`.
 2. Call `show_browser`, then confirm with `browser_mode` that it reports `"headless": false`. It reported headless at the start of both runs so far, so always check. Headed mode is required, because Cloudflare blocks headless Chrome on Elicit and the user needs a window to log in. A Chrome auto-restart (e.g. after `kill_chrome`) comes back headless, so check again after any restart.
 3. Call `set_viewport {width:1440,height:900}`.
-4. Open Elicit and Litmaps in two tabs and check whether each is logged in (the signals are in the references). If either is logged out, tell the user "please log in to X in the Chrome window, then reply 'done'" and wait.
+4. Open Elicit in a tab and check that it is logged in (signals in the reference). If it is logged out, tell the user "please log in to Elicit in the Chrome window, then reply 'done'" and wait.
+   **Litmaps through the MCP:** call `mcp__litmaps__list_workspaces` and keep the Default Workspace id. If the tools are missing or return an authentication error, ask the user to run `/mcp`, choose litmaps and authenticate, then retry. Use the browser notes in [references/litmaps.md](references/litmaps.md) only if the MCP stays unavailable.
 5. Note each account's plan (Elicit: Basic/Plus/Pro; Litmaps: Free/Pro). The plan decides the column limits, map limits and filters in later steps. Litmaps' Zotero sync needs **Pro**; Elicit's table export needs **Plus**.
 6. **Zotero (optional).** Check three things, each by its signal in [references/zotero.md](references/zotero.md):
    - Elicit is connected: the Library shows **Import from Zotero**.
-   - Litmaps is connected: **Sync** offers **Create a new Zotero-synced Tag**.
+   - Litmaps is connected to Zotero: the MCP cannot see sync status, so ask the user whether their Litmaps account has Zotero sync set up (Sync → Create a new Zotero-synced Tag in the app).
    - The agent's local read access works: `http://localhost:23119` answers, via the `zotero-literature` script.
    If one fails, run without it and say so. Zotero is never required for the flow.
 
@@ -115,27 +117,25 @@ Then pick **8–15 seed papers** across all three questions:
 
 Optional, and only if the user approves the usage: a **Research Report** with the *Research Gap Analysis* template on the strongest framing question. It takes 10–30 minutes, and Elicit emails the user when it is done. Do other steps while it runs.
 
-### 3. Litmaps: citation topology
-1. **Build the map.** Import the seed DOIs with Manual Bulk Import, select all, add them to a new Litmap, then run **Explore**. The default algorithm is *Shared Citations & References*. Wait for it to finish (1–3 min in the free queue).
-   - **With a `scout` Zotero collection (Pro):**
-     1. Sync → **Create a new Zotero-synced Tag** → choose that collection.
-     2. Tag the seeds into it, which also saves them to Zotero.
-     3. Open the Tag → **Explore Related Articles** to build the map from it.
-     Papers you keep later go into the same Tag. **Never** sync a Tag to any other collection.
-   - **Name the map after its real topic, at once.** Explore saves it as "(N articles)", which tells the user nothing. Name it for what the seed papers actually cover, as a short title a researcher would recognise: e.g. "Prompt-Injection Defenses for LLM Agents" or "Detection Deadlines for CBTC Attacks". No dates, run slugs or "scout" prefixes; the ledger keeps those. If the user already has a map with that name, add a short qualifier (the angle or the year). To rename: with the map open, hover its (highlighted) sidebar item, real-click its **⋮** button, choose **Rename**; in the **Rename Litmap** dialog select all, type the name and click **Done** (details in [references/litmaps.md](references/litmaps.md)). Renaming the run's own new map is allowed; never rename or touch other maps, and never choose **Duplicate** or **Delete Litmap** in that menu. Record the name, the map URL and the run date in the ledger.
-2. **Record the Explore list** in the ledger. Use the list, not the canvas; the canvas cannot be read from the DOM.
-3. **Switch to Similar Text** and run Explore again. List the papers that appear here but did not appear in step 2. These are **disconnected neighbours**: work that is close in meaning but not linked by citations. They usually come from different communities or different vocabulary, and they are the strongest bridge-gap signal.
-   - Similar Text is flaky and can return "There were no results." If it fails twice, use two substitutes: the Map Connectivity axis (low-connectivity seeds are the weakly linked periphery), and papers that Elicit's semantic search returned but that are missing from Litmaps' citation list.
-   - Seeds that are mostly IEEE conference papers may show no citation links at all, because their reference lists are often missing from open metadata. Treat that as a data gap, not a research gap.
-4. **Look for cutting-edge papers.** Set the axes to x = Momentum, y = Map Connectivity and take a screenshot. Papers in the top right are cutting edge; recent papers in the bottom right have high momentum but few links to the map. Read titles from the list and use the screenshot only for the shape of the map.
-5. **Check whether foundations have been followed up.** For 2–3 foundational seeds, use "More Like This" and "MORE RECENTLY PUBLISHED". A highly cited older paper with few recent follow-ups is a possible stale-foundation gap.
-6. **Leave the map as a list.** The sidebar reopens each map in the view last used, and a map left in Explore (`/map/<id>/explore`) re-runs "Searching thousands of citations and references…" every time the user opens it. Before leaving Litmaps, open `/map/<id>` (no `/explore`) and wait until its article list has loaded; a navigation that leaves before the list appears is not remembered.
+### 3. Litmaps: citation topology (through the MCP)
+Use the Litmaps MCP tools; parameters and known quirks are in [references/litmaps.md](references/litmaps.md) § MCP. The browser steps in that file are the fallback for when the MCP is unavailable.
+
+1. **Resolve the seeds.** `get_articles_by_doi` with the seed DOIs (up to 100 per call). Litmaps often holds one paper twice, as an arXiv record and a publisher record, sometimes under two different DOIs: deduplicate by arXiv id, then by normalised title, keeping the record that has a `referenceCount`. Log the DOIs Litmaps does not know. Keep at most 20 seeds (the Explore limit).
+2. **Create the map, named after its real topic.** `create_litmap(name, workspace_id, article_ids=<seeds>)`. Name it for what the seed papers actually cover, as a short title a researcher would recognise, e.g. "Prompt-Injection Defenses for LLM Agents" or "Detection Deadlines for CBTC Attacks". No dates, run slugs or "scout" prefixes; the ledger keeps those. If `list_litmaps` already shows that name, add a short qualifier (the angle or the year). One map per run. Record the name, the `litmap_id` and `https://app.litmaps.com/map/<id>` in the ledger.
+   - **With a `scout` Zotero collection:** ask the user to create the Zotero-synced Tag in the Litmaps app (Sync → Create a new Zotero-synced Tag → that collection) and tell you its name. Find its id with `list_collections`, and add the seeds, and later the papers you keep, with `add_articles_to_collection` to that Tag only. **Never** use any other Tag.
+3. **Explore the connected neighbourhood.** `find_related_articles(seed_article_ids=<seeds>, strategy="citation_connected", limit=100)`, deduplicated the same way, recorded in the ledger (title, year, DOI, citations). Scores fall in a narrow band, so read the list as the connected neighbourhood, not as a strict ranking; with fewer than about 8 seeds the scores barely differ at all.
+   - Seeds that are mostly IEEE conference papers may show few citation links, because their reference lists are often missing from open metadata. Treat that as a data gap, not a research gap.
+4. **Find disconnected neighbours.** The same seeds with `strategy="similar_text"`. Papers that appear here but not in step 3 are close in meaning but not linked by citations. They usually come from a different community or vocabulary, and they are the strongest bridge-gap signal. Litmaps' Similar Text queue often stalls (twice for over 2 minutes on 2026-10-13; it also failed in 4 of 5 browser runs): try it once, and if it stalls, use the papers that Elicit's semantic search returned but that are missing from step 3's list.
+5. **Identify the key teams.** The same seeds with `strategy="common_authors"`: the groups behind the area, for the related-work positioning and to notice when one group dominates it.
+6. **Cutting edge and stale foundations.**
+   - *Cutting edge:* among step 3's results from the last 2 years, rank by citations per year since publication. The MCP has no momentum or map-connectivity field, so label this ranking approximate.
+   - *Stale foundations:* for 2–3 foundational seeds, `find_related_articles(seed_article_ids=[that seed], strategy="citations", limit=100)` and count the citing papers by year. A highly cited older paper with few citing papers in the last 2 years is a possible stale-foundation gap.
 
 ### 4. Candidate synthesis
 - **What counts as a candidate:** a topic needs **at least 2 independent signals** out of:
   - (a) at least 2 Elicit papers naming the same limitation or future work;
-  - (b) a bridge gap from the Similar Text disconnect;
-  - (c) an emerging high-momentum cluster that has not yet been applied to the user's population or method;
+  - (b) a bridge gap: a disconnected neighbour from step 3.4 (Similar Text, or its Elicit fallback);
+  - (c) an emerging cluster (step 3.6's recent, fast-cited papers) that has not yet been applied to the user's population or method;
   - (d) a stale foundation;
   - (e) contradictory findings across the Elicit results.
 - **Output:** draft 3–7 candidates. Phrase each as a research question and tag it with its signals and evidence papers.
@@ -146,7 +146,7 @@ Optional, and only if the user approves the usage: a **Research Report** with th
      - A candidate whose only difference is "same method, new domain" or "same method, on hardware" is at most `narrow`.
      - (Lesson from the 2026-09-18 run: domain-phrased queries missed NOTE, RoTTA, SAR, TTAB, ROID, TinyTTA and FORGE.)
    - "Not found in this scan" is never evidence that nobody has done it. Write verdicts as "no direct match found in N queries", not "open".
-2. **Litmaps.** Run a keyword search on the candidate with the "Since {last_year}" filter to catch preprints Elicit might miss.
+2. **Litmaps.** To catch recent work Elicit might miss, take the candidate's 3–5 closest papers as seeds and run `find_related_articles(strategy="citation_connected", start_date=<1 January of last year>)`. Litmaps' keyword search (`search_articles`) is noisy (an irrelevant forum post ranked first on 2026-10-13); use it only as a last resort and discard rows without a DOI or venue.
 3. **Ledger.** Record the verdict (`open` / `narrow` / `saturated`) with the papers that justify it.
 
 ### 6. Score and report
@@ -164,7 +164,7 @@ Score the surviving candidates with the rubric below. Write `$RUN/report.md` con
   - the `scout` collection name, and its item count **as read back through the local API**, not as assumed from the sync;
   - any ledger paper missing from it, noted as such;
   - which evidence papers were already in the user's prior-reading collection.
-  If saving was declined, offer a BibTeX file instead (Litmaps **Export All**, or Elicit's table export on Plus).
+  If saving was declined, offer a BibTeX file instead (Litmaps **Export All** in the app, since the MCP has no export, or Elicit's table export on Plus).
 - limitations of this scan (plan limits hit, paywalled PDFs, Elicit results vary between runs).
 
 **Stage files** (project root; append under a dated heading, never overwrite what is there):
@@ -190,8 +190,8 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.1.0 |
-| Last Updated | 2026-10-09 |
+| Skill Version | 1.2.0 |
+| Last Updated | 2026-10-13 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |
 | Role | Topic scouting with Elicit and Litmaps; literature stage 1a |

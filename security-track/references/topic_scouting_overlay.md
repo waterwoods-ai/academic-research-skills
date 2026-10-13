@@ -15,7 +15,7 @@
 
 | Stage | Need | Tool | Runs on |
 |---|---|---|---|
-| S0 | No topic yet: turn a broad area into 3–7 candidate topics | `find-research-topic` | Claude Code (needs the Chrome browser tool) |
+| S0 | No topic yet: turn a broad area into 3–7 candidate topics | `find-research-topic` | Claude Code (Chrome for Elicit; Litmaps through its MCP) |
 | S1 | Topic chosen: systematic, repeatable gap evidence, filed in Zotero | `research-gaps` (Elicit API — needs **Elicit Pro**; Litmaps Pro for Zotero Sync) | Claude Code |
 | S2 → S3 | Is this RQ worth committing to? | `topic_verification_gate.md` (12 questions); optional blind second opinion through `verify-research-topic` | Gate: every runtime. ChatGPT pass: Claude Code |
 | S3 | Start from ONE baseline paper: limitation ledger, then filter candidate improvements for novelty (it does not generate) | `novelty-filter` | Claude Code |
@@ -23,17 +23,20 @@
 
 - **With Elicit Pro, prefer the API for Elicit work** (`research-gaps`): it is
   repeatable, needs no browser, and allows up to 20 extraction columns. Keep
-  the browser skill for early scouting and for the Litmaps steps it automates
-  (Explore, Similar Text, momentum × connectivity).
+  the browser skill for early scouting. Litmaps steps go through Litmaps' MCP
+  server since 2026-10-13 (Explore strategies, maps named at creation, Tags);
+  only the map's momentum × connectivity axes still need the browser.
 - Do not run both front-ends on the same topic for the same purpose; pick by
   the table.
-- **Zotero and Elicit are reached through their APIs, not their web pages**
+- **Zotero and Elicit are reached through their APIs, and Litmaps through
+  its MCP server (`mcp__litmaps__*`, since 2026-10-13), not their web pages**
   (Tom's standing instruction, 2026-10-01; the keys are in the shell as
   `ELICIT_API_KEY`, `ZOTERO_API_KEY`, `ZOTERO_LIBRARY_ID`). Zotero reads go
   through the local API (`zotero_api.py`, Zotero desktop running) and writes
   through the Web API (`zotero_write.py`); Elicit searches and reviews go
   through `elicit_api.py`. Open the Elicit or Zotero site in a browser only
-  for what the API cannot do (Litmaps steps, the Elicit UI's column views).
+  for what the API or MCP cannot do
+  (Litmaps' map axes, the Elicit UI's column views).
 - **Codex / opencode** cannot drive the browser. There: run S1 with
   `perspective_retrieval_protocol.md` and the scholarly-index resolvers, apply
   the rules below by hand, and run the gate from `topic_verification_gate.md`.
