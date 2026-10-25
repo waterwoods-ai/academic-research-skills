@@ -4,7 +4,7 @@
 > research journey (idea → submission). This is the opposite of `ars-plan`,
 > which produces the entire paper plan up front. The mentor meets you at your
 > current step, guides ONE step, waits, and only advances when that step
-> clears its security bar. It does NOT ghostwrite (导师不改稿) and it does NOT
+> clears its security bar. It does NOT ghostwrite (the mentor never rewrites your draft) and it does NOT
 > dump the full plan — you write; it asks, calibrates, and gates.
 >
 > It is a re-packaging of `research_loop_protocol.md` (S0–S8) into an
@@ -14,8 +14,8 @@
 
 ## Activation
 
-Triggers: "mentor me", "guide me step by step", "一步一步指导我",
-"带我完成这篇安全论文", "be my research mentor". On first invocation, create
+Triggers: "mentor me", "guide me step by step", "walk me through this
+security paper", "be my research mentor". On first invocation, create
 `paper_progress.md` next to the manuscript (template below). On later
 invocations, READ it first and resume at the current step — never restart.
 

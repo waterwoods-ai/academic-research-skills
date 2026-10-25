@@ -111,8 +111,8 @@ close paper.
 ## Invocation
 
 `Dissect this paper: <path or title> — full single-paper dissection per
-paper_dissection_protocol.md`. Triggers: dissect / peruse / deep-read a
-paper, 精读, 拆解这篇论文, 解剖论文.
+paper_dissection_protocol.md`. Triggers: dissect / peruse / deep-read /
+close-read a paper, take this paper apart.
 
 ## Human appendix — 4-week training plan
 

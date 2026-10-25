@@ -102,7 +102,7 @@ filter and the current buzzwords removed, and an **adjacent-method-family
 query** regardless of application domain. A gap also needs at least two
 independent signals, not one tool's silence.
 
-## S2 — Research question generation (课题延伸)
+## S2 — Research question generation (extending the topic)
 
 From the gap registry, generate candidate RQs. Each RQ card states:
 threat-model sketch (adversary, assets, trust boundary), contribution
@@ -402,7 +402,7 @@ Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
    failures (§3.3).
 2. **One targeted change** to the method, with the mechanism hypothesis
    ("criterion X fails because Y; change Z addresses Y").
-2a. **Provenance guard (IRON RULE — the anti-偷梁换柱 rule).** If the change
+2a. **Provenance guard (IRON RULE — the anti-bait-and-switch rule).** If the change
    introduces a new *mechanism* (not mere tuning), it must pass
    `method_change_provenance.md` BEFORE the experiments re-run: (i) scenario
    fidelity — does the substitute still solve the ORIGINAL problem at the
@@ -620,10 +620,10 @@ the artifact's state; it cannot self-schedule the way an auto-ML loop does.
 ## Invocation
 
 Say what stage you are at; the protocol meets you there. Examples:
-- "帮我从这批文献找 gap 并延伸课题" → S1–S2
-- "评估我的方法的 novelty 和 contribution" → S3 evaluate mode
-- "为这个方法设计证伪实验" → S4
-- "跑实验/结果不达标，改进方法" → S5–S6
+- "Find the gaps in these papers and extend them into a topic" → S1–S2
+- "Assess the novelty and contribution of my method" → S3 evaluate mode
+- "Design falsification experiments for this method" → S4
+- "Run the experiments; the results fall short, improve the method" → S5–S6
 - Full loop from scratch: state the topic → S0 onward.
   On Claude Code, prefer the `novelty-engine` skill's richer S0–S4 agents
   (shipped in this suite; this protocol supplies the security calibration

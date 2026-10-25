@@ -1,81 +1,89 @@
-# Security Track — 安装与使用
+# Security Track — Installation and Usage
 
-> 日常使用手册(全流程场景速查 + 研究闭环 S0–S8):[`HOWTO.md`](../HOWTO.md)
+> Day-to-day manual (quick reference for every stage, plus the research loop S0–S8): [`HOWTO.md`](../HOWTO.md)
 
-> 本 fork 在上游 ARS（4 个 skill）之上增加第 5 个 skill `security-track`：
-> 面向安全顶会（四大 + tier-2）研究的覆盖层，校准方向为 CPS / IoT / AI 安全。
-> 同一插件另带 4 个自有 skill：`find-research-topic`、`verify-research-topic`、
-> `novelty-filter`（选题与查新前端，需浏览器）和 `novelty-engine`（想法生成器）。
-> 2026-10-06 起本仓库作为独立产品维护：任何文件都可修改，不再从上游合并；
-> 上游更新经审阅后手工移植（见仓库根目录 `UPSTREAM.md`）。全部工作在 `dev`
-> 分支（GitHub 默认分支已设为 `dev`），`main` 冻结在最后一次合并的上游版本，只作对照基线。
+> This fork adds a fifth skill, `security-track`, to the four upstream ARS skills:
+> an overlay for research aimed at top security conferences (the Big 4 and tier-2),
+> calibrated for CPS, IoT and AI security.
+> The same plugin also carries four skills of its own: `find-research-topic`,
+> `verify-research-topic`, `novelty-filter` (the topic-scouting and novelty-check
+> front end; needs a browser) and `novelty-engine` (the idea generator).
+> Since 2026-10-06 this repository is maintained as its own product: any file may be
+> edited, and nothing is merged from upstream any more. Upstream updates are reviewed
+> and ported by hand (see `UPSTREAM.md` at the repository root). All work happens on
+> the `dev` branch (the GitHub default branch is `dev`); `main` is frozen at the last
+> merged upstream version and serves only as a comparison baseline.
 
-## 这个 skill 包含什么
+## What this skill contains
 
-| 文件 | 内容 |
+| File | Contents |
 |---|---|
-| `SKILL.md` | 触发条件 + 对 stock ARS 的覆盖规则（引用格式、论文结构、审稿面板、双盲、截稿铁律） |
-| `references/big4_venue_profiles.md` | 四大会档案：格式 / 判定机制 / AE / 伦理（经官方 CFP 逐条核实，2023–2027 各版） |
-| `references/security_paper_conventions.md` | 安全论文行文规范：Threat Model 章、三方向评估门槛、责任披露、匿名化清单 |
-| `references/security_reviewer_personas.md` | 5 人安全审稿面板 + 标准拒稿锚点 |
-| `references/major_revision_playbook.md` | 四大会多轮评审实战手册：rebuttal / revision / re-review 机制 + ARS 模式映射 |
-| `references/perspective_retrieval_protocol.md` | 视角驱动检索协议（STORM 检索侧机制改造，opt-in） |
-| `references/conference_ranking_2025.json` | 22 会 CIF 排名快照（源：jianying.space，每年更新） |
-| `references/deadlines_current.md` | 截稿日历（**生成文件，勿手改**，源：sec-deadlines.github.io） |
-| `scripts/fetch_deadlines.py` | 截稿日历拉取脚本（超过 7 天自动重拉） |
-| `contracts/reviewer/security_full.json` | 安全顶会版 sprint contract（盲态预提交标尺；Schema 13.2 验证通过，F 条件语法与上游一致） |
-| `references/research_loop_protocol.md` | 研究闭环协议：S0 选题→S1 gap→S2 课题延伸→S3 方法提出/评估（novelty+contribution）→S4 证伪实验设计→S5 执行→S6 有界改进循环→S7 对抗压测→S8 论文 |
+| `SKILL.md` | Triggers, and the rules that override stock ARS defaults (citation style, paper structure, reviewer panel, double-blind, the deadline rule) |
+| `references/big4_venue_profiles.md` | Big-4 venue profiles: format / decision process / artifact evaluation / ethics (checked item by item against the official CFPs, 2023–2027 editions) |
+| `references/security_paper_conventions.md` | Security-paper writing conventions: the Threat Model section, the three-direction evaluation bar, responsible disclosure, the anonymization checklist |
+| `references/security_reviewer_personas.md` | The five-person security reviewer panel and the standard rejection anchors |
+| `references/major_revision_playbook.md` | Field manual for multi-round review at the Big 4: rebuttal / revision / re-review mechanics, mapped to ARS modes |
+| `references/perspective_retrieval_protocol.md` | Perspective-driven retrieval protocol (an adaptation of STORM's retrieval-side mechanism; opt-in) |
+| `references/conference_ranking_2025.json` | Snapshot of the 22-conference CIF ranking (source: jianying.space; updated yearly) |
+| `references/deadlines_current.md` | Deadline calendar (**generated file, do not edit by hand**; source: sec-deadlines.github.io) |
+| `scripts/fetch_deadlines.py` | Fetches the deadline calendar (re-fetches automatically when it is older than 7 days) |
+| `contracts/reviewer/security_full.json` | Sprint contract for security venues (blind pre-commitment rubric; validates against Schema 13.2; F-condition syntax matches upstream) |
+| `references/research_loop_protocol.md` | Research loop protocol: S0 topic → S1 gap → S2 extending the topic → S3 proposing or assessing a method (novelty + contribution) → S4 falsification experiment design → S5 execution → S6 bounded improvement loop → S7 adversarial stress test → S8 paper |
 
-## 安装（Claude Code）
+## Installation (Claude Code)
 
 ```
-# 若装过 upstream 版，先移除（marketplace 同名会冲突）
+# If you installed the upstream version, remove it first (marketplaces with the same name conflict)
 /plugin marketplace remove academic-research-skills
 
-# 方式 A：从 GitHub 安装（默认分支已是 dev，直接装到本版本）
+# Option A: install from GitHub (the default branch is already dev, so this installs this version)
 /plugin marketplace add waterwoods-ai/academic-research-skills
 
-# 方式 B：本机开发者模式——本地 clone 作为 marketplace，编辑即生效
+# Option B: local developer mode — use a local clone as the marketplace; edits take effect directly
 /plugin marketplace add /path/to/academic-research-skills
 
-# 安装
+# Install
 /plugin install academic-research-skills@academic-research-skills
 ```
 
-装完**开新 session** 生效。验证：问一句「NDSS 的 Major Revision 流程是什么」，
-agent 应去读 `major_revision_playbook.md` 而非凭记忆作答。
+Start a **new session** after installing. To verify, ask "What is the NDSS Major
+Revision process?": the agent should read `major_revision_playbook.md` rather than
+answer from memory.
 
-更新：GitHub 源用 `/plugin update academic-research-skills`；
-本地路径源无需重装，重开 session 即可。
+To update: with the GitHub source, run `/plugin update academic-research-skills`;
+a local-path source needs no reinstall, just start a new session.
 
-## 使用
+## Usage
 
-**自动激活**：论文任务涉及安全会议即触发（会议名、threat model、CPS/IoT/
-AI security 等触发词，见 `SKILL.md` frontmatter）。用户档案为安全研究方向时，
-所有论文任务默认按安全会议处理；明确说明非安全研究则回退 stock 行为。
+**Automatic activation:** it triggers on any paper task that involves a security
+conference (conference names, threat model, CPS/IoT/AI security and the other
+triggers in the `SKILL.md` frontmatter). When the user's profile is security
+research, every paper task targets a security conference by default; say explicitly
+that the work is not security research to fall back to the stock behaviour.
 
-**与 ARS 命令的配合**（overlay 自动叠加，无需额外指定）：
+**Working with the ARS commands** (the overlay applies automatically; nothing extra to specify):
 
-| 你要做的事 | 用法 | overlay 提供 |
+| What you want to do | How | What the overlay adds |
 |---|---|---|
-| 选会 / 投稿规划 | 直接提问，或 `/ars-plan` | venue 档案 + 实时截稿日历 |
-| 文献综述 | `/ars-lit-review`；说「确保覆盖全面」触发视角检索协议 | 6 透镜查询扩展 + 未用检索追问 |
-| 写作 / 大纲 | `/ars-outline`、`/ars-full` | 安全论文结构、numeric 引用、双盲清单 |
-| 模拟审稿 | `/ars-reviewer` | 5 人安全面板 + 目标会议的准确判定词汇 |
-| 收到审稿意见 | `/ars-revision-coach` | 按 venue+判定档定制的 Roadmap 与响应包结构 |
-| 检查 rebuttal 草稿 | `/ars-rebuttal-audit` | 按 venue 硬规则审计（S&P 500 词等） |
-| 延伸课题 / 提方法 / 评估 novelty / 设计并跑实验 / 改进方法 | 直接说明所处阶段（如「评估我的方法的 novelty」） | 研究闭环协议 S0–S8，改进循环硬上限 3 轮 + 人工检查点 |
+| Choose a venue / plan the submission | ask directly, or `/ars-plan` | venue profiles + the live deadline calendar |
+| Literature review | `/ars-lit-review`; say "make sure the coverage is comprehensive" to trigger the perspective retrieval protocol | six-lens query expansion + follow-up on unused searches |
+| Writing / outline | `/ars-outline`, `/ars-full` | security-paper structure, numeric citations, the double-blind checklist |
+| Simulated review | `/ars-reviewer` | the five-person security panel + the target venue's exact decision vocabulary |
+| Reviews received | `/ars-revision-coach` | a roadmap and response-package structure for the venue and decision tier |
+| Check a rebuttal draft | `/ars-rebuttal-audit` | an audit against the venue's hard rules (S&P's 500-word limit, etc.) |
+| Extend a topic / propose a method / assess novelty / design and run experiments / improve a method | say which stage you are at (e.g. "assess the novelty of my method") | the research loop protocol S0–S8, with the improvement loop capped at 3 rounds + human checkpoints |
 
-**截稿日期铁律**：日期只从 `references/deadlines_current.md` 引用；超过 7 天
-先运行 `python3 security-track/scripts/fetch_deadlines.py`（需网络 +
-Python 3.10+ / pyyaml）；拉取失败时明确说明日历过期，绝不凭模型记忆报日期。
+**Deadline rule:** quote dates only from `references/deadlines_current.md`. If it is
+older than 7 days, first run `python3 security-track/scripts/fetch_deadlines.py`
+(needs the network + Python 3.10+ / pyyaml). If the fetch fails, say clearly that
+the calendar is stale; never give dates from model memory.
 
-## 维护（fork 工作流）
+## Maintenance (fork workflow)
 
 ```bash
-git upstream-review   # 拉取上游，列出上次审阅之后的改动和文件（不合并）
+git upstream-review   # fetch upstream and list the changes and files since the last review (no merge)
 ```
 
-- 上游的改动逐项审阅后手工移植，结论记在 `UPSTREAM.md`；任何文件都可修改。
-- `conference_ranking_2025.json`：排名源每年更新一次，届时重新快照。
-- venue 档案钉的是结构性事实；页数限制、轮次数会漂移，临近投稿时以当年 CFP 为准。
+- Upstream changes are reviewed one by one and ported by hand; the outcome is logged in `UPSTREAM.md`. Any file may be edited.
+- `conference_ranking_2025.json`: the ranking source updates once a year; take a new snapshot then.
+- The venue profiles pin structural facts; page limits and the number of review rounds drift, so check the current year's CFP close to submission.

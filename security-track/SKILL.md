@@ -1,8 +1,8 @@
 ---
 name: security-track
-description: "Security-conference overlay for the ARS suite: Big-4 venue profiles (IEEE S&P, NDSS, ACM CCS, USENIX Security) + tier-2 fallbacks, systems-security writing conventions (threat model, ethics, artifact evaluation), security reviewer personas for CPS/IoT/AI-security papers, the 22-conference CIF ranking, and a live deadline calendar fetched from sec-deadlines.github.io. Use WITH the other ARS skills whenever a paper task targets a security venue: venue selection, submission planning, deadline questions, outlining, drafting, reviewing, or revising a security paper. Triggers: security paper, security conference, Big 4, S&P, Oakland, NDSS, CCS, USENIX Security, threat model, CVE, MITRE ATT&CK, ATT&CK technique mapping, responsible disclosure, artifact evaluation, CPS security, ICS security, IoT security, firmware, AI security, adversarial ML, research gap, extend topic, topic viability, go/no-go, propose method, novelty assessment, contribution, experiment design, falsification, run experiments, improve method, method substitution, rename check, prior art check, taxonomy, define categories, security framing, dissect this paper, peruse this paper, peruse paper, introduction structure, subfield reviewer bar, retrospective, lessons learned, knowledge index, mentor me, guide me step by step, be my research mentor, pre-registration, pre-register, research integrity, cherry-picking, seed hacking, HARKing, data leakage, eval-set overfitting, reproducibility check, humanize, humanizer, polish prose, language polish, de-slop, remove AI tells, AI slop, clarity pass, find research topic, scout topic, research gap mapping, Elicit, Litmaps, verify research topic, topic verification, stress-test my topic, novelty check, build on this paper, multi-agent lab, research team roles, orchestrator, Reviewer #2, claims register, reject reasons, agent refused, authorized research scope, 一步一步指导, 带我完成, 安全会议, 安全论文, 四大安全会议, 威胁模型, 顶会, 研究缺口, 延伸课题, 新方法, 创新点, 实验设计, 精读, 拆解论文, 预注册, 研究诚信, 实验诚信, 润色, 语言润色, 去AI味, 选题, 找课题, 验证课题, 查新."
+description: "Security-conference overlay for the ARS suite: Big-4 venue profiles (IEEE S&P, NDSS, ACM CCS, USENIX Security) + tier-2 fallbacks, systems-security writing conventions (threat model, ethics, artifact evaluation), security reviewer personas for CPS/IoT/AI-security papers, the 22-conference CIF ranking, and a live deadline calendar fetched from sec-deadlines.github.io. Use WITH the other ARS skills whenever a paper task targets a security venue: venue selection, submission planning, deadline questions, outlining, drafting, reviewing, or revising a security paper. Triggers: security paper, security conference, Big 4, S&P, Oakland, NDSS, CCS, USENIX Security, threat model, CVE, MITRE ATT&CK, ATT&CK technique mapping, responsible disclosure, artifact evaluation, CPS security, ICS security, IoT security, firmware, AI security, adversarial ML, research gap, extend topic, topic viability, go/no-go, propose method, novelty assessment, contribution, experiment design, falsification, run experiments, improve method, method substitution, rename check, prior art check, taxonomy, define categories, security framing, dissect this paper, peruse this paper, peruse paper, introduction structure, subfield reviewer bar, retrospective, lessons learned, knowledge index, mentor me, guide me step by step, be my research mentor, pre-registration, pre-register, research integrity, cherry-picking, seed hacking, HARKing, data leakage, eval-set overfitting, reproducibility check, humanize, humanizer, polish prose, language polish, de-slop, remove AI tells, AI slop, clarity pass, find research topic, scout topic, research gap mapping, Elicit, Litmaps, verify research topic, topic verification, stress-test my topic, novelty check, build on this paper, multi-agent lab, research team roles, orchestrator, Reviewer #2, claims register, reject reasons, agent refused, authorized research scope."
 metadata:
-  version: "0.5.1"
+  version: "0.5.2"
   last_updated: "2026-10-25"
   status: active
   data_access_level: raw
@@ -95,7 +95,7 @@ Read the relevant reference BEFORE the corresponding task:
 | Building or checking a threat model | `references/threat_model_workbench.md` |
 | Connecting the work to CVE / MITRE ATT&CK (mapping, technique ids) | `references/cve_attack_mapping.md` |
 | Changing / improving / substituting a method, esp. to rescue a failing experiment (anti-rename) | `references/method_change_provenance.md` |
-| Deep-read ONE paper (dissect / peruse / 精读) — NOT multi-paper lit-review; also the overlap perusal required before a found paper narrows or drops any claim (iron rule 7) | `references/paper_dissection_protocol.md` |
+| Deep-read ONE paper (dissect / peruse / close reading) — NOT multi-paper lit-review; also the overlap perusal required before a found paper narrows or drops any claim (iron rule 7) | `references/paper_dissection_protocol.md` |
 | Peer-review simulation | `references/security_reviewer_personas.md` |
 | Ranking / tier questions | `references/conference_ranking_2025.json` |
 | Reviewer comments / rebuttal / revision / re-review | `references/major_revision_playbook.md` |
@@ -268,7 +268,7 @@ local review + tooling Python.)
 
 | Item | Content |
 |------|---------|
-| Skill Version | 0.5.1 |
+| Skill Version | 0.5.2 |
 | Last Updated | 2026-10-25 |
 | Maintainer | Tom |
 | Dependent Skills | academic-paper, academic-paper-reviewer, academic-pipeline, deep-research |

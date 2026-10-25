@@ -11,8 +11,8 @@ A suite of Claude Code skills for rigorous academic research, paper writing, pee
 | `academic-paper-reviewer` v1.11.1 | Multi-perspective paper review (5 reviewers + optional cross-model DA critique) | full, re-review, quick, methodology-focus, guided, calibration |
 | `academic-pipeline` v3.23.0 | Full pipeline orchestrator | (coordinates all above) |
 | `sr-screener` v1.0.0 | Protocol-driven study screening (2 blinded AI reviewers + adjudicator) | protocol, quick, pilot, ta-screen, ft-screen, adjudicate, audit, report |
-| `security-track` v0.5.1 | Security-first defaults for the suite: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
-| `novelty-engine` v1.4.0 | Idea generator: three evidence-led routes, candidate checks, formalization | verify, discover, gaps, assess, dogma, limitations, observations, candidates, formalize, falsify, experiment, stress-test, paper |
+| `security-track` v0.5.2 | Security-first defaults for the suite: venues, threat model, research loop S0–S8, integrity, reviewer personas, lab orchestration | (overlay; loaded with the skills above) |
+| `novelty-engine` v1.4.1 | Idea generator: three evidence-led routes, candidate checks, formalization | verify, discover, gaps, assess, dogma, limitations, observations, candidates, formalize, falsify, experiment, stress-test, paper |
 | `find-research-topic` v1.4.0 | Topic scouting with Elicit and Litmaps (literature stage 1a) | — |
 | `verify-research-topic` v1.2.0 | Twelve-question topic check with a blind second opinion | — |
 | `novelty-filter` v1.1.0 | One paper's limitations and a novelty check of candidate improvements | — |

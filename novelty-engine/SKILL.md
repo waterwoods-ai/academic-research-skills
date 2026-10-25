@@ -1,10 +1,10 @@
 ---
 name: novelty-engine
-description: "Academic Novelty & Method Engineering Engine — the suite's idea generator. 4-stage pipeline: (I) Research Preparation — topic verification, paper discovery, gap analysis, go/no-go; (II) Idea Generation — three evidence-led routes (assumption-breaking, limitation-driven, observation-driven), then common candidate checks and a shortlist; (III) Formalization & Proof — math/algorithms, falsification experiments, runnable code; (IV) Validation & Publication — ARS peer review, hardening, full paper. 10 roles. Math or algorithm required for every method. Use when the user asks to generate research ideas, propose a novel method, break a field's assumptions, import a method from another discipline, improve on a baseline's limitations, investigate an observed anomaly or deployment obstacle, formalize a method, or design falsification experiments. Triggers: novelty engine, idea generation, generate ideas, novel method, propose a method, dogma, unstated assumption, cross-domain, observation-driven, replication anomaly, formalize this method, falsification experiment, 生成想法, 提出新方法, 形式化."
+description: "Academic Novelty & Method Engineering Engine — the suite's idea generator. 4-stage pipeline: (I) Research Preparation — topic verification, paper discovery, gap analysis, go/no-go; (II) Idea Generation — three evidence-led routes (assumption-breaking, limitation-driven, observation-driven), then common candidate checks and a shortlist; (III) Formalization & Proof — math/algorithms, falsification experiments, runnable code; (IV) Validation & Publication — ARS peer review, hardening, full paper. 10 roles. Math or algorithm required for every method. Use when the user asks to generate research ideas, propose a novel method, break a field's assumptions, import a method from another discipline, improve on a baseline's limitations, investigate an observed anomaly or deployment obstacle, formalize a method, or design falsification experiments. Triggers: novelty engine, idea generation, generate ideas, novel method, propose a method, dogma, unstated assumption, cross-domain, observation-driven, replication anomaly, formalize this method, falsification experiment."
 argument-hint: "[verify | discover | gaps | assess | dogma | limitations | observations | candidates | formalize | falsify | experiment | stress-test | paper]"
 metadata:
-  version: "1.4.0"
-  last_updated: "2026-10-13"
+  version: "1.4.1"
+  last_updated: "2026-10-25"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -907,8 +907,8 @@ Does it need human judgment at a checkpoint?
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.4.0 |
-| Last Updated | 2026-10-13 |
+| Skill Version | 1.4.1 |
+| Last Updated | 2026-10-25 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (research loop), deep-research, academic-paper-reviewer |
 | Role | Idea generator: three evidence-led routes, candidate checks, formalization, falsification design |
