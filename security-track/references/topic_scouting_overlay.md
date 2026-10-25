@@ -49,7 +49,7 @@
    | Tool verdict | What it means | Status in the loop |
    |---|---|---|
    | `open` | no direct match found in N queries | candidate only; becomes NOVEL-WITHIN-SEARCH after the S3 full-text check of the nearest work |
-   | `narrow` | a partial match, or the same mechanism in a new domain / on new hardware | a lead to peruse: KEEP, SHARPEN or NARROW only after the overlap perusal of the matching paper (`paper_dissection_protocol.md`) |
+   | `narrow` | a partial match, or the same mechanism moved to a new domain / new hardware with nothing to adapt (a transfer that names what has to change in the new domain is judged on that adaptation) | a lead to peruse: KEEP, SHARPEN or NARROW only after the overlap perusal of the matching paper (`paper_dissection_protocol.md`) |
    | `saturated` | a direct match was found | peruse the matching papers first; KNOWN only if the overlap card shows they deliver the contribution at comparable depth — then drop or rework the *approach* and keep the *problem* (iron rules 6, 7) |
 
 2. **A reported gap enters the gap registry only with S1's three fields**: the
@@ -60,7 +60,8 @@
    more papers naming the same limitation or future work; a bridge gap
    (close in meaning, not linked by citation); a fast-growing cluster not yet
    applied to your setting; a highly cited foundation with few recent
-   follow-ups; contradictory findings.
+   follow-ups; a disputed point between highly cited papers and the perused
+   papers that argue against them (find-research-topic's debate map).
 4. **A paper named by an LLM or a tool counts only after verification** against
    a registry or the publisher page (title, authors, year) — the ARS
    citation-existence gate. Otherwise list it as `claimed by <tool>, not found`.

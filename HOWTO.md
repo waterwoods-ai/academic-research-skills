@@ -160,7 +160,7 @@ Check ./research_plan.md as the row "Full research plan" of the independent-chec
 **1a 侦察(只在没有题目时;仅 Claude Code)**
 
 ```text
-find-research-topic <broad area>. Besides the report, write the stage files: save every kept paper to ./literature.md and save every candidate's gap to ./gap_registry.md as a LEAD entry (signals, evidence papers, the queries and dates that found it).
+find-research-topic <broad area>. Start from the most-cited papers: peruse them, find the papers that argue against them, and map the disputed points and the common ground in debate_map.md; slice the topic or method into gaps (new data for an old conclusion, a method transfer from another area, new parameters or unit of analysis). Besides the report, write the stage files: save every kept paper to ./literature.md and save every candidate's gap to ./gap_registry.md as a LEAD entry (its move, signals, evidence papers, the queries and dates that found it).
 ```
 📄 `runs/<日期>-<slug>/report.md`(3–7 个排序的候选题目)、`literature.md`、`gap_registry.md`(LEAD 条目)。🚦 你选一个候选,1b 在它上面做深。
 

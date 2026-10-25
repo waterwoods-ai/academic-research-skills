@@ -1,10 +1,10 @@
 ---
 name: find-research-topic
-description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
+description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. It starts from the most-cited papers, perused, and the papers that argue against them, maps the disputed points and the common ground, and slices the topic or method into gaps (new data for an old conclusion, method transfer, new parameters or unit of analysis). Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.3.0"
-  last_updated: "2026-10-13"
+  version: "1.4.0"
+  last_updated: "2026-10-25"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -42,14 +42,20 @@ Otherwise, classify the user's input:
 
 You drive Elicit in Chrome through the `use_browser` tool (superpowers-chrome) and Litmaps through its MCP tools (`mcp__litmaps__*`), then write a ranked, evidence-backed topic report.
 
-**Place in the workflow.** This skill is the breadth pass of the literature stage (HOWTO Step 1a), used when the user has only a broad area. The depth pass (Step 1b, ARS `lit-review` on the chosen topic) continues from the files this skill writes, so the same ground is not searched twice. Always write the stage files in step 6, not only the report.
+**Place in the workflow.** This skill is the breadth pass of the literature stage (HOWTO Step 1a), used when the user has only a broad area. The depth pass (Step 1b, ARS `lit-review` on the chosen topic) continues from the files this skill writes, so the same ground is not searched twice. Always write the stage files in step 10, not only the report.
+
+**Method (Tom, 2026-10-25).** Start from the papers the area is built on, not from a keyword list:
+1. find the most-cited papers, review them and peruse them (steps 2–4);
+2. find the related papers that argue against them (step 5);
+3. map the disputed points and the common ground both sides share (step 6);
+4. slice the topic or method to find the gap (step 7), with three moves: re-test an old conclusion on new data or a new sample; transfer a method that is mature in area A to area B; or study the same phenomenon with a new set of parameters or a new unit of analysis.
 Load the `superpowers-chrome:browsing` skill first if its instructions are not already in context. Litmaps needs no browser: its MCP tools are deferred, so load them in one `ToolSearch` (`select:` all `mcp__litmaps__*` tools you need) before step 3.
 
 - Elicit operating notes: [references/elicit.md](references/elicit.md)
 - Litmaps operating notes: [references/litmaps.md](references/litmaps.md)
 - Zotero integrations (Elicit import, Litmaps two-way sync, local read API): [references/zotero.md](references/zotero.md)
 
-Read the reference for a tool before touching it. When the UI differs from the notes, trust the screen: read the auto-captured `.png`/`.md`, adapt, and log the difference in the run log (step 7).
+Read the reference for a tool before touching it. When the UI differs from the notes, trust the screen: read the auto-captured `.png`/`.md`, adapt, and log the difference in the run log (step 11).
 
 ## Hard rules
 
@@ -111,7 +117,7 @@ For each framing question:
 **If the user named a prior-reading collection:** optionally import it into the Elicit Library (**Import from Zotero**), so Research Agent runs can see it. It is one-way, shared (group) collections cannot be imported, nested collections are flattened, and PDFs come across only if file-synced in Zotero. Never import into Elicit without saying so; it adds to their Library.
 
 Then pick **8–15 seed papers** across all three questions:
-- 2–4 foundational papers (high citations; use `+citations:>100`);
+- the **3–5 anchor papers**: the most-cited papers the area is built on. Find them with `+citations:>100` on each framing question and rank by total citations; list citations per year beside each, so a recent paper that is cited fast is not missed. Confirm the counts in Litmaps in step 3.1. Anchors must be on the user's topic, not just highly cited in a neighbouring one;
 - 4–8 recent papers from the last 3 years;
 - papers whose future-work statements point at the same open problem.
 
@@ -129,30 +135,76 @@ Use the Litmaps MCP tools; parameters and known quirks are in [references/litmap
 5. **Identify the key teams.** The same seeds with `strategy="common_authors"`: the groups behind the area, for the related-work positioning and to notice when one group dominates it.
 6. **Cutting edge and stale foundations.**
    - *Cutting edge:* among step 3's results from the last 2 years, rank by citations per year since publication. The MCP has no momentum or map-connectivity field, so label this ranking approximate.
-   - *Stale foundations:* for 2–3 foundational seeds, `find_related_articles(seed_article_ids=[that seed], strategy="citations", limit=100)` and count the citing papers by year. A highly cited older paper with few citing papers in the last 2 years is a possible stale-foundation gap.
+   - *Citing papers and stale foundations:* for every anchor, `find_related_articles(seed_article_ids=[that anchor], strategy="citations", limit=100)`. Keep the list: step 5 screens it for papers that argue against the anchor. Count the citing papers by year: a highly cited older paper with few citing papers in the last 2 years is a possible stale-foundation gap.
 
-### 4. Candidate synthesis
-- **What counts as a candidate:** a topic needs **at least 2 independent signals** out of:
+### 4. Review and peruse the anchors
+1. **Peruse each anchor in full** with `security-track/references/paper_dissection_protocol.md` §1–4: problem, threat model, method, evidence and limitations, each with page or section. Write one file per anchor: `$RUN/anchors/<firstauthor><year>.md`.
+   - Full text comes from Elicit (**Has PDF**), Zotero or the publisher page. An anchor read from its abstract only is marked `abstract only` and supports no claim below.
+2. **Write the anchor's central claims as testable statements**, with ids (`A1.c1`, `A1.c2`, …). For each claim, record the **evidence basis** it rests on:
+   - data or sample (population, dataset, systems, versions, lab or field);
+   - parameters (budgets, thresholds, time windows, scale);
+   - unit of analysis (packet, flow, session, device, fleet; sample, user, model, pipeline);
+   - threat model, metric and definitions.
+
+   Step 7 slices along these fields, so record them exactly.
+3. **Literature review.** In `$RUN/review.md`, write how the anchors relate: which builds on which, where they agree, and what each leaves open. This is the field's current position.
+
+### 5. Counter-literature: papers that argue against the anchors
+1. **Collect candidates** for every anchor claim:
+   - **Citing papers:** step 3.6's `citations` strategy, run on every anchor. Screen titles and abstracts for dissent: "revisiting", "rethinking", "re-evaluation", "does not generalize", "fails", "pitfalls", "limitations of", "SoK", reproduction or replication studies. In security, also look for adaptive or stronger attacks that break a published defense, and defenses that refute a claimed attack.
+   - **Elicit, per claim:** queries such as "evidence against <claim>", "<method> fails / does not generalize / re-evaluated". Add a classification column `Stance toward "<claim>" (supports / contradicts / qualifies / unrelated)`; it works well for this (`references/elicit.md`).
+   - **Bridge neighbours** from step 3.4 that test the same claim from another community.
+2. **Keep** the papers labelled `contradicts` or `qualifies` that you saw in a tool with title, year and DOI (hard rule 4).
+3. **Peruse the contested part of each kept paper** (its claim, setup and results, with page or section) before recording a dispute. A title or abstract that sounds opposed is not a dispute yet (iron rule 7 applies in both directions). Up to about 3 counter-papers per anchor claim; a counter-paper read from its abstract only is listed as `unperused` and is not used in step 6.
+
+### 6. Debate map: disputed points and common ground
+Write `$RUN/debate_map.md`:
+1. **One row per anchor claim:**
+
+   | Claim | Supporting (paper, section) | Opposing or qualifying (paper, section) | What differs between the sides | Status |
+   |---|---|---|---|---|
+
+   - *What differs* names the evidence-basis field the sides differ on: data or sample, parameters, unit of analysis, threat model, metric or definitions. "No visible difference" is itself worth recording: the disagreement is unexplained.
+   - *Status:* `disputed` (perused evidence on both sides), `qualified` (holds only under conditions a counter-paper names) or `settled` (no perused counter-evidence).
+2. **Disputed points:** list the `disputed` and `qualified` rows, with why the sides disagree.
+3. **Common ground:** what every side accepts: shared definitions, assumptions, facts, metrics and threat models. A candidate stands on this ground and does not re-argue it.
+4. **Stance:** a disagreement is an open question of the field, not a fault of its authors. What a paper leaves open is the opening the new work extends (iron rule 6).
+
+### 7. Slice the topic or method to find the gap
+Slice each anchor claim along its evidence basis (step 4.2), then apply the three moves:
+1. **New data or sample, old conclusion.** Re-test an anchor's conclusion, or one side of a disputed point, on data the original did not cover: a new population, newer systems, models, firmware or protocol versions, field deployments instead of lab or simulation, other vendors or regions. Strongest when the sides of a dispute used different samples, so the re-test can settle it.
+2. **Method transfer from area A to area B.** Take a method that is mature in area A (many papers, benchmarks and known failure modes) to a problem in area B where it is absent. Find it by naming the generic method family that solves the analogous problem and asking Elicit for its best-known methods and benchmarks in any domain (the adjacent-community query, run again in step 9), and among step 3.4's bridge neighbours. Name what has to change in B: an assumption that no longer holds, a resource constraint, a different threat model, missing data. That adaptation is the contribution; a transfer with nothing to adapt stays `narrow` (lesson from the 2026-09-18 run).
+3. **Same phenomenon, new parameters or unit of analysis.** Keep the phenomenon and change the lens:
+   - a parameter range the anchors did not test (attacker budget, threshold, time window, scale);
+   - or the unit of analysis (packet → flow → session → device → fleet; single model → agent pipeline; per sample → per user).
+
+   Strongest when the anchor's conclusion is likely to depend on that choice, or when the sides of a dispute used different units.
+
+Each slice that survives becomes a draft candidate. It names its move (1, 2 or 3), the anchor claim or debate-map row it slices, and the common ground it stands on.
+
+### 8. Candidate synthesis
+- **What counts as a candidate:** a slice from step 7 needs **at least 2 independent signals** out of:
   - (a) at least 2 Elicit papers naming the same limitation or future work;
   - (b) a bridge gap: a disconnected neighbour from step 3.4 (Similar Text, or its Elicit fallback);
   - (c) an emerging cluster (step 3.6's recent, fast-cited papers) that has not yet been applied to the user's population or method;
   - (d) a stale foundation;
-  - (e) contradictory findings across the Elicit results.
-- **Output:** draft 3–7 candidates. Phrase each as a research question and tag it with its signals and evidence papers.
+  - (e) a `disputed` or `qualified` row of the debate map (step 6) that the candidate can settle or bound.
+- **Output:** draft 3–7 candidates. Phrase each as a research question and tag it with its move, its signals and its evidence papers.
 
-### 5. Novelty check (every candidate)
+### 9. Novelty check (every candidate)
 1. **Elicit.** Run the candidate as a Find Papers query with `+year:>{current_year-3}`. If papers seem to answer it directly, the candidate is only **saturated-pending**: peruse the closest 1–3 of them (the overlap perusal (`security-track/references/paper_dissection_protocol.md` § Overlap perusal)) and let the overlap card decide. A paper that mentions the idea, or treats it without the depth the candidate rests on, keeps the candidate (KEEP or SHARPEN); only comparable delivery narrows or drops it.
    - **Also run an adjacent-community query.** Name the generic ML or security *method family* the candidate belongs to (e.g. "test-time adaptation", "backdoor detection", "federated learning robustness") and ask Elicit for its best-known methods and benchmarks, regardless of application domain.
-     - A candidate whose only difference is "same method, new domain" or "same method, on hardware" is at most `narrow`.
+     - A candidate whose only difference is "same method, new domain" or "same method, on hardware", with nothing to adapt, is at most `narrow`. A move-2 transfer (step 7) is judged on the adaptation it names: what has to change in area B, and whether anyone has already made that change.
      - (Lesson from the 2026-09-18 run: domain-phrased queries missed NOTE, RoTTA, SAR, TTAB, ROID, TinyTTA and FORGE.)
    - "Not found in this scan" is never evidence that nobody has done it. Write verdicts as "no direct match found in N queries", not "open".
 2. **Litmaps.** To catch recent work Elicit might miss, take the candidate's 3–5 closest papers as seeds and run `find_related_articles(strategy="citation_connected", start_date=<1 January of last year>)`. Litmaps' keyword search (`search_articles`) is noisy (an irrelevant forum post ranked first on 2026-10-13); use it only as a last resort and discard rows without a DOI or venue.
 3. **Ledger.** Record the verdict (`open` / `narrow` / `saturated`) with the papers that justify it, and for `narrow` or `saturated` the overlap card's path and outcome (KEEP / SHARPEN / NARROW / DROP).
 
-### 6. Score and report
+### 10. Score and report
 Score the surviving candidates with the rubric below. Write `$RUN/report.md` containing:
 - the scope and the framing questions;
-- a ranked table with columns: topic | score | signals | verdict;
+- the anchors and the field's current position (from `review.md`), and the debate map's disputed points and common ground (from `debate_map.md`);
+- a ranked table with columns: topic | move | score | signals | verdict;
 - for each topic:
   - a rationale paragraph;
   - 3–6 evidence papers (title, year, DOI, and which tool they came from);
@@ -168,20 +220,20 @@ Score the surviving candidates with the rubric below. Write `$RUN/report.md` con
 - limitations of this scan (plan limits hit, paywalled PDFs, Elicit results vary between runs).
 
 **Stage files** (project root; append under a dated heading, never overwrite what is there):
-- `literature.md`: one line per kept paper — citation, one-line finding, the candidate it bears on, the tool that found it, `source: scout <date>`.
-- `gap_registry.md`: for each candidate, its gap as `status: LEAD`, with the signals, the evidence papers, and the queries and dates from the ledger. A LEAD is not yet a gap: Step 1b completes it (nearest misses and why each falls short, the security question it blocks, the ancestor and adjacent-method-family queries) or drops it with the reason.
+- `literature.md`: one line per kept paper — citation, one-line finding, its role (`anchor`, `counter` or `supporting`), the candidate it bears on, the tool that found it, `source: scout <date>`.
+- `gap_registry.md`: for each candidate, its gap as `status: LEAD`, with its move, the anchor claim or debate-map row it slices, the signals, the evidence papers, and the queries and dates from the ledger. A LEAD is not yet a gap: Step 1b completes it (nearest misses and why each falls short, the security question it blocks, the ancestor and adjacent-method-family queries) or drops it with the reason.
 
 <!-- TODO(user): define how candidate topics are scored — see "Scoring rubric" below. -->
 #### Scoring rubric
 Default (used until the user defines their own): score each 1–5, with equal weights.
-- **Novelty:** the Step 5 verdict and how close the nearest existing work is.
+- **Novelty:** the step 9 verdict and how close the nearest existing work is.
 - **Evidence of gap:** the number and independence of signals.
 - **Feasibility:** fit with the user's methods, data and time horizon.
 - **Impact:** citation momentum of the surrounding cluster.
 
 Drop any candidate that scores 1 on Novelty or Feasibility.
 
-### 7. Wrap-up
+### 11. Wrap-up
 - Summarise the top 3 topics in chat (one line each) and give the report path.
 - Give the next step: the user picks a candidate, then Step 1b runs `ars-lit-review` on it, corpus first from `literature.md`.
 - Add any UI differences you hit to the matching `references/*.md` under "Observed changes", with the date, so the next run is faster.
@@ -190,8 +242,8 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.3.0 |
-| Last Updated | 2026-10-13 |
+| Skill Version | 1.4.0 |
+| Last Updated | 2026-10-25 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |
 | Role | Topic scouting with Elicit and Litmaps; literature stage 1a |
