@@ -290,6 +290,14 @@ the idea or treats it shallowly, the claim stays: ANSWER with the card's
 findings, and add one related-work sentence only if a reader needs the
 difference. Narrow only what the paper actually delivers.
 
+**Narrowing is a decision, not a disposition.** No review item narrows a claim
+by itself. After the perusal, if the overlap card shows comparable delivery, run
+the gap deep-dive on the objection (`gap_deep_dive_protocol.md`): the objection may
+show the framing was too small, not too large. The PI then decides NARROW, WIDEN or
+RESHAPE in `decisions.md`, and a NARROW names its replacement (a Limitations line
+plus a future-work claim). Report the net scope change with the net word change
+every round; two consecutive narrowing-only rounds stop for a PI check.
+
 **The reader test.** Before adding any sentence, ask: would a reader who
 never saw this review need it? If not, it is an ANSWER, not paper text.
 
@@ -315,7 +323,11 @@ venue reader would and lists every passage that sounds like a reply to an
 unseen reviewer, plus repeated caveats and hedge stacks. Claude then
 rewrites each into plain paper prose, merges it into one place, or moves
 it to the response file. Claims, numbers and the one statement of each
-scope hedge do not change. Record the result in `ars-review/cold-read.md`.
+scope hedge do not change. The same agent runs the scope-drift check: it compares
+the abstract's and introduction's claims with `claims.md` scope v1 and the gap card
+v2 boundary and lists every claim now smaller than the gap it was written to fill;
+the PI decides each (restore with evidence, keep narrowed with the open part in
+Limitations, or back to the gap). Record both in `ars-review/cold-read.md`.
 
 ## 7. Sources
 

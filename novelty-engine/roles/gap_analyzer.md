@@ -136,6 +136,10 @@ Range: 1-125. Rank gaps by composite score.
 | 15-39 | **COOL** | Worth noting but not the best use of effort right now |
 | 1-14 | **COLD** | Either intractable, low-impact, or stale |
 
+### Step 3.5: Gap status
+
+Every gap leaves this report with status GAP (or LEAD when it lacks the three-field form). It is not yet a basis for a research question: the gap deep-dive (security-track `gap_deep_dive_protocol.md`, research loop S1.5) researches it as its own topic and sets DEEPENED, RESHAPED or FILLED. The candidate RQs below are provisional until their gap is DEEPENED; say so in the report.
+
 ### Step 4: Research Question Generation
 
 For the top 2-4 ranked gaps (HOT and top WARM), generate candidate research questions.

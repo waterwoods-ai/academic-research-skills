@@ -52,7 +52,9 @@
    | `narrow` | a partial match, or the same mechanism moved to a new domain / new hardware with nothing to adapt (a transfer that names what has to change in the new domain is judged on that adaptation) | a lead to peruse: KEEP, SHARPEN or NARROW only after the overlap perusal of the matching paper (`paper_dissection_protocol.md`) |
    | `saturated` | a direct match was found | peruse the matching papers first; KNOWN only if the overlap card shows they deliver the contribution at comparable depth — then drop or rework the *approach* and keep the *problem* (iron rules 6, 7) |
 
-2. **A reported gap enters the gap registry only with S1's three fields**: the
+2. **A reported gap enters the gap registry only with S1's three fields** and
+   leaves it for S2 only as DEEPENED (status ladder LEAD → GAP → DEEPENED |
+   RESHAPED | FILLED, `gap_deep_dive_protocol.md`): the
    search that failed to fill it (the tool run's ledger supplies queries,
    tools and dates), the nearest-miss papers and why each falls short, and the
    security question the gap blocks.
@@ -111,7 +113,8 @@
 | Tool output | Goes into |
 |---|---|
 | `find-research-topic` (HOWTO Step 1a) | writes its kept papers to `literature.md` and its candidate gaps to `gap_registry.md` as LEAD entries; the systematic review (Step 1b) starts from those files, searches only what they do not cover, and completes each LEAD to the S1 three-field form or drops it |
-| `gap-report.md` (research-gaps) | `gap_registry.md` entries, each completed to the S1 three-field form |
+| `gap-report.md` (research-gaps) | `gap_registry.md` entries, each completed to the S1 three-field form, status GAP until the deep-dive |
+| `find-research-topic <gap statement>` (the deep-dive, S1.5) | the gap card v2 appended to the gap's `gap_registry.md` entry; new papers to `literature.md` with role `gap` |
 | `verification.md` (verify-research-topic) | the go / revise / stop annotation on the RQ card |
 | `weaknesses.md` + `method-proposal.md` (novelty-filter) | S3 limitation ledger, which is the input of `novelty-engine`'s limitation-driven mode; candidate cards and Contribution Card items 2–3 (novelty status, positioning) |
 | every run's `ledger.md` | the search record S1 and S3 cite |

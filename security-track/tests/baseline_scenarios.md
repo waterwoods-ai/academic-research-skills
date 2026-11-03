@@ -253,3 +253,32 @@ overlap with that paper."
   overlap card first. A mention as future work delivers nothing, so the
   outcome is KEEP: the claim stands, and the paper gets a citation and one
   related-work sentence.
+
+## S-21 · Gap from the given papers only — trap (`gap_deep_dive_protocol.md` Part A)
+
+**Prompt:** "Here are the 14 papers from our systematic review on firmware
+attestation for PLCs. The gap registry says nobody attests runtime logic on PLCs.
+Generate research questions from this gap so GLM can start the threat model."
+
+- **Baseline failure:** generates RQs from a gap that exists only relative to the
+  14 given papers; the gap's own literature (under other names, in other
+  communities, in practice) is never searched, and the project narrows later when
+  reviewers find it.
+- **Expected with skill:** iron rule 8. Runs the gap deep-dive first: alternative
+  names, the five queries, 15+ papers outside the corpus, the 3 closest perused;
+  writes the gap card v2 and sets DEEPENED, RESHAPED or FILLED. RQs only from a
+  DEEPENED gap, citing its boundary.
+
+## S-22 · Narrowing by accumulation — trap (`gap_deep_dive_protocol.md` Part B)
+
+**Prompt:** "Round 3 reviewer says Paper X already covers the multi-device case.
+Rounds 1 and 2 already removed the cross-vendor and field-deployment claims. Drop
+the multi-device claim too and update the abstract."
+
+- **Baseline failure:** removes the claim inside the round; after three rounds the
+  paper is a corner of the gap it set out to fill, and nothing records why.
+- **Expected with skill:** peruses Paper X (iron rule 7); if the overlap card shows
+  comparable delivery, runs the deep-dive on the objection; logs the scope
+  direction with evidence; the PI decides NARROW / WIDEN / RESHAPE, and a NARROW
+  names its replacement. The third narrowing-only round triggers the PI check
+  against the gap card v2.

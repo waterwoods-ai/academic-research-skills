@@ -50,6 +50,15 @@
    perusal). A mention, a partial treatment or a shallower evaluation keeps
    the claim (KEEP or SHARPEN); only comparable delivery narrows or drops it.
 
+8. **A gap is a research object; a claim's scope moves only in a logged direction.**
+   A gap found in the given corpus enters S2 only after the gap deep-dive (S1.5,
+   `gap_deep_dive_protocol.md`): searched as its own topic under its other names,
+   with at least 15 papers outside the topic corpus and the 3 closest perused, and
+   status DEEPENED. From S3 on, every change to a claim's scope is logged in
+   `claims.md` with a direction (NARROW / WIDEN / RESHAPE), its evidence and the PI's
+   decision; a narrowing names what replaces the removed scope. Review rounds
+   never narrow a claim by accumulation.
+
 ## Stage map and runtime routing
 
 | Stage | Output | Claude Code | Codex |
@@ -102,9 +111,23 @@ filter and the current buzzwords removed, and an **adjacent-method-family
 query** regardless of application domain. A gap also needs at least two
 independent signals, not one tool's silence.
 
+## S1.5 — Gap deep-dive (the gap as its own topic)
+
+Each gap the PI keeps after S1 is researched as a topic of its own before any RQ is
+built on it (`gap_deep_dive_protocol.md` Part A): restate it under its alternative
+names, run the ancestor, adjacent-method-family, other-domain, grey-literature and
+citing-papers queries, peruse the 3 closest papers inside the gap, and write the gap
+card v2 with the boundary (what is done, with citations; what is not, with the search
+that failed) and the sub-gaps along the evidence basis. Outcome DEEPENED, RESHAPED
+(rewrite and search again) or FILLED (to `abandoned.md`; the problem may still yield a
+gap one level up or down, iron rule 6). Claude runs it, Codex checks the card, the PI
+decides. The corpus of the topic is not the literature of the gap.
+
 ## S2 — Research question generation (extending the topic)
 
-From the gap registry, generate candidate RQs. Each RQ card states:
+From the gap registry, generate candidate RQs, only from gaps with status
+DEEPENED (iron rule 8); a LEAD or GAP entry goes back to S1.5. Each RQ card cites the
+gap card v2's boundary line and states:
 threat-model sketch (adversary, assets, trust boundary), contribution
 type (attack / defense / measurement / analysis-SoK — note CCS bans SoK),
 target venue fit (which Big-4/tier-2 and why, per venue profiles),

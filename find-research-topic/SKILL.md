@@ -3,8 +3,8 @@ name: find-research-topic
 description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. It starts from the most-cited papers, perused, and the papers that argue against them, maps the disputed points and the common ground, and slices the topic or method into gaps (new data for an old conclusion, method transfer, new parameters or unit of analysis). Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.4.0"
-  last_updated: "2026-10-25"
+  version: "1.4.1"
+  last_updated: "2026-11-03"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -221,7 +221,9 @@ Score the surviving candidates with the rubric below. Write `$RUN/report.md` con
 
 **Stage files** (project root; append under a dated heading, never overwrite what is there):
 - `literature.md`: one line per kept paper — citation, one-line finding, its role (`anchor`, `counter` or `supporting`), the candidate it bears on, the tool that found it, `source: scout <date>`.
-- `gap_registry.md`: for each candidate, its gap as `status: LEAD`, with its move, the anchor claim or debate-map row it slices, the signals, the evidence papers, and the queries and dates from the ledger. A LEAD is not yet a gap: Step 1b completes it (nearest misses and why each falls short, the security question it blocks, the ancestor and adjacent-method-family queries) or drops it with the reason.
+- `gap_registry.md`: for each candidate, its gap as `status: LEAD`, with its move, the anchor claim or debate-map row it slices, the signals, the evidence papers, and the queries and dates from the ledger. A LEAD is not yet a gap: Step 1b completes it (nearest misses and why each falls short, the security question it blocks, the ancestor and adjacent-method-family queries) or drops it with the reason, and Step 1.5 deepens it before any RQ is built on it.
+
+**Gap deep-dive (Step 1.5).** Run this skill again with the gap statement as the area (`find-research-topic <gap statement>`), restated under its alternative names (`security-track/references/gap_deep_dive_protocol.md` A1). Steps 2–7 then search the gap's own literature: the anchors are the most-cited papers inside the gap, the counter-literature and debate map show where its edges are disputed, and the slices become the sub-gaps. Add the grey-literature and citing-papers queries from the protocol. Write the gap card v2 into the gap's `gap_registry.md` entry instead of new LEADs, and the new papers to `literature.md` with role `gap`.
 
 <!-- TODO(user): define how candidate topics are scored — see "Scoring rubric" below. -->
 #### Scoring rubric
@@ -242,8 +244,8 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.4.0 |
-| Last Updated | 2026-10-25 |
+| Skill Version | 1.4.1 |
+| Last Updated | 2026-11-03 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |
 | Role | Topic scouting with Elicit and Litmaps; literature stage 1a |

@@ -124,6 +124,11 @@ C01 | <the claim, as it will read in the paper>
   CONFIRMED id; a sentence with no id is removed, or registered and checked.
 - REFUTED stays with its root cause (iron rule 6); NARROWED keeps the original
   wording beside the new one, so the paper cannot drift back.
+- Every scope change carries the scope-direction line (`gap_deep_dive_protocol.md`
+  Part B): scope v1 at Gate 4, scope now, direction NARROW / WIDEN / RESHAPE, the
+  evidence, the PI's decision and what replaces the removed scope. Each review
+  round reports the net scope change; two rounds that only narrow trigger a PI
+  check against the gap card v2.
 
 ## Reject-reasons register (`reviews/reject_reasons.md`)
 
@@ -150,6 +155,7 @@ The lab's stages run the research loop; the HOWTO step numbers are in brackets.
 | Research plan [0.5] | — | Codex writes `research_plan.md`; Claude breaks Phase A into sub-plans | Claude checks the plan; PI approves |
 | 0 Problem selection [1a] | S0 | Claude, with the PI | — |
 | 1 Systematic literature review [1b] | S1 | Claude | Codex |
+| 1.5 Gap deep-dive [1.5] | S1.5 | Claude (`find-research-topic <gap>`, gap card v2) | Codex (card); PI decides DEEPENED / RESHAPED / FILLED |
 | 2 Ideas [2] | S1–S2 | GLM and Claude, independently | — |
 | 3 Novelty and gap verification [3] | S1–S2 | Claude for GLM's ideas, Codex for Claude's; Codex's opinion | **Gate 1** |
 | 4 Threat model [2–4] | S2 | GLM | Claude — **Gate 2** |
@@ -176,7 +182,8 @@ flawed plan is caught before it costs compute.
   papers checked; the closest 5 identified; the difference from each
   documented; Codex unable to invalidate the novelty with a retrieved paper,
   where every paper raised has been perused (overlap card) before any claim
-  changed (iron rule 7).
+  changed (iron rule 7); the gap the RQ rests on has status DEEPENED with its
+  card v2 (iron rule 8).
   Also `topic_verification_gate.md` and the Phase 3.5 mechanism re-check.
 - **Gate 2 — threat model, before experiments:** attacker goal, knowledge,
   capability and budget; defender assumptions; success criteria

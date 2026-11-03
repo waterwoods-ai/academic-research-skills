@@ -40,6 +40,7 @@
 | 0.5 总体研究计划(开题) | 🧭 Codex 写 `research_plan.md` | 🔬 Claude 核查,并把阶段 A 拆成子计划 `subplans/`;🚦 你批准 |
 | 1a 选题侦察(只在没有题目时) | 🔬 Claude(`find-research-topic`,只能在 Claude Code 跑) | 在 1b 中核查 |
 | 1b 系统综述 + gap 登记(接着 1a 的文件做) | 🔬 Claude(`ars-lit-review`) | 🧭 Codex(补漏文献,带检索证据) |
+| 1.5 Gap deep-dive: the gap as its own topic | 🔬 Claude(`find-research-topic <gap statement>`, gap card v2) | 🧭 Codex checks the card; 🚦 you decide DEEPENED / RESHAPED / FILLED |
 | 2 想法:RQ 卡片 + 威胁模型草图 | 🧪 GLM 写 `rq_cards.md`;🔬 Claude 独立写 `ideas_claude.md` | 在 Step 3 中核查 |
 | 3 选题把关(Gate 1:>30 篇直接相关、最接近 5 篇、差异写清) | 🔬 Claude 检索查新 GLM 的卡片;🧭 Codex 查新 Claude 的想法 | 🧭 Codex:专业意见 + 用检索到的文献试图推翻 novelty;🚦 你选定 1 个问题 |
 | 4 落定课题 | 🔬 Claude 按你的决定写 `research_question.md` | — |
@@ -178,6 +179,13 @@ Save every included paper to the same ./literature.md (citation, one-line findin
 > **说明(见 `topic_scouting_overlay.md`)**:1a 的 `open / narrow / saturated` 只是扫描级线索,不是 novelty 结论;LEAD 条目要在 1b 补齐三项才算 gap。题目已定、要系统化的 gap 证据也可以加跑 `research-gaps`(Elicit API,结果归档到 Zotero),它的结果同样写进这两个文件。Codex / opencode 没有浏览器:跳过 1a,直接 1b。
 
 > 顺带:agent 按你的子领域从 `knowledge_index.md` 加载该领域的审稿门槛(adaptive-eval / 测床+物理后果 / OTA 对标 in-toto/SLSA 等),S1–S3/S7 全程套用。
+
+**Step 1.5 🔬 Claude gap deep-dive (every gap you keep; before Step 2)**
+
+```text
+Gap deep-dive on ./gap_registry.md entry <G-id> (security-track gap_deep_dive_protocol.md Part A). Restate the gap under its alternative names, then run find-research-topic with the gap statement as the area: anchors, counter-literature and debate map inside the gap, the ancestor, adjacent-method-family, other-domain, grey-literature and citing-papers queries, at least 15 papers outside ./literature.md, the 3 closest perused with the overlap card. Append the gap card v2 to the entry (boundary: what is done with citations, what is not with the search that failed; sub-gaps; practice) and set DEEPENED, RESHAPED or FILLED. New papers go to ./literature.md with role gap.
+```
+📄 `gap_registry.md` (each kept gap carries a card v2 and a status), `literature.md`, `runs/<date>-<gap-slug>/`. 🧭 Codex checks each card (were the five queries run; do the 3 perusals support the outcome; is the boundary from the gap's literature, not the topic's). 🚦 You decide per gap. Why: a gap found only in the given papers is a gap relative to those papers; Step 2 builds RQs only on DEEPENED gaps (iron rule 8), so the project does not shrink later when reviewers find the gap's own literature.
 
 **Step 2 🧪 GLM 课题延伸(RQ 卡片 + 威胁模型草图)+ 🔬 Claude 独立出想法**
 
@@ -421,7 +429,7 @@ ars-reviewer re-review
 **Step 16.5 🔬 Claude 冷读(收敛后、终审前;交给一个从没看过审稿轮的新子代理)**
 
 ```text
-Cold read before the final review. Start a fresh subagent and give it only ./paper.tex (no ./ars-review/, no history). Ask it to read as a reader at the target venue and list every passage that sounds like a reply to an unseen reviewer, every caveat or scope hedge stated in more than one place, and every hedge stack (security-track major_revision_playbook.md §6). Then rewrite each listed passage into plain paper prose, merge repeated caveats into one place, or move the text to the latest ./ars-review/round-N/response.md. Do not change claims, numbers, or the one statement of each scope hedge. Write ./ars-review/cold-read.md (passage → action) and report the net word change.
+Cold read before the final review. Start a fresh subagent and give it only ./paper.tex (no ./ars-review/, no history). Ask it to read as a reader at the target venue and list every passage that sounds like a reply to an unseen reviewer, every caveat or scope hedge stated in more than one place, and every hedge stack (security-track major_revision_playbook.md §6). Then rewrite each listed passage into plain paper prose, merge repeated caveats into one place, or move the text to the latest ./ars-review/round-N/response.md. Do not change claims, numbers, or the one statement of each scope hedge. Then run the scope-drift check: compare the abstract's and introduction's claims with ./claims.md scope v1 (Gate 4) and the gap card v2 boundary in ./gap_registry.md, and list every claim now smaller than the gap it was written to fill, for the PI to decide (gap_deep_dive_protocol.md Part B). Write ./ars-review/cold-read.md (passage → action) and report the net word change.
 ```
 📄 `ars-review/cold-read.md`。为什么需要:几轮审稿后,论文容易写满只为回应审稿人的辩护句;Step 17 的终审在同一个 Codex 会话里,看过每一轮,察觉不到。冷读用的是没看过审稿的新眼睛。
 

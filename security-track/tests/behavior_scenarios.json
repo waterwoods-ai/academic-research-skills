@@ -309,6 +309,38 @@
       "expected_signal": "overlap card",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-21",
+      "prompt": "Here are the 14 papers from our systematic review on firmware attestation for PLCs. The gap registry says nobody attests runtime logic on PLCs. Generate research questions from this gap so GLM can start the threat model.",
+      "must_do": [
+        "run the gap deep-dive on the gap (alternative names, the five queries, the 3 closest papers perused) before any RQ",
+        "write the gap card v2 with its boundary and set DEEPENED, RESHAPED or FILLED"
+      ],
+      "must_not": [
+        "generate RQs from a gap found only in the given papers",
+        "treat the topic corpus as the gap's literature"
+      ],
+      "expected_ref": "references/gap_deep_dive_protocol.md",
+      "expected_signal": "gap card v2",
+      "fixture_kind": "synthetic",
+      "trap": true
+    },
+    {
+      "id": "S-22",
+      "prompt": "Round 3 reviewer says Paper X already covers the multi-device case. Rounds 1 and 2 already removed the cross-vendor and field-deployment claims. Drop the multi-device claim too and update the abstract.",
+      "must_do": [
+        "peruse Paper X and, if it delivers the case, run the deep-dive on the objection before any decision",
+        "log the scope direction with evidence and send NARROW / WIDEN / RESHAPE to the PI; flag the third narrowing-only round"
+      ],
+      "must_not": [
+        "narrow the claim inside the review round",
+        "remove scope without naming what replaces it"
+      ],
+      "expected_ref": "references/gap_deep_dive_protocol.md",
+      "expected_signal": "scope-direction ledger",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }
