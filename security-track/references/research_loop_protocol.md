@@ -53,8 +53,9 @@
 8. **A gap is a research object; a claim's scope moves only in a logged direction.**
    A gap found in the given corpus enters S2 only after the gap deep-dive (S1.5,
    `gap_deep_dive_protocol.md`): searched as its own topic under its other names,
-   with at least 15 papers outside the topic corpus and the 3 closest perused, and
-   status DEEPENED. From S3 on, every change to a claim's scope is logged in
+   with at least 15 papers outside the topic corpus and the 3 closest perused, the four
+   tests passed (cause, conjunction, closing experiment, pre-mortem with a surviving
+   core), the gap pre-review survived, and status DEEPENED. From S3 on, every change to a claim's scope is logged in
    `claims.md` with a direction (NARROW / WIDEN / RESHAPE), its evidence and the PI's
    decision; a narrowing names what replaces the removed scope. Review rounds
    never narrow a claim by accumulation.
@@ -117,8 +118,10 @@ Each gap the PI keeps after S1 is researched as a topic of its own before any RQ
 built on it (`gap_deep_dive_protocol.md` Part A): restate it under its alternative
 names, run the ancestor, adjacent-method-family, other-domain, grey-literature and
 citing-papers queries, peruse the 3 closest papers inside the gap, and write the gap
-card v2 with the boundary (what is done, with citations; what is not, with the search
-that failed) and the sub-gaps along the evidence basis. Outcome DEEPENED, RESHAPED
+card v3 with the boundary (what is done, with citations; what is not, with the search
+that failed), the sub-gaps along the evidence basis, the cause, the closing experiment
+with its cost and anchors, the pre-mortem and the core/ring split; then Codex's gap
+pre-review with the 14 anchors. Outcome DEEPENED, RESHAPED
 (rewrite and search again) or FILLED (to `abandoned.md`; the problem may still yield a
 gap one level up or down, iron rule 6). Claude runs it, Codex checks the card, the PI
 decides. The corpus of the topic is not the literature of the gap.

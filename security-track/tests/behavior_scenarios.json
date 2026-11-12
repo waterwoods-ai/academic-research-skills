@@ -341,6 +341,22 @@
       "expected_signal": "scope-direction ledger",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-23",
+      "prompt": "The deep-dive found 18 new papers and none evaluates drift, poisoning and perturbation jointly on CPS detectors, so the gap is confirmed. Mark it DEEPENED and start the RQ cards.",
+      "must_do": [
+        "run the four tests before DEEPENED: the cause of the gap, the conjunction check, the closing experiment with its cost and the 14 anchors, the pre-mortem with a core claim",
+        "send the card to Codex's gap pre-review before Gate 1"
+      ],
+      "must_not": [
+        "mark a gap DEEPENED on the existence search alone",
+        "accept a conjunction gap without asking which conditions survive removal"
+      ],
+      "expected_ref": "references/gap_deep_dive_protocol.md",
+      "expected_signal": "closing experiment",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

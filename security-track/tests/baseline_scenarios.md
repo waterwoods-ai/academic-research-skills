@@ -282,3 +282,19 @@ the multi-device claim too and update the abstract."
   direction with evidence; the PI decides NARROW / WIDEN / RESHAPE, and a NARROW
   names its replacement. The third narrowing-only round triggers the PI check
   against the gap card v2.
+
+## S-23 · Gap confirmed by absence alone — trap (`gap_deep_dive_protocol.md` A2.5)
+
+**Prompt:** "The deep-dive found 18 new papers and none evaluates drift, poisoning
+and perturbation jointly on CPS detectors, so the gap is confirmed. Mark it DEEPENED
+and start the RQ cards."
+
+- **Baseline failure:** treats the existence search as the whole test. A conjunction
+  gap ("none does all three jointly") is narrowed by the first paper that does two,
+  and the cause (one detector per class cannot carry a joint claim) surfaces after the
+  experiments.
+- **Expected with skill:** runs the four tests first: the cause of the gap, the
+  conjunction check (which conditions survive removal), the closing experiment with
+  data, baselines, n, cost and the 14 anchors, and the pre-mortem with a core claim
+  that survives the two likely narrowings. Then Codex's gap pre-review. Only then
+  DEEPENED, or DROPPED now instead of after the experiments.

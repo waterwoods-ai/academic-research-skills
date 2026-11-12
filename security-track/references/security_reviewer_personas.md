@@ -176,6 +176,11 @@ it, that is the objection to raise.
     load-bearing detail needed to reproduce the result is omitted from the
     paper (claim-vs-artifact / reproducibility) (R3).
 
+**Gap pre-review.** The same 14 anchors are run by Reviewer #2 against a gap card v3
+and its closing experiment before Gate 1 (`gap_deep_dive_protocol.md` A4), so a
+narrowing is found before the experiments rather than after. Cite the paper you would
+raise and the anchor that fails; a gap whose core survives passes.
+
 Panels may additionally emit the Top-4 Readiness scorecard — but ONLY as the
 S7 pre-paper self-check (see `research_loop_protocol.md` S7). A formal venue
 simulation always uses the target venue's exact decision vocabulary

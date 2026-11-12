@@ -51,7 +51,40 @@ Depth bar before the gap can be DEEPENED:
 - one **practitioner check**: does any deployed system, standard or tool already do
   this? If yes, cite it; the gap may still stand for the research question it leaves open.
 
-### A3. Gap card v2
+### A2.5. The four tests a gap must pass before it is built on
+
+The existence search (A2) is one test. Every gap that was narrowed after experiments in
+this lab's projects (audit 2026-11-03) would have failed one of the next four, all
+answerable before any build:
+
+1. **Cause.** Why is the gap open? Pick one, with evidence: (a) a new capability,
+   dataset or system recently made it answerable; (b) it needs a key others lack and we
+   have (access, data, device, method); (c) it is hard, and the obstacle is named and we
+   say how we pass it; (d) nobody cares (then drop it); (e) it needs data or hardware we
+   also lack (then it is not our gap). Only (a), (b) and a credible (c) proceed. A gap
+   with no identifiable cause is a hole in the corpus, not a gap.
+2. **Conjunction check.** If the gap is "nobody does A and B and C together", remove each
+   condition in turn. If the gap only exists with all conditions present, it will be
+   narrowed by the first paper that does two of them. Keep it only if the conjunction
+   itself has a stated security consequence.
+3. **Closing experiment.** Write the one experiment whose result closes the gap: data,
+   unit of analysis, threat model, metric, baselines from the last three years of Big-4
+   work, required n, and the cost (GPU-hours, hardware, weeks). Then run the 14
+   rejection anchors (`security_reviewer_personas.md`) against that experiment, not
+   against a paper. If the experiment cannot be written, or cannot be afforded, the gap
+   is not ours; record it as FILLED-FOR-US with the missing resource.
+4. **Pre-mortem and core/ring.** Name the three papers a reviewer is most likely to raise
+   as "already did this" and the two narrowings most likely to be forced. Split the gap
+   into a **core** claim that survives both narrowings and **ring** claims that may be
+   cut. Later review rounds may cut rings; cutting the core sends the paper back here.
+   A gap with no surviving core is DROPPED now, not after the experiments.
+
+A short feasibility probe (one or two days: is the data obtainable, does the baseline
+run, what is the rough effect size) is part of test 3 when the answer is uncertain.
+"Precomputable cheaply, computed late" was the post-mortem of eight failed attempts in
+one project; the probe makes it computed early.
+
+### A3. Gap card v3
 
 Append to the gap's entry in `gap_registry.md`:
 
@@ -62,8 +95,17 @@ papers inside the gap: <n new>, closest 3 perused: <ids, overlap outcome each>
 boundary: what IS done (with citations) | what is NOT done (the search that failed, queries + indexes + date)
 sub-gaps: <the gap split by the evidence basis: data/sample, parameters, unit of analysis, threat model, metric>
 practice: <standards, tools, products that touch it>
-status: DEEPENED | RESHAPED | FILLED
+cause: a | b | c | d | e — <evidence>
+conjunction: <conditions; which survive removal>
+closing experiment: <data, unit, threat model, metric, baselines, n, cost> — anchors failed: <list or none>
+pre-mortem: <3 papers a reviewer will raise> | likely narrowings: <2>
+core: <claim that survives both narrowings> | ring: <claims that may be cut>
+pre-review: <Codex date, verdict, anchors raised>
+status: DEEPENED | RESHAPED | FILLED | FILLED-FOR-US | DROPPED
 ```
+
+A card with any of `cause`, `closing experiment`, `pre-mortem` or `core` empty cannot be
+DEEPENED.
 
 - **DEEPENED**: the gap stands; its boundary is now known from the gap's own
   literature. S2 may generate RQs from it, and must cite the boundary.
@@ -74,10 +116,17 @@ status: DEEPENED | RESHAPED | FILLED
   the gap to `abandoned.md` with the filling papers. The *problem* may still yield a
   gap one level up or down (iron rule 6): record that as a new LEAD.
 
-### A4. Checks
+### A4. Checks and the gap pre-review
 
 - Codex checks each card: were the five queries run, do the 3 perusals support the
   outcome, is the boundary stated from the gap's literature rather than the topic's?
+- **Gap pre-review (before Gate 1).** Codex, as Reviewer #2, attacks the gap card and
+  its closing experiment with the 14 rejection anchors and the five personas, exactly
+  as it would attack the finished paper: which anchor fails, which paper it would cite,
+  which narrowing it would force. The verdict and the anchors raised go on the card.
+  A card whose core does not survive the pre-review is not DEEPENED. This moves the
+  review loop in front of the experiments, where a narrowing costs a day instead of a
+  project.
 - A gap that reaches S2 as LEAD or GAP (not DEEPENED or RESHAPED→DEEPENED) is a
   protocol failure: S2 refuses it and returns it to S1.5.
 - `research_question.md` (Step 4) cites the gap card v2's boundary line; the
@@ -124,7 +173,8 @@ Rules:
 
 | Step | Does | Checks | Decides |
 |---|---|---|---|
-| A1–A3 deep-dive | Claude | Codex (card) | PI (DEEPENED / RESHAPED / FILLED) |
+| A1–A3 deep-dive, four tests | Claude | Codex (card) | PI (DEEPENED / RESHAPED / FILLED / FILLED-FOR-US / DROPPED) |
+| A4 gap pre-review | Codex (Reviewer #2, 14 anchors on the card) | Claude (records) | PI (core survives?) |
 | B1 narrowing path | Claude peruses, runs the deep-dive on the objection | Codex | PI |
 | B4 drift report | Claude, each round | Codex, in the round's review | PI at two narrowing rounds |
 | B5 cold-read drift check | fresh Claude subagent | — | PI per claim |

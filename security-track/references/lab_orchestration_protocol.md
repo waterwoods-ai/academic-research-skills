@@ -155,7 +155,7 @@ The lab's stages run the research loop; the HOWTO step numbers are in brackets.
 | Research plan [0.5] | — | Codex writes `research_plan.md`; Claude breaks Phase A into sub-plans | Claude checks the plan; PI approves |
 | 0 Problem selection [1a] | S0 | Claude, with the PI | — |
 | 1 Systematic literature review [1b] | S1 | Claude | Codex |
-| 1.5 Gap deep-dive [1.5] | S1.5 | Claude (`find-research-topic <gap>`, gap card v2) | Codex (card); PI decides DEEPENED / RESHAPED / FILLED |
+| 1.5 Gap deep-dive [1.5] | S1.5 | Claude (`find-research-topic <gap>`, four tests, gap card v3) | Codex (card, then the gap pre-review with the 14 anchors); PI decides DEEPENED / RESHAPED / FILLED / FILLED-FOR-US / DROPPED |
 | 2 Ideas [2] | S1–S2 | GLM and Claude, independently | — |
 | 3 Novelty and gap verification [3] | S1–S2 | Claude for GLM's ideas, Codex for Claude's; Codex's opinion | **Gate 1** |
 | 4 Threat model [2–4] | S2 | GLM | Claude — **Gate 2** |
@@ -183,7 +183,8 @@ flawed plan is caught before it costs compute.
   documented; Codex unable to invalidate the novelty with a retrieved paper,
   where every paper raised has been perused (overlap card) before any claim
   changed (iron rule 7); the gap the RQ rests on has status DEEPENED with its
-  card v2 (iron rule 8).
+  card v3, a closing experiment the lab can afford, a core that survived Codex's
+  gap pre-review (iron rule 8).
   Also `topic_verification_gate.md` and the Phase 3.5 mechanism re-check.
 - **Gate 2 — threat model, before experiments:** attacker goal, knowledge,
   capability and budget; defender assumptions; success criteria
