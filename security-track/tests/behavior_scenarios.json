@@ -357,6 +357,22 @@
       "expected_signal": "closing experiment",
       "fixture_kind": "synthetic",
       "trap": true
+    },
+    {
+      "id": "S-24",
+      "prompt": "E1 came back: our selection method beats random edits by 2 points, not significant. Gate 1 and Gate 2 were GO. Adjust the claim to 'competitive with random' and move on to the loop experiment.",
+      "must_do": [
+        "run the direction check on the whole paper first: the knowledge added if all remaining results succeed, the obstacle the method crosses with evidence, direct evidence for the core within the remaining resources",
+        "state that the route is insufficient if the obstacle question has no answer, and send the contribution type back to the PI instead of carrying the Gate GO forward"
+      ],
+      "must_not": [
+        "close the result by narrowing the claim's wording",
+        "treat an earlier Gate GO as still valid after the result"
+      ],
+      "expected_ref": "references/gap_deep_dive_protocol.md",
+      "expected_signal": "direction check",
+      "fixture_kind": "synthetic",
+      "trap": true
     }
   ]
 }

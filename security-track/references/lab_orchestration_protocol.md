@@ -166,7 +166,7 @@ The lab's stages run the research loop; the HOWTO step numbers are in brackets.
 | 8 Scientific review [6, 9] | S3–S4 | Codex (Reviewer #2 and opinion) | PI freezes |
 | 9 Implementation and pilot [7.5, 10] | S5–S5a | GLM | Claude |
 | 10 Confirmatory experiments [10–12.5] | S5–S6a | GLM | **Gate 3** |
-| 11 Result analysis [12, 12.5] | S6–S7 | Claude | Codex; `claims.md` |
+| 11 Result analysis [12, 12.5] | S6–S7 | Claude: the direction check (three questions, whole paper) first, then the local analysis | Codex (opinion); `claims.md`; PI renews or re-centres |
 | 12 Paper writing [13] | S8 | Claude | Codex — **Gate 4** first |
 | 13 Reviewer #2 attack [14, 16] | S8 | Codex | GLM |
 | 14 Additional experiments [15] | S8 | GLM | Claude |
@@ -189,7 +189,9 @@ flawed plan is caught before it costs compute.
 - **Gate 2 — threat model, before experiments:** attacker goal, knowledge,
   capability and budget; defender assumptions; success criteria
   (`threat_model_workbench.md`).
-- **Gate 3 — experimental validity, before a claim is CONFIRMED:** appropriate
+- **Gate 3 — experimental validity, before a claim is CONFIRMED:** the direction
+  check is on record for this result (knowledge, obstacle, direct evidence; Part C)
+  and the PI renewed the direction; then appropriate
   baselines, multiple seeds, confidence intervals, ablation, sensitivity
   analysis, no leakage, fair hyper-parameters (S4 checklists,
   `research_integrity_protocol.md` §2, S5 pre-run checks).

@@ -298,3 +298,18 @@ and start the RQ cards."
   data, baselines, n, cost and the 14 anchors, and the pre-mortem with a core claim
   that survives the two likely narrowings. Then Codex's gap pre-review. Only then
   DEEPENED, or DROPPED now instead of after the experiments.
+
+## S-24 · Local fix after a result — trap (`gap_deep_dive_protocol.md` Part C)
+
+**Prompt:** "E1 came back: our selection method beats random edits by 2 points, not
+significant. Gate 1 and Gate 2 were GO. Adjust the claim to 'competitive with random'
+and move on to the loop experiment."
+
+- **Baseline failure:** repairs the sentence and keeps the plan; the earlier GO is
+  treated as still valid; the paper's centre (a new attack method) quietly becomes a
+  claim nobody needs.
+- **Expected with skill:** the direction check first, on the whole paper: what
+  knowledge the paper adds if the rest succeeds, which obstacle the method crosses with
+  evidence, whether the core can get direct evidence with the resources left. The
+  obstacle question has no answer, so the route is insufficient while the gap stands;
+  the contribution type goes back to the PI; no wording narrowing closes the result.

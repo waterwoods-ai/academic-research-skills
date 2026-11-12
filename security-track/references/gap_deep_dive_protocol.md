@@ -169,6 +169,40 @@ Rules:
    (then the Limitations line says what is left open), or send the paper back to the
    gap.
 
+## Part C: Direction check at every result (the whole paper, not the local fix)
+
+A Gate GO is a judgement about the plan at the time it was given. It does not survive
+new evidence by default. **Every experiment result, every checkpoint (S5 pre-run
+checks, S6 rounds, Step 12, Gate 3) and every pilot re-opens the paper's direction**,
+before any local repair is discussed. Claude writes the check; Codex gives its
+opinion; the PI decides. Record it in `decisions.md` as `direction check <date>`.
+
+The check is three questions, answered in writing from the current evidence:
+
+1. **Knowledge.** If every remaining expected result comes out as hoped, which single
+   piece of knowledge does the paper add that a Big-4 reader did not have? Write it as
+   one sentence a reviewer could cite. If the sentence is about the instrument or the
+   method's efficiency rather than about the world, say so.
+2. **Obstacle.** Which obstacle does the chosen method cross that existing methods
+   cannot? Name the obstacle, the methods that stop at it, and the evidence (not the
+   hypothesis) that ours crosses it. "Unmeasured" or "assumed" is a failing answer.
+3. **Direct evidence.** With the resources actually available (the capacity file, the
+   remaining GPU-hours, the calendar), can the core claim be supported by a direct
+   measurement, or is the plan adding proxy metrics in front of it? If a smaller direct
+   experiment on the core exists, it runs first.
+
+Outcomes:
+- All three answered → continue; the Gate GO is renewed with the date.
+- Question 2 or 3 unanswered → the **route** (method or evidence plan) is insufficient,
+  the gap is not refuted. Re-centre on the core (Part A test 4), re-plan the evidence,
+  or return to S3 for the method. The contribution type is re-decided by the PI.
+- Question 1 unanswered → the **gap** is insufficient. Return to S1.5.
+
+What is forbidden at this point: closing the check by narrowing the wording of the
+claim, by adding a proxy metric that the current method can pass, or by carrying the
+old Gate GO forward because it was given. A problem that was important must not be
+turned into a small one that is easy to pass and no longer matters.
+
 ## Who does what
 
 | Step | Does | Checks | Decides |
@@ -178,3 +212,4 @@ Rules:
 | B1 narrowing path | Claude peruses, runs the deep-dive on the objection | Codex | PI |
 | B4 drift report | Claude, each round | Codex, in the round's review | PI at two narrowing rounds |
 | B5 cold-read drift check | fresh Claude subagent | — | PI per claim |
+| C direction check (three questions) at every result | Claude | Codex (opinion) | PI: continue / re-centre / back to S3 / back to S1.5 |

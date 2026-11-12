@@ -58,7 +58,9 @@
    core), the gap pre-review survived, and status DEEPENED. From S3 on, every change to a claim's scope is logged in
    `claims.md` with a direction (NARROW / WIDEN / RESHAPE), its evidence and the PI's
    decision; a narrowing names what replaces the removed scope. Review rounds
-   never narrow a claim by accumulation.
+   never narrow a claim by accumulation. Every result re-opens the paper's direction
+   with the three-question check (`gap_deep_dive_protocol.md` Part C); a Gate GO is
+   renewed by the PI at each result or it lapses.
 
 ## Stage map and runtime routing
 
@@ -415,6 +417,8 @@ candidates; here they apply to the selected method and any later variants:
    researcher confirms the choice.
 
 ## S6 — Bounded improvement loop (the anti-dead-loop core)
+
+**Direction check first (`gap_deep_dive_protocol.md` Part C).** Before any improvement round is planned from a result, answer the three questions (knowledge added if everything succeeds; the obstacle this method crosses that others cannot; direct evidence for the core within the available resources) against the whole paper. A Gate GO given before the result is not carried forward; the PI renews it or re-centres. Local repairs come after this, never instead of it.
 
 Enter only if ≥1 pre-registered criterion is UNMET. Per iteration
 (M-v1 → M-v2 → …):
