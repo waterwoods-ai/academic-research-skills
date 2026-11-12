@@ -285,6 +285,17 @@ positioning argument.
 
 ## S4 — Validation design (refutation-shaped, by paper type)
 
+**Core-first ordering (added 2026-11-12).** The first experiment that spends
+confirmatory budget is the smallest direct test of the core claim (`gap_deep_dive_protocol.md`
+Part A test 4), pre-registered like the rest. Proxy stages that exist to choose or tune the
+method (selection gates, screening grids, calibration pilots beyond instrument
+qualification) run after the core has shown an effect, never before. Reason: in the
+2026-11-03 audits the projects that reached the core last ran out of budget or calendar
+before it, and the ring became the paper; the one project that killed its core first
+(cps-credbench kill test) lost a week instead of a quarter. The S4 plan lists the
+experiments in spend order with the core marked.
+
+
 The validation goal is to SHOW THE CLAIM IS RIGHT — but at a Big-4 venue a
 claim is only believed once it has survived the specific attempt at
 refutation its subfield demands. Confirmatory demonstrations ("we ran our

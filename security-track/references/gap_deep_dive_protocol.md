@@ -189,7 +189,7 @@ The check is three questions, answered in writing from the current evidence:
 3. **Direct evidence.** With the resources actually available (the capacity file, the
    remaining GPU-hours, the calendar), can the core claim be supported by a direct
    measurement, or is the plan adding proxy metrics in front of it? If a smaller direct
-   experiment on the core exists, it runs first.
+   experiment on the core exists, it runs first (S4 core-first ordering).
 
 Outcomes:
 - All three answered → continue; the Gate GO is renewed with the date.

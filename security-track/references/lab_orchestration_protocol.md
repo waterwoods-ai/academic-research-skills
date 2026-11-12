@@ -162,7 +162,7 @@ The lab's stages run the research loop; the HOWTO step numbers are in brackets.
 | 5 Research question [4] | S2–S3 | Claude writes `research_question.md` on the PI's decision | — |
 | Plan revision [4.5] | — | Codex revises `research_plan.md`; Claude writes the sub-plans for Phases B–C | Claude checks; PI approves |
 | 6 Method proposal [5a–5b] | S3 | GLM; Claude may add candidates | Claude (methodology, novelty); Codex |
-| 7 Experiment design [5b, 8] | S3–S4 | GLM | Claude |
+| 7 Experiment design [5b, 8] | S3–S4 | GLM; experiments listed in spend order, the direct core test first | Claude |
 | 8 Scientific review [6, 9] | S3–S4 | Codex (Reviewer #2 and opinion) | PI freezes |
 | 9 Implementation and pilot [7.5, 10] | S5–S5a | GLM | Claude |
 | 10 Confirmatory experiments [10–12.5] | S5–S6a | GLM | **Gate 3** |
