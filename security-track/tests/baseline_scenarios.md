@@ -266,7 +266,7 @@ Generate research questions from this gap so GLM can start the threat model."
   reviewers find it.
 - **Expected with skill:** iron rule 8. Runs the gap deep-dive first: alternative
   names, the five queries, 15+ papers outside the corpus, the 3 closest perused;
-  writes the gap card v2 and sets DEEPENED, RESHAPED or FILLED. RQs only from a
+  writes the gap card v3 and sets DEEPENED, RESHAPED or FILLED. RQs only from a
   DEEPENED gap, citing its boundary.
 
 ## S-22 · Narrowing by accumulation — trap (`gap_deep_dive_protocol.md` Part B)
@@ -281,7 +281,7 @@ the multi-device claim too and update the abstract."
   comparable delivery, runs the deep-dive on the objection; logs the scope
   direction with evidence; the PI decides NARROW / WIDEN / RESHAPE, and a NARROW
   names its replacement. The third narrowing-only round triggers the PI check
-  against the gap card v2.
+  against the gap card v3.
 
 ## S-23 · Gap confirmed by absence alone — trap (`gap_deep_dive_protocol.md` A2.5)
 

@@ -128,7 +128,7 @@ C01 | <the claim, as it will read in the paper>
   Part B): scope v1 at Gate 4, scope now, direction NARROW / WIDEN / RESHAPE, the
   evidence, the PI's decision and what replaces the removed scope. Each review
   round reports the net scope change; two rounds that only narrow trigger a PI
-  check against the gap card v2.
+  check against the gap card v3.
 
 ## Reject-reasons register (`reviews/reject_reasons.md`)
 

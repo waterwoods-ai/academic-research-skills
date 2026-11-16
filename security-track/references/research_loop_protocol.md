@@ -132,7 +132,7 @@ decides. The corpus of the topic is not the literature of the gap.
 
 From the gap registry, generate candidate RQs, only from gaps with status
 DEEPENED (iron rule 8); a LEAD or GAP entry goes back to S1.5. Each RQ card cites the
-gap card v2's boundary line and states:
+gap card v3's boundary line and states:
 threat-model sketch (adversary, assets, trust boundary), contribution
 type (attack / defense / measurement / analysis-SoK — note CCS bans SoK),
 target venue fit (which Big-4/tier-2 and why, per venue profiles),

@@ -115,6 +115,13 @@ DEEPENED.
 - **FILLED**: the closest papers deliver it at comparable depth (overlap card). Move
   the gap to `abandoned.md` with the filling papers. The *problem* may still yield a
   gap one level up or down (iron rule 6): record that as a new LEAD.
+- **A FILLED, FILLED-FOR-US or DROPPED gap is replaced, not mourned.** The deep-dive
+  moves to the next LEAD in `gap_registry.md`. When none is left, re-run the slicing
+  (`find-research-topic` steps 7–9, its replacement loop) with the filling papers added
+  as anchors: what they leave untested is the next slice. At most 3 replacement rounds
+  per problem; after that Claude reports the problem as saturated at this slicing, with
+  the papers that filled each gap, and the PI decides to shift the area or stop. No RQ
+  is built while the registry holds no DEEPENED gap.
 
 ### A4. Checks and the gap pre-review
 
@@ -129,7 +136,7 @@ DEEPENED.
   project.
 - A gap that reaches S2 as LEAD or GAP (not DEEPENED or RESHAPED→DEEPENED) is a
   protocol failure: S2 refuses it and returns it to S1.5.
-- `research_question.md` (Step 4) cites the gap card v2's boundary line; the
+- `research_question.md` (Step 4) cites the gap card v3's boundary line; the
   Contribution Card and Gate 4 cite it again as "what was unknown before".
 
 ## Part B: Scope-direction ledger (every claim change, S3 → submission)
@@ -161,10 +168,10 @@ Rules:
 4. **Scope-drift report, every round.** With the net word change (`major_revision_playbook.md`
    §6), report the net scope change: claims narrowed, widened, reshaped this round,
    with ids. Two consecutive rounds that only narrow trigger a PI check: is the
-   paper still the paper that fills the gap card v2, or has it become a corner of it?
+   paper still the paper that fills the gap card v3, or has it become a corner of it?
 5. **Scope-drift check at the cold read (Step 16.5).** The fresh agent compares the
    abstract's and introduction's claims with `claims.md` scope v1 (Gate 4) and the gap
-   card v2 boundary, and lists every claim that is now smaller than the gap it was
+   card v3 boundary, and lists every claim that is now smaller than the gap it was
    written to fill. The PI decides for each: restore (with evidence), keep narrowed
    (then the Limitations line says what is left open), or send the paper back to the
    gap.

@@ -3,8 +3,8 @@ name: find-research-topic
 description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. It starts from the most-cited papers, perused, and the papers that argue against them, maps the disputed points and the common ground, and slices the topic or method into gaps (new data for an old conclusion, method transfer, new parameters or unit of analysis). Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.4.2"
-  last_updated: "2026-11-12"
+  version: "1.4.3"
+  last_updated: "2026-11-16"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -199,6 +199,10 @@ Each slice that survives becomes a draft candidate. It names its move (1, 2 or 3
    - "Not found in this scan" is never evidence that nobody has done it. Write verdicts as "no direct match found in N queries", not "open".
 2. **Litmaps.** To catch recent work Elicit might miss, take the candidate's 3–5 closest papers as seeds and run `find_related_articles(strategy="citation_connected", start_date=<1 January of last year>)`. Litmaps' keyword search (`search_articles`) is noisy (an irrelevant forum post ranked first on 2026-10-13); use it only as a last resort and discard rows without a DOI or venue.
 3. **Ledger.** Record the verdict (`open` / `narrow` / `saturated`) with the papers that justify it, and for `narrow` or `saturated` the overlap card's path and outcome (KEEP / SHARPEN / NARROW / DROP).
+4. **Replace every dropped candidate (the loop).** A candidate that prior work already delivers (overlap card DROP) is not the end of the search: go back to step 7 and take the next slice, then run steps 8 and 9 on it.
+   - **Where the next slice comes from, in this order:** (i) the same anchor claim sliced along another axis of its evidence basis or with another of the three moves; (ii) the filling paper itself, which is now the newest anchor on that point: its perused limitations and the claims it leaves untested are sliced like any anchor claim; (iii) the next anchor claim or debate-map row not yet sliced.
+   - **Record it.** The dropped candidate goes to `abandoned.md` with the filling papers and the overlap card, so no later round finds it again; the ledger gets one line per round: dropped candidate → filling papers → replacement slice.
+   - **Stop when** at least 3 candidates stand (`open`, or `narrow` with KEEP or SHARPEN), or after 3 replacement rounds, or when no unsliced claim is left. In the last two cases the report says the area is saturated at this slicing, lists what filled each candidate, and proposes a shifted or wider area; it does not pad the table with dropped candidates.
 
 ### 10. Score and report
 Score the surviving candidates with the rubric below. Write `$RUN/report.md` containing:
@@ -244,8 +248,8 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.4.2 |
-| Last Updated | 2026-11-12 |
+| Skill Version | 1.4.3 |
+| Last Updated | 2026-11-16 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |
 | Role | Topic scouting with Elicit and Litmaps; literature stage 1a |

@@ -315,14 +315,14 @@
       "prompt": "Here are the 14 papers from our systematic review on firmware attestation for PLCs. The gap registry says nobody attests runtime logic on PLCs. Generate research questions from this gap so GLM can start the threat model.",
       "must_do": [
         "run the gap deep-dive on the gap (alternative names, the five queries, the 3 closest papers perused) before any RQ",
-        "write the gap card v2 with its boundary and set DEEPENED, RESHAPED or FILLED"
+        "write the gap card v3 with its boundary and set DEEPENED, RESHAPED or FILLED"
       ],
       "must_not": [
         "generate RQs from a gap found only in the given papers",
         "treat the topic corpus as the gap's literature"
       ],
       "expected_ref": "references/gap_deep_dive_protocol.md",
-      "expected_signal": "gap card v2",
+      "expected_signal": "gap card v3",
       "fixture_kind": "synthetic",
       "trap": true
     },
