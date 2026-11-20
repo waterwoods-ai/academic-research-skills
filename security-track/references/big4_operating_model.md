@@ -23,17 +23,22 @@ evidence. This file overrides any stage rule that conflicts with it.
 
 ## 2. Paper types the lab takes on
 
-Chosen for the evidence the lab can afford (two shared RTX 4090 hosts, no testbed, no
-device fleet, one PI). Until the PI changes this:
+The lab takes on **measurement, attack and defense** papers (PI, 2026-11-20). No type
+is excluded. What differs is the evidence each type owes, and the lab's means (two
+shared RTX 4090 hosts, no testbed, no device fleet, one PI) decide whether a given
+topic can pay for it:
 
-| Type | Evidence a Big-4 panel expects | In scope |
-|---|---|---|
-| **Measurement** of a real software or service ecosystem | the population (hundreds to thousands of real artifacts), a reproducible pipeline, findings that hold across it | yes |
-| **Vulnerability discovery / attack** on real, deployed or production-grade software | confirmed flaws in named real systems, responsible disclosure, root-cause taxonomy | yes |
-| **Defense system** | a real system or testbed, the cheapest existing control as baseline, adaptive attackers, demonstrated harm prevented | not now |
-| **Benchmark / SoK** | only with a measurement finding that stands by itself | case by case, PI decides |
+| Type | Evidence a Big-4 panel expects |
+|---|---|
+| **Measurement** of a real software or service ecosystem | the population (hundreds to thousands of real artifacts), a reproducible pipeline, findings that hold across it |
+| **Attack / vulnerability discovery** on real, deployed or production-grade systems | confirmed flaws or working attacks on named real systems, responsible disclosure, root-cause taxonomy |
+| **Defense** | a real system or testbed, the cheapest existing control as baseline, every designed component evaluated, adaptive attackers, harm demonstrated without the defense and prevented with it, the operating cost (false positives, overhead) across settings |
+| **Benchmark / SoK** | a measurement finding that stands by itself; case by case, PI decides |
 
-A topic whose closing experiment needs a testbed, devices or data the lab lacks is
+The paper type is named on the gap card at S1.5, and the evidence bar (section 3) is
+taken from exemplars of that type. A defense paper is the most expensive of the three
+for this lab: its bar is checked first against what the lab can run. A topic of any
+type whose closing experiment needs a testbed, devices or data the lab lacks is
 FILLED-FOR-US (`gap_deep_dive_protocol.md` test 3), whatever its novelty.
 
 ## 3. The evidence bar comes from exemplars, set before the build
