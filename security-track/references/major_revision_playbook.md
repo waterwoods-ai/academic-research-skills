@@ -268,6 +268,8 @@ otherwise.
 
 ## 6. Keep the paper a paper (simulated review rounds)
 
+**Limits (`big4_operating_model.md` §6).** At most three scientific rounds per draft; packaging items go to a checklist. An internal Accept means "ready for a human read", not "ready to submit". After a real review: append to `review_calibration.md`, and before any resubmission fill `resubmission_table.md`; an evidence concern closed only by wording keeps the paper out of a venue of the same tier.
+
 Our own review rounds (Reviewer #2, the ARS panel, re-review) raise many
 items each round. If every item is closed by adding text, the paper turns
 into a rebuttal: sentences that answer a reviewer nobody else has read,
