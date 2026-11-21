@@ -74,6 +74,9 @@ EXPECTED_LEVELS = {
     "novelty-engine": "raw",
     "find-research-topic": "raw",
     "verify-research-topic": "raw",
+    # Registered 2026-11-21: reads the project's registry and third-party
+    # index results.
+    "update-research-topic": "raw",
     "novelty-filter": "raw",
 }
 

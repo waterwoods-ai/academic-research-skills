@@ -5,9 +5,10 @@
 > This fork adds a fifth skill, `security-track`, to the four upstream ARS skills:
 > an overlay for research aimed at top security conferences (the Big 4 and tier-2),
 > calibrated for CPS, IoT and AI security.
-> The same plugin also carries four skills of its own: `find-research-topic`,
+> The same plugin also carries five skills of its own: `find-research-topic`,
 > `verify-research-topic`, `novelty-filter` (the topic-scouting and novelty-check
-> front end; needs a browser) and `novelty-engine` (the idea generator).
+> front end; needs a browser), `update-research-topic` (the repeat look at a topic
+> while the project runs) and `novelty-engine` (the idea generator).
 > Since 2026-10-06 this repository is maintained as its own product: any file may be
 > edited, and nothing is merged from upstream any more. Upstream updates are reviewed
 > and ported by hand (see `UPSTREAM.md` at the repository root). All work happens on

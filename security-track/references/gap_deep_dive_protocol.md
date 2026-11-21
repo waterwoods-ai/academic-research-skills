@@ -184,6 +184,12 @@ checks, S6 rounds, Step 12, Gate 3) and every pilot re-opens the paper's directi
 before any local repair is discussed. Claude writes the check; Codex gives its
 opinion; the PI decides. Record it in `decisions.md` as `direction check <date>`.
 
+**The literature moves during the project.** A direction check is answered against
+the literature as it is now. If the project's last look (`topic_watch.json`
+`last_check`) is more than 30 days old, run `update-research-topic` first. A status of
+CONTESTED or OVERTAKEN re-opens the gap itself: question 1 is then answered with the
+new paper on the table, and a FILLED core goes through the replacement loop (A3).
+
 The check is three questions, answered in writing from the current evidence:
 
 1. **Knowledge.** If every remaining expected result comes out as hoped, which single

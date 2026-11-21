@@ -127,6 +127,9 @@ and the closing experiment before the build.
 
 ## 5. No headline result, no paper
 
+- While a project is ACTIVE, the topic is looked at again every 30 days and before
+  each gate (`update-research-topic`): a result that another group published first is
+  no longer a headline.
 - Drafting starts only when the **headline result** exists: one sentence a reviewer
   would cite, with the table or figure that supports it, from the evidence ledger.
 - At Gate 1 the PI sets a **headline date**. On that date, without the result: the PI

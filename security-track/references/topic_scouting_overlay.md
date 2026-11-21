@@ -1,10 +1,12 @@
 # Topic Scouting Overlay (Custom — Security Track)
 
-> Binds five skills to stages S0–S3 of `research_loop_protocol.md`.
+> Binds six skills to stages S0–S3 of `research_loop_protocol.md`, and one of
+> them (`update-research-topic`) to every stage after that.
 > `novelty-engine` (the idea generator) ships in both editions of this suite.
 > `find-research-topic`, `verify-research-topic` and `novelty-filter`
 > drive Elicit, Litmaps, ChatGPT and Claude.ai in a headed Chrome window, so
-> they ship in the Claude Code edition only. The fifth, `research-gaps`
+> they ship in the Claude Code edition only, and so does
+> `update-research-topic`, which continues from their files. The sixth, `research-gaps`
 > (Elicit API + Litmaps Zotero Sync + Zotero), comes from the separate
 > zotero-literature plugin. The three browser skills and `research-gaps` are
 > **search and filter front-ends**: they find leads faster than index queries
@@ -18,6 +20,7 @@
 | S0 | No topic yet: turn a broad area into 3–7 candidate topics | `find-research-topic` | Claude Code (Chrome for Elicit; Litmaps through its MCP) |
 | S1 | Topic chosen: systematic, repeatable gap evidence, filed in Zotero | `research-gaps` (Elicit API — needs **Elicit Pro**; Litmaps Pro for Zotero Sync) | Claude Code |
 | S2 → S3 | Is this RQ worth committing to? | `topic_verification_gate.md` (12 questions); optional blind second opinion through `verify-research-topic` | Gate: every runtime. ChatGPT pass: Claude Code |
+| S1.5 → submission | The project is running: what appeared since the last look, and does any of it touch the core claim? Every 30 days, before each gate and direction check, before drafting, in the 7 days before a submission, before a resubmission | `update-research-topic` (date-windowed sweep of the saved queries, citing papers and the closest papers' authors; overlap card per near paper; status CLEAR / MOVED / CONTESTED / OVERTAKEN) | Claude Code |
 | S3 | Start from ONE baseline paper: limitation ledger, then filter candidate improvements for novelty (it does not generate) | `novelty-filter` | Claude Code |
 | S3 | Generate from supported assumptions, confirmed baseline limitations or located observations; check and deduplicate candidates, shortlist at most three, formalize | `novelty-engine` Phases 1–4 (`dogma_extractor`, `cross_domain_synthesizer`, `limitation_resolver`, `observation_analyst`, `novelty_verifier`, `math_formalizer`); `references/evidence_driven_ideation.md` inside that skill | Every runtime (subagents on Claude Code; role by role elsewhere) |
 
@@ -116,5 +119,6 @@
 | `gap-report.md` (research-gaps) | `gap_registry.md` entries, each completed to the S1 three-field form, status GAP until the deep-dive |
 | `find-research-topic <gap statement>` (the deep-dive, S1.5) | the gap card v3 appended to the gap's `gap_registry.md` entry; new papers to `literature.md` with role `gap` |
 | `verification.md` (verify-research-topic) | the go / revise / stop annotation on the RQ card |
+| `update.md` (update-research-topic) | one `update:` line on the gap's `gap_registry.md` entry; new papers to `literature.md` with role `update`; new baselines to `evidence_bar.md`; a scope ledger entry for a RING outcome; an open PI decision in `decisions.md` for CONTESTED or OVERTAKEN; `topic_watch.json` with the new `last_check` |
 | `weaknesses.md` + `method-proposal.md` (novelty-filter) | S3 limitation ledger, which is the input of `novelty-engine`'s limitation-driven mode; candidate cards and Contribution Card items 2–3 (novelty status, positioning) |
 | every run's `ledger.md` | the search record S1 and S3 cite |
