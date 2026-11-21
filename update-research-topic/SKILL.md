@@ -3,7 +3,7 @@ name: update-research-topic
 description: Use when the user asks to update, refresh or re-check a research topic, gap or paper idea that is already being worked on, to find out what has been published in the area since the last search, or whether someone else has already published the same idea (scooped, overtaken, concurrent work); also before a gate, before drafting, before a submission and before a resubmission.
 argument-hint: "<project folder or topic> [since YYYY-MM-DD]"
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   last_updated: "2026-11-21"
   status: active
   data_access_level: raw
@@ -46,6 +46,7 @@ Find out what appeared in the topic since the project last looked, read the pape
 
 - Watch profile and report formats: [references/formats.md](references/formats.md)
 - Sweep script: `scripts/sweep.py` (OpenAlex and arXiv, standard library only)
+- Elicit API client, in the sibling skill: `find-research-topic/scripts/elicit_api.py` (`check`, `search`)
 - Tool notes for Elicit and Litmaps: `find-research-topic/references/elicit.md`, `find-research-topic/references/litmaps.md`
 
 ## When to run
@@ -106,7 +107,7 @@ It asks OpenAlex and arXiv for new papers per query, new papers citing each seed
 Log each in `ledger.md`.
 
 - **Litmaps** (if its MCP is connected): `find_related_articles` on the seeds with `start_date` set to the window start, `strategy="citation_connected"` and again `strategy="similar_text"`. Similar text finds the paper that solves the same problem and cites none of the seeds.
-- **Elicit** through its API route, one search per query that the script found nothing for.
+- **Elicit** through its API, for every query of the profile: `python3 <suite>/find-research-topic/scripts/elicit_api.py search "<query text>" --since <window start> -n 50 -o RUN/elicit/<query id>.json`, in a login shell so the key loads. Its semantic search returns papers that share no keyword with the query, which the script's indexes miss. Drop the papers the project already holds, by DOI or arXiv id. Exit code 1 means no answer: log the query as not searched.
 - **Accepted-paper lists and programs** of the profile's venues that were published inside the window: scan the titles for the topic's names. Add workshop programs co-located with those venues.
 - **Grey literature**: standards and drafts, CVEs and advisories, tool and dataset repositories, vendor documentation, and talks at practitioner conferences. Security gaps are often closed by practice before a paper says so.
 - **The other communities' names** (control, networking, formal methods, software engineering, HCI), when the script's queries used only the security vocabulary.
@@ -178,7 +179,7 @@ Give the user: the status in one sentence with the search it rests on; each `nea
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.0.0 |
+| Skill Version | 1.1.0 |
 | Last Updated | 2026-11-21 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (gap deep-dive protocol, evidence bar), find-research-topic (tool notes, ledgers) |

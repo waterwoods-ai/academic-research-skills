@@ -103,3 +103,11 @@ Tags: **[live]** = seen in the browser, **[docs]** = from the help center, **[ve
 - **An API `search` costs nothing measurable.** `elicit_api.py check` read 86% before and after 36 searches of 20–30 results each. Paid usage comes from UI Find-papers runs, Reports and reviews, not from API search. Breadth and novelty passes can therefore go entirely through `elicit_api.py search`. Still log the count, because users may cap it.
 - API results carry `abstract`, `doi`, `citedByCount` and `venue`, but no extraction columns. Get limitations and future work from full text instead; an arXiv-HTML subagent pass over about 15 papers took about 10 min.
 - **zsh gotcha:** `echo ======` fails in zsh ("= not found") and aborts the rest of a `&&` chain. Use `echo "-----"`.
+
+## API route (`scripts/elicit_api.py`) [docs + live, 2026-11-21]
+- `check` calls `GET /usage`; `search` calls `POST /search/papers` (base `https://elicit.com/api/v2`). The key is `ELICIT_API_KEY` in the shell profile: run in a login shell, check it by name only, never print it.
+- Search options: `-n` (1–300, the Pro plan's cap per search; there is no pagination), `--min-year`, `--max-year`, `--since YYYY-MM-DD`, `--has-pdf`, `--include`, `--exclude`, `--keyword-mode` (keyword search accepts no filters; the API answers 400), `-o FILE` for the full JSON.
+- Each paper: `elicitId`, `title`, `authors`, `year`, `abstract`, `doi`, `venue`, `citedByCount`, `urls`, `fullTextUrl`. No extraction columns and no citation filter.
+- Limits: 100 requests per minute per IP across all endpoints; exceeding it blocks the IP for 5 minutes (429). 402 is exhausted quota, 403 a plan without API access.
+- A search uses no plan usage: `check` read 0% before and after a search on 2026-11-21 (86% before and after 36 searches on 2026-10-08).
+- The client covers `check` and `search` only. The earlier client's review commands (`review`, `status`, `wait`, `fetch`, `resume`) were not rebuilt; systematic reviews and reports run from the web page.

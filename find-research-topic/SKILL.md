@@ -3,8 +3,8 @@ name: find-research-topic
 description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. It starts from the most-cited papers, perused, and the papers that argue against them, maps the disputed points and the common ground, and slices the topic or method into gaps (new data for an old conclusion, method transfer, new parameters or unit of analysis). Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.4.3"
-  last_updated: "2026-11-16"
+  version: "1.5.0"
+  last_updated: "2026-11-21"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -40,7 +40,7 @@ Otherwise, classify the user's input:
 **Security-first default (this suite):** every research or paper task targets a security venue — the Big 4 (IEEE S&P, NDSS, ACM CCS, USENIX Security) or a tier-2 venue — unless the opt-out rule in the `security-track` skill (§ Activation) holds. Before configuring any ARS skill or agent for such a task, load `security-track` and apply its § Overrides of stock ARS defaults: IEEE/ACM numeric citations instead of APA 7.0; the security chapter structure with an explicit Threat Model and Ethics Considerations instead of IMRaD, sized by the venue's page limit; the five security reviewer personas with the target venue's decision vocabulary; double-blind anonymity; and conference deadlines only from its `deadlines_current.md`.
 <!-- routing-core:end -->
 
-You drive Elicit in Chrome through the `use_browser` tool (superpowers-chrome) and Litmaps through its MCP tools (`mcp__litmaps__*`), then write a ranked, evidence-backed topic report.
+You reach Elicit through its API (`scripts/elicit_api.py`; its web page in Chrome, through the `use_browser` tool, only for extraction columns and reports) and Litmaps through its MCP tools (`mcp__litmaps__*`), then write a ranked, evidence-backed topic report.
 
 **Place in the workflow.** This skill is the breadth pass of the literature stage (HOWTO Step 1a), used when the user has only a broad area. The depth pass (Step 1b, ARS `lit-review` on the chosen topic) continues from the files this skill writes, so the same ground is not searched twice. Always write the stage files in step 10, not only the report.
 
@@ -51,6 +51,7 @@ You drive Elicit in Chrome through the `use_browser` tool (superpowers-chrome) a
 4. slice the topic or method to find the gap (step 7), with three moves: re-test an old conclusion on new data or a new sample; transfer a method that is mature in area A to area B; or study the same phenomenon with a new set of parameters or a new unit of analysis.
 Load the `superpowers-chrome:browsing` skill first if its instructions are not already in context. Litmaps needs no browser: its MCP tools are deferred, so load them in one `ToolSearch` (`select:` all `mcp__litmaps__*` tools you need) before step 3.
 
+- Elicit API client: `scripts/elicit_api.py` (`check`, `search`; standard library only; `verify-research-topic` and `update-research-topic` use the same file)
 - Elicit operating notes: [references/elicit.md](references/elicit.md)
 - Litmaps operating notes: [references/litmaps.md](references/litmaps.md)
 - Zotero integrations (Elicit import, Litmaps two-way sync, local read API): [references/zotero.md](references/zotero.md)
@@ -77,6 +78,7 @@ Set `RUN=runs/<YYYY-MM-DD>-<slug>` under the project root. Append to `$RUN/ledge
 ## Flow
 
 ### 0. Browser + login gate
+The Elicit part of this gate (items 1–4) is needed only when a later step uses the Elicit web page. A run that stays on the API checks the key instead: `python3 scripts/elicit_api.py check` in a login shell, so the key loads from the shell profile.
 1. Call `get_profile`. If the profile is not `research-scout`: `kill_chrome`, then `set_profile research-scout`.
 2. Call `show_browser`, then confirm with `browser_mode` that it reports `"headless": false`. It reported headless at the start of both runs so far, so always check. Headed mode is required, because Cloudflare blocks headless Chrome on Elicit and the user needs a window to log in. A Chrome auto-restart (e.g. after `kill_chrome`) comes back headless, so check again after any restart.
 3. Call `set_viewport {width:1440,height:900}`.
@@ -103,7 +105,9 @@ Set `RUN=runs/<YYYY-MM-DD>-<slug>` under the project root. Append to `$RUN/ledge
 3. Show the questions to the user. Adjust them once based on the reply, then proceed without asking again.
 
 ### 2. Elicit: landscape + stated gaps
-For each framing question:
+**API first.** Turn each framing question into keywords and run `python3 scripts/elicit_api.py search "<keywords>" -n 30 -o $RUN/elicit/<id>.json`, then again with `--min-year {current_year-3}` for the recent slice. The API has no citation filter: for the anchors, run with `-n 100` and sort the saved file by `citedByCount`. Its results carry abstract, DOI, citation count and venue, and no extraction columns, so limitations and future work come from the full text or from the web route below. A search costs no plan usage (measured 2026-10-08 and 2026-11-21). A run that ends with exit code 1 gave no answer: log it as not searched, never as nothing found.
+
+**Web route, when the extraction columns are needed** (paid usage: ask first). For each framing question:
 1. **Find Papers.** Run the question, then run it again with `+year:>{current_year-3}` to get the recent slice.
 2. **Load results.** Load More until you have about 30 results, or until they stop being relevant.
 3. **Add columns** (by chat, in this priority order, up to your plan's column limit):
@@ -248,8 +252,8 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.4.3 |
-| Last Updated | 2026-11-16 |
+| Skill Version | 1.5.0 |
+| Last Updated | 2026-11-21 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |
 | Role | Topic scouting with Elicit and Litmaps; literature stage 1a |

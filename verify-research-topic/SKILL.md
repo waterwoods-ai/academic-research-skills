@@ -3,8 +3,8 @@ name: verify-research-topic
 description: Use when the user asks to verify, stress-test, sanity-check or review a security research topic, paper idea or study design before committing to it, including requests to answer a fixed list of research questions about a topic or to cross-check a topic with ChatGPT.
 argument-hint: "<topic, or a path to a report/design file> [more topics]"
 metadata:
-  version: "1.2.0"
-  last_updated: "2026-10-13"
+  version: "1.3.0"
+  last_updated: "2026-11-21"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -44,6 +44,7 @@ Answer 12 questions about each topic from the evidence you hold, then get an **i
 
 - Questions, pass criteria and verdict rules: [references/questions.md](references/questions.md)
 - Driving chatgpt.com: [references/chatgpt.md](references/chatgpt.md)
+- Elicit API client, in the sibling skill: `find-research-topic/scripts/elicit_api.py` (`check`, `search`)
 
 Load `superpowers-chrome:browsing` if it is not already in context.
 
@@ -58,12 +59,14 @@ Load `superpowers-chrome:browsing` if it is not already in context.
 6. **Every paste step aborts unless `location.hostname === 'chatgpt.com'`,** Temporary Chat is on, and the chat is empty. Other tabs in the same browser (e.g. claude.ai) use the same `.ProseMirror` editor, and focus can move between tabs without warning.
 
 ## Run folder
-`RUN=runs/<YYYY-MM-DD>-verify-<slug>`. Files: `answers.md` (yours, frozen), `brief.md` (approved), `chatgpt-blind.md`, `chatgpt-review.md` (transcripts), `verification.md` (final).
+`RUN=runs/<YYYY-MM-DD>-verify-<slug>`. Files: `answers.md` (yours, frozen), `brief.md` (approved), `chatgpt-blind.md`, `chatgpt-review.md` (transcripts), `verification.md` (final), `elicit/` (saved prior-work searches).
 
 ## Flow — repeat per topic, one fresh ChatGPT chat per pass
 
 ### 1. Gather the evidence
 Read the topic's design / report / ledgers. List the sources you will cite. A topic with no written design gets a one-paragraph design from the user first.
+
+**Search for prior work before answering Q3.** Write 3–5 keyword queries that name the topic's problem and its method in public vocabulary (rule 2 applies to search queries too: no unpublished claim or design text), and run each through Elicit's API: `python3 <suite>/find-research-topic/scripts/elicit_api.py search "<keywords>" -n 30 --min-year <two years back> -o $RUN/elicit/<id>.json`, in a login shell so the key loads. Read every returned paper that is close to the topic and missing from its design or ledgers before answering Q3. A search that ends with exit code 1 gave no answer: record it in `answers.md` as not searched, never as nothing found.
 
 **Expand the prior work before answering Q3 (if the Litmaps MCP is connected).** Take the topic's 5–20 key papers by DOI (`get_articles_by_doi`, deduplicated by arXiv id or title), then run `find_related_articles` with `strategy="citation_connected"` (limit 100) and, for the newest work, again with `start_date` set to the start of last year. Papers that sit close to the topic but are not in its design or ledgers are prior-work candidates: read each one before using it as evidence. This is read-only and needs no browser; tool notes are in `find-research-topic/references/litmaps.md` § MCP.
 
@@ -113,8 +116,8 @@ Write `verification.md` in the format below, then give the user the verdict and 
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.2.0 |
-| Last Updated | 2026-10-13 |
+| Skill Version | 1.3.0 |
+| Last Updated | 2026-11-21 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic verification gate) |
 | Role | Twelve-question topic check with a blind second opinion |
