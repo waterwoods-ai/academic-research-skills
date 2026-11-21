@@ -1,14 +1,15 @@
 # Topic Scouting Overlay (Custom — Security Track)
 
-> Binds six skills to stages S0–S3 of `research_loop_protocol.md`, and one of
+> Binds five skills to stages S0–S3 of `research_loop_protocol.md`, and one of
 > them (`update-research-topic`) to every stage after that.
 > `novelty-engine` (the idea generator) ships in both editions of this suite.
 > `find-research-topic`, `verify-research-topic` and `novelty-filter`
 > drive Elicit, Litmaps, ChatGPT and Claude.ai in a headed Chrome window, so
 > they ship in the Claude Code edition only, and so does
-> `update-research-topic`, which continues from their files. The sixth, `research-gaps`
-> (Elicit API + Litmaps Zotero Sync + Zotero), comes from the separate
-> zotero-literature plugin. The three browser skills and `research-gaps` are
+> `update-research-topic`, which continues from their files. `research-gaps`
+> belonged to the zotero-literature plugin, which was removed in 2026-11; its
+> Elicit API route now lives in `find-research-topic/scripts/elicit_api.py`
+> and its Zotero steps run through `zotero-cli`. The three browser skills are
 > **search and filter front-ends**: they find leads faster than index queries
 > alone; they do not decide. The loop's own gates (S1 gap rules, S3 full-text
 > novelty check, the human gates) still decide.
@@ -18,26 +19,28 @@
 | Stage | Need | Tool | Runs on |
 |---|---|---|---|
 | S0 | No topic yet: turn a broad area into 3–7 candidate topics | `find-research-topic` | Claude Code (Chrome for Elicit; Litmaps through its MCP) |
-| S1 | Topic chosen: systematic, repeatable gap evidence, filed in Zotero | `research-gaps` (Elicit API — needs **Elicit Pro**; Litmaps Pro for Zotero Sync) | Claude Code |
+| S1 | Topic chosen: systematic, repeatable gap evidence, filed in Zotero | `find-research-topic` on the chosen topic through its API route (`scripts/elicit_api.py` — needs **Elicit Pro**), kept papers filed with `zotero-cli` (Litmaps Pro for Zotero Sync) | Claude Code |
 | S2 → S3 | Is this RQ worth committing to? | `topic_verification_gate.md` (12 questions); optional blind second opinion through `verify-research-topic` | Gate: every runtime. ChatGPT pass: Claude Code |
 | S1.5 → submission | The project is running: what appeared since the last look, and does any of it touch the core claim? Every 30 days, before each gate and direction check, before drafting, in the 7 days before a submission, before a resubmission | `update-research-topic` (date-windowed sweep of the saved queries, citing papers and the closest papers' authors; overlap card per near paper; status CLEAR / MOVED / CONTESTED / OVERTAKEN) | Claude Code |
 | S3 | Start from ONE baseline paper: limitation ledger, then filter candidate improvements for novelty (it does not generate) | `novelty-filter` | Claude Code |
 | S3 | Generate from supported assumptions, confirmed baseline limitations or located observations; check and deduplicate candidates, shortlist at most three, formalize | `novelty-engine` Phases 1–4 (`dogma_extractor`, `cross_domain_synthesizer`, `limitation_resolver`, `observation_analyst`, `novelty_verifier`, `math_formalizer`); `references/evidence_driven_ideation.md` inside that skill | Every runtime (subagents on Claude Code; role by role elsewhere) |
 
-- **With Elicit Pro, prefer the API for Elicit work** (`research-gaps`): it is
-  repeatable, needs no browser, and allows up to 20 extraction columns. Keep
-  the browser skill for early scouting. Litmaps steps go through Litmaps' MCP
+- **With Elicit Pro, prefer the API for Elicit work**
+  (`find-research-topic/scripts/elicit_api.py`): it is repeatable and needs
+  no browser. Use the Elicit web page only for extraction columns and reports. Litmaps steps go through Litmaps' MCP
   server since 2026-10-13 (Explore strategies, maps named at creation, Tags);
   only the map's momentum × connectivity axes still need the browser.
 - Do not run both front-ends on the same topic for the same purpose; pick by
   the table.
-- **Zotero and Elicit are reached through their APIs, and Litmaps through
-  its MCP server (`mcp__litmaps__*`, since 2026-10-13), not their web pages**
-  (Tom's standing instruction, 2026-10-01; the keys are in the shell as
-  `ELICIT_API_KEY`, `ZOTERO_API_KEY`, `ZOTERO_LIBRARY_ID`). Zotero reads go
-  through the local API (`zotero_api.py`, Zotero desktop running) and writes
-  through the Web API (`zotero_write.py`); Elicit searches and reviews go
-  through `elicit_api.py`. Open the Elicit or Zotero site in a browser only
+- **Elicit is reached through its API, Zotero through `zotero-cli`, and
+  Litmaps through its MCP server (`mcp__litmaps__*`, since 2026-10-13), not
+  their web pages** (Tom's standing instructions, 2026-10-01 and 2026-11-21;
+  the Elicit key is in the shell as `ELICIT_API_KEY`, and `zotero-cli` keeps
+  its own configuration). Every Zotero read and write goes through
+  `zotero-cli` (`items`, `collections`, `tags`; `--json` for machine-readable
+  output); writes reach Zotero desktop after a sync, and a delete is confirmed
+  with the user first. Elicit searches go through
+  `find-research-topic/scripts/elicit_api.py`. Open the Elicit or Zotero site in a browser only
   for what the API or MCP cannot do
   (Litmaps' map axes, the Elicit UI's column views).
 - **Codex / opencode** cannot drive the browser. There: run S1 with
@@ -116,7 +119,7 @@
 | Tool output | Goes into |
 |---|---|
 | `find-research-topic` (HOWTO Step 1a) | writes its kept papers to `literature.md` and its candidate gaps to `gap_registry.md` as LEAD entries; the systematic review (Step 1b) starts from those files, searches only what they do not cover, and completes each LEAD to the S1 three-field form or drops it |
-| `gap-report.md` (research-gaps) | `gap_registry.md` entries, each completed to the S1 three-field form, status GAP until the deep-dive |
+| the S1 run's gap report | `gap_registry.md` entries, each completed to the S1 three-field form, status GAP until the deep-dive |
 | `find-research-topic <gap statement>` (the deep-dive, S1.5) | the gap card v3 appended to the gap's `gap_registry.md` entry; new papers to `literature.md` with role `gap` |
 | `verification.md` (verify-research-topic) | the go / revise / stop annotation on the RQ card |
 | `update.md` (update-research-topic) | one `update:` line on the gap's `gap_registry.md` entry; new papers to `literature.md` with role `update`; new baselines to `evidence_bar.md`; a scope ledger entry for a RING outcome; an open PI decision in `decisions.md` for CONTESTED or OVERTAKEN; `topic_watch.json` with the new `last_check` |

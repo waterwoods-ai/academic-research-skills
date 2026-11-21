@@ -3,7 +3,7 @@ name: find-research-topic
 description: Find a novel, feasible academic research topic by driving Elicit (semantic search + gap extraction) in a real Chrome window and Litmaps (citation-network exploration) through its MCP server, with optional Zotero seeding and saving through their Zotero integrations. It starts from the most-cited papers, perused, and the papers that argue against them, maps the disputed points and the common ground, and slices the topic or method into gaps (new data for an old conclusion, method transfer, new parameters or unit of analysis). Use when the user asks to find/scout/choose a research topic, research gap, or thesis/paper direction with Elicit and/or Litmaps. It is the breadth pass of the literature stage (HOWTO Step 1a); besides the report it writes kept papers to literature.md and candidate gaps to gap_registry.md, so the systematic review (Step 1b) continues from them instead of searching again.
 argument-hint: "<broad research area> [constraints]"
 metadata:
-  version: "1.5.0"
+  version: "1.5.1"
   last_updated: "2026-11-21"
   status: active
   data_access_level: raw
@@ -54,7 +54,7 @@ Load the `superpowers-chrome:browsing` skill first if its instructions are not a
 - Elicit API client: `scripts/elicit_api.py` (`check`, `search`; standard library only; `verify-research-topic` and `update-research-topic` use the same file)
 - Elicit operating notes: [references/elicit.md](references/elicit.md)
 - Litmaps operating notes: [references/litmaps.md](references/litmaps.md)
-- Zotero integrations (Elicit import, Litmaps two-way sync, local read API): [references/zotero.md](references/zotero.md)
+- Zotero integrations (Elicit import, Litmaps two-way sync, `zotero-cli`): [references/zotero.md](references/zotero.md)
 
 Read the reference for a tool before touching it. When the UI differs from the notes, trust the screen: read the auto-captured `.png`/`.md`, adapt, and log the difference in the run log (step 11).
 
@@ -88,7 +88,7 @@ The Elicit part of this gate (items 1–4) is needed only when a later step uses
 6. **Zotero (optional).** Check three things, each by its signal in [references/zotero.md](references/zotero.md):
    - Elicit is connected: the Library shows **Import from Zotero**.
    - Litmaps is connected to Zotero: the MCP cannot see sync status, so ask the user whether their Litmaps account has Zotero sync set up (Sync → Create a new Zotero-synced Tag in the app).
-   - The agent's local read access works: `http://localhost:23119` answers, via the `zotero-literature` script.
+   - The agent's own access works: `zotero-cli -q collections list` returns collection keys.
    If one fails, run without it and say so. Zotero is never required for the flow.
 
 ### 1. Scope intake (single checkpoint with the user)
@@ -252,7 +252,7 @@ Drop any candidate that scores 1 on Novelty or Feasibility.
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.5.0 |
+| Skill Version | 1.5.1 |
 | Last Updated | 2026-11-21 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (topic scouting overlay), academic-paper lit-review (stage 1b) |

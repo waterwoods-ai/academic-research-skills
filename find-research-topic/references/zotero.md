@@ -24,17 +24,17 @@ The two integrations work in **opposite directions**, and that difference is the
 
 - **Elicit** [docs]: Settings → **Integrations** → **Connect** (log in to Zotero, "accept default permissions"). Connected = the Library shows an **Import from Zotero** button. [verify: button location on the current Library page]
 - **Litmaps** [docs]: sidebar **Sync** → "Authenticate a new Zotero Account" → Zotero login → **Accept Defaults** → **Return to Litmaps**. Connected = Sync offers **"Create a new Zotero-synced Tag"**. The sidebar shows **IMPORT** and **SYNC** [live, 2026-09-26]. Changing the Zotero permissions afterwards breaks the sync [docs].
-- **Local read access for the agent** [live, 2026-09-27]: Zotero desktop exposes a read-only local API at `http://localhost:23119` (HTTP 200 when the app is running). The `zotero-literature` skill's script wraps it:
+- **Agent access through `zotero-cli`** [live, 2026-11-21]: every Zotero read and write goes through the `zotero-cli` command (the zotero-literature plugin and its scripts were removed). It talks to the Zotero web API with its own stored configuration, so Zotero desktop need not be running; a write shows up in the desktop app after a sync.
   ```bash
-  Z="$HOME/.claude/plugins/zotero-literature/skills/zotero-literature/scripts/zotero_api.py"
-  python3 $Z find-collection "<name>"          # → collection key
-  python3 $Z list-items <KEY>                  # item keys, dates, titles
-  python3 $Z search-items <KEY> "<query>"
-  python3 $Z export-bibtex <KEY> [out.bib]
+  zotero-cli --json collections list                     # the collection tree with keys
+  zotero-cli --json items list --collection <KEY>        # items of one collection
+  zotero-cli --json items search "<query>"               # whole library
+  zotero-cli items find-doi <DOI>                        # is this paper already there?
+  zotero-cli items export --collection <KEY> --format bibtex --output out.bib
+  zotero-cli collections create --name "<name>"          # writes: only into the run's own collection
+  zotero-cli items add-doi <DOI> --collection <KEY> --tags scout
   ```
-  It cannot write. That suits verification: it lets you confirm what the Litmaps sync actually put into Zotero. If it is unreachable, ask the user to open Zotero desktop, or skip verification and say so.
-  - `find-collection` does a **case-insensitive substring** match and prints each match's `Items:` count, which is the number the report needs. Always pass the full `scout <date> <slug>` name; a bare `scout` matches every run. A miss prints "No collection matching …" and exits 1 [live, 2026-09-27].
-  - The local API returned all 38 of the user's collections with no `limit` parameter, so there is no pagination problem at this size [live, 2026-09-27]. Recheck if the library grows past ~100 collections.
+  `-q` prints keys only. Never print the stored key (`config show` masks it). Ask the user before any `delete`. If the command fails, run without Zotero and say so.
 
 ## Elicit: importing a Zotero collection [docs]
 

@@ -3,8 +3,8 @@ name: novelty-engine
 description: "Academic Novelty & Method Engineering Engine — the suite's idea generator. 4-stage pipeline: (I) Research Preparation — topic verification, paper discovery, gap analysis, go/no-go; (II) Idea Generation — three evidence-led routes (assumption-breaking, limitation-driven, observation-driven), then common candidate checks and a shortlist; (III) Formalization & Proof — math/algorithms, falsification experiments, runnable code; (IV) Validation & Publication — ARS peer review, hardening, full paper. 10 roles. Math or algorithm required for every method. Use when the user asks to generate research ideas, propose a novel method, break a field's assumptions, import a method from another discipline, improve on a baseline's limitations, investigate an observed anomaly or deployment obstacle, formalize a method, or design falsification experiments. Triggers: novelty engine, idea generation, generate ideas, novel method, propose a method, dogma, unstated assumption, cross-domain, observation-driven, replication anomaly, formalize this method, falsification experiment."
 argument-hint: "[verify | discover | gaps | assess | dogma | limitations | observations | candidates | formalize | falsify | experiment | stress-test | paper]"
 metadata:
-  version: "1.4.2"
-  last_updated: "2026-11-03"
+  version: "1.4.3"
+  last_updated: "2026-11-21"
   status: active
   data_access_level: raw
   task_type: open-ended
@@ -158,7 +158,7 @@ The first stage is entirely about deciding WHETHER and WHAT to research. No idea
       - Call `notebook_describe` to get topic summary and suggested topics
       - Call `notebook_query` asking "What is the research topic, focus, and motivation?" to extract the research description
    b. **Literature corpus** from Zotero:
-      - Use zotero-literature skill: `search-items` in the configured collection
+      - Use `zotero-cli`: `zotero-cli --json items list --collection <KEY>` on the configured collection (`zotero-cli --json collections list` gives the key)
       - Extract paper titles, authors, years, and abstracts (at least 2-3 papers required)
       - Save paper summaries to `novelty_engine/00_literature/`
    c. **Additional knowledge context** from Obsidian:
@@ -907,8 +907,8 @@ Does it need human judgment at a checkpoint?
 
 | Item | Content |
 |------|---------|
-| Skill Version | 1.4.2 |
-| Last Updated | 2026-11-03 |
+| Skill Version | 1.4.3 |
+| Last Updated | 2026-11-21 |
 | Maintainer | Tom |
 | Dependent Skills | security-track (research loop), deep-research, academic-paper-reviewer |
 | Role | Idea generator: three evidence-led routes, candidate checks, formalization, falsification design |
