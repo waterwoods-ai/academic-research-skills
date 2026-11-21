@@ -79,7 +79,7 @@
 
 ## S0 — Topic viability (go / no-go)
 
-**Before S0: the operating model (`big4_operating_model.md`).** A project enters the loop only if it is one of the two ACTIVE projects and its paper type is in scope (measurement of a real ecosystem, or vulnerability discovery on real software). The evidence bar from three exemplar papers is written at S1.5 and checked at Gate 1; drafting waits for the headline result; the headline date is set at Gate 1.
+**Before S0: the operating model (`big4_operating_model.md`).** A project enters the loop only if it is one of the two ACTIVE projects and its paper type is named (measurement, attack or defense; all three are in scope). The evidence bar (three exemplar papers for the scale, the type's defect list for the floor) is written at S1.5 and checked at Gate 1; drafting waits for the headline result; the headline date is set at Gate 1.
 
 Before any investment: is the topic saturated, misframed, or viable?
 Retrieve the 5–10 most-cited and most-recent Big-4/tier-2 papers on the
